@@ -147,8 +147,11 @@ var TableValidator = {
               var remove_arr = [" CHARACTER SET utf8mb4"," COLLATE utf8mb4_general_ci"," COLLATE utf8_general_ci"," CHARACTER SET utf8","COLLATE utf8mb4_general_ci"]
               table_str = table_str.split("\n").map(m =>{
                 if(m.toUpperCase().indexOf("ENGINE") > -1){ return m; }
+                else if(m.trim().indexOf("#") == 0 || m.trim().indexOf("/*!") == 0){
+                  return ""
+                }
                 else{ var t =  m; remove_arr.forEach(e=>{ t = t.replace(e,"").replace(e,""); }); return t; }
-               }).join("\n")
+               }).filter( f => { return f.length > 0}).join("\n")
                fs.writeFileSync( "./db_info/version_tables/table_" + tab_name + ".sql",table_str);
 
         return TableValidator.dump_recreate_indexes(tab_name, cb);

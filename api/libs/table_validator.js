@@ -362,6 +362,9 @@ var TableValidator = {
   },
   run_setup_scripts: (cb) => {
     var setup_scripts_dir = './db_info/setup_scripts/';
+    if(fs.existsSync(setup_scripts_dir) == false){
+      return cb()
+    }
     async.mapLimit(
       fs.readdirSync(setup_scripts_dir),
       1,
