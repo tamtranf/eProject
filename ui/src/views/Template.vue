@@ -24,45 +24,45 @@ export default {
   components: {},
   computed: {},
   methods: {},
-  props:[],
+  props: [],
   beforeCreate() {
-    console.log(this.name + ' beforeCreate');
+    console.log(`${this.name} beforeCreate`);
   },
   created() {
-    console.log(this.name + ' created');
+    console.log(`${this.name} created`);
   },
   beforeMount() {
-    console.log(this.name + ' beforeMount');
+    console.log(`${this.name} beforeMount`);
   },
   mounted() {
-    console.log(this.name + ' mounted');
+    console.log(`${this.name} mounted`);
   },
   beforeUpdate() {
-    console.log(this.name + ' beforeUpdate');
+    console.log(`${this.name} beforeUpdate`);
   },
   updated() {
-    console.log(this.name + ' updated');
+    console.log(`${this.name} updated`);
   },
   beforeUnmount() {
-    console.log(this.name + ' beforeUnmount');
+    console.log(`${this.name} beforeUnmount`);
   },
   unmounted() {
-    console.log(this.name + ' unmounted');
+    console.log(`${this.name} unmounted`);
   },
   errorCaptured() {
-    console.log(this.name + ' errorCaptured');
+    console.log(`${this.name} errorCaptured`);
   },
   renderTracked() {
-    console.log(this.name + ' renderTracked');
+    console.log(`${this.name} renderTracked`);
   },
   renderTriggered() {
-    console.log(this.name + ' renderTriggered');
+    console.log(`${this.name} renderTriggered`);
   },
   activated() {
-    console.log(this.name + ' activated');
+    console.log(`${this.name} activated`);
   },
   deactivated() {
-    console.log(this.name + ' deactivated');
+    console.log(`${this.name} deactivated`);
   },
 };
 </script>

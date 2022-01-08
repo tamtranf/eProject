@@ -2,38 +2,30 @@
   <app-header></app-header>
   <div class="home">
     <h1>Project "e"</h1>
-    <br>
-    <br><br><br>
+    <br />
+    <br /><br /><br />
     <img alt="Vue logo" src="../assets/logo.png" />
   </div>
-  <div>{{now}}</div>
+  <div>{{ now }}</div>
 </template>
 
 <script>
-import mixinLayoutComponents from "@/mixins/layout-components";
+import mixinLayoutComponents from '@/mixins/layout-components';
+
 export default {
-  name: "Home",
+  name: 'e-home',
   data() {
     return {
-      name: "Home",
+      name: 'Home',
     };
   },
-  mixins:[
-    mixinLayoutComponents
-  ],
-  components: {
-  },
+  mixins: [mixinLayoutComponents],
+  components: {},
   computed: {
-    now(){
+    now() {
       return new Date();
-    }
+    },
   },
-  routes:  [
-      {
-        path: "/",
-        name: "Home",
-        component: this,
-      },
-    ],
+  routes: [{ path: '/', name: 'Home', component: this }],
 };
 </script>

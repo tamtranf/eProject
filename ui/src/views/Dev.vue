@@ -10,8 +10,9 @@
 </template>
 <script>
 import mixinLayoutComponents from '@/mixins/layout-components';
-import constants from '../../../api/rules/constants';
+// import constants from '../../../api/rules/constants';
 import fields from '../../../api/rules/fields_master_user';
+
 export default {
   name: 'dev',
   data() {
@@ -30,6 +31,12 @@ export default {
   mixins: [mixinLayoutComponents],
   components: {},
   computed: {
+    formFields() {
+      if (this.local_fields_ref === false) {
+        this.local_fields_ref = fields.fields.array.filter((f) => typeof f.label !== 'undefined');
+      }
+      return this.local_fields_ref;
+    },
     testTime: {
       get() {
         return this.test_time;
@@ -38,65 +45,55 @@ export default {
         this.test_time = v;
       },
     },
-    formFields() {
-      if (this.local_fields_ref == false) {
-        this.local_fields_ref = fields.fields.array.filter((f) => {
-          console.log('TEST DEBUG 211128 (33 at Test.vue)[18:11]: ', { f });
-          return typeof f.label != 'undefined';
-        });
-      }
-      return this.local_fields_ref;
-    },
   },
   methods: {},
+
   beforeCreate() {
-    console.log(this.name + ' beforeCreate');
+    console.log(`${this.name} beforeCreate`);
   },
   created() {
-    console.log(this.name + ' created');
+    console.log(`${this.name} created`);
   },
   beforeMount() {
-    console.log(this.name + ' beforeMount');
+    console.log(`${this.name} beforeMount`);
   },
   mounted() {
     setInterval(() => {
-      this.testTime++;
+      this.testTime += 1;
       this.local_fields_ref[0].orig_label = this.local_fields_ref[0].orig_label || this.local_fields_ref[0].label;
-      this.local_fields_ref[0].label = this.local_fields_ref[0].orig_label + " : " + this.testTime
+      this.local_fields_ref[0].label = `${this.local_fields_ref[0].orig_label} : ${this.testTime}`;
     }, 100000);
-    console.log(this.name + ' mounted');
+    console.log(`${this.name} mounted`);
     this.$ajax.get('/test/', (err, data) => {
-      console.log('TEST DEBUG 211121 (34 at Test.vue)[18:27]: ', { data });
+      console.log('TEST DEBUG 220108 (67 at Dev.vue)[21:42]: ', { err, data });
     });
-
-    console.log('TEST DEBUG 211128 (45 at Test.vue)[15:49]: LOCAL CONSTANTS', { constants, fields });
   },
   beforeUpdate() {
-    console.log(this.name + ' beforeUpdate');
+    console.log(`${this.name} beforeUpdate`);
   },
   updated() {
-    console.log(this.name + ' updated');
+    console.log(`${this.name} updated`);
   },
   beforeUnmount() {
-    console.log(this.name + ' beforeUnmount');
+    console.log(`${this.name} beforeUnmount`);
   },
   unmounted() {
-    console.log(this.name + ' unmounted');
+    console.log(`${this.name} unmounted`);
   },
   errorCaptured() {
-    console.log(this.name + ' errorCaptured');
+    console.log(`${this.name} errorCaptured`);
   },
   renderTracked() {
-    console.log(this.name + ' renderTracked');
+    console.log(`${this.name} renderTracked`);
   },
   renderTriggered() {
-    console.log(this.name + ' renderTriggered');
+    console.log(`${this.name} renderTriggered`);
   },
   activated() {
-    console.log(this.name + ' activated');
+    console.log(`${this.name} activated`);
   },
   deactivated() {
-    console.log(this.name + ' deactivated');
+    console.log(`${this.name} deactivated`);
   },
 };
 </script>

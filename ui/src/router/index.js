@@ -1,58 +1,56 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [];
-//Define here the name of each file that should be part to the router
+// Define here the name of each file that should be part to the router
 [
-  require('../views/Home.vue'),
-  require('../views/About.vue'),
-  require('../views/Template.vue'),
-  require('../views/Test.vue'),
-  require('../views/Dev.vue'),
-].forEach(file =>{
-  file.default.routes.forEach((r)=>{
-    r.component = file.default
-    routes.push(r)
-  })
-})
+  require('../views/Home'),
+  require('../views/About'),
+  require('../views/Template'),
+  require('../views/Test'),
+  require('../views/Dev'),
+].forEach((file) => {
+  file.default.routes.forEach((r) => {
+    r.component = file.default;
+    routes.push(r);
+  });
+});
 
 // Here it configure the routes
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
 // Here it authenticate the cookies, adust it based on the login rules
-var checkCookies = () => {
-  var found = 0;
-  var s = document.cookie.split(";")
+const checkCookies = () => {
+  let found = 0;
+  const s = document.cookie.split(';');
   s.forEach((c) => {
-    var kv = c.trim().split("=")
-    if (kv[0] == "session_key" && kv[1].length > 70) {
-      found++;
+    const kv = c.trim().split('=');
+    if (kv[0] === 'session_key' && kv[1].length > 70) {
+      found += 1;
     }
-    if (kv[0] == "session_user" && kv[1].length > 0) {
-      found++;
-
+    if (kv[0] === 'session_user' && kv[1].length > 0) {
+      found += 1;
     }
-  })
-  return found == 2
-}
+  });
+  return found === 2;
+};
 
 // Before it navigate to each page, it will run this.
-// If the requiresAuth be set then it will check the cookies, 
-// if the cookies don't be valid, then it will redirect to the 
+// If the requiresAuth be set then it will check the cookies,
+// if the cookies don't be valid, then it will redirect to the
 // expired page.
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth == true && checkCookies() == false) {
+  if (to.meta.requiresAuth === true && checkCookies() === false) {
     next({
       path: '/expired',
-    })
+    });
   } else {
-    console.log("router accessing page",to.name)
-    next()
+    console.log('router accessing page', to.name);
+    next();
   }
+});
 
-})
-
-export default router
+export default router;

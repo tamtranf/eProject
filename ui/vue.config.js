@@ -7,9 +7,9 @@ module.exports = {
       '^/api': {
         target: 'http://localhost:4001',
         ws: true,
-        changeOrigin: true
-      }
-    }
+        changeOrigin: true,
+      },
+    },
   },
-  parallel:8
-}
+  parallel: 8,
+};

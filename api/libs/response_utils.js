@@ -1,20 +1,21 @@
-const debug = require('./debug').create('ResponseUtils');
+// const debug = require('./debug').create('ResponseUtils');
 
 class ResponseUtils {
-  constructor() {}
+  // constructor() {}
+
   response(req, res, data, error, options = {}, cb = false) {
     if (error != null && req && req.log && req.log.info) {
       req.log.info({ error }, 'Return error.');
     }
-    if (cb != false) {
+    if (cb !== false) {
       return cb(error, data);
-    } else {
-      if (options.error_code) {
-        return res.json({ success: error == null, data, error, error_code: options.error_code });
-      } else {
-        return res.json({ success: error == null, data, error });
-      }
     }
+    if (options.error_code) {
+      return res.json({
+        success: error == null, data, error, error_code: options.error_code,
+      });
+    }
+    return res.json({ success: error == null, data, error });
   }
 }
 

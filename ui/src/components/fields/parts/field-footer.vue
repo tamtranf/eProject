@@ -11,41 +11,41 @@ export default {
   data() {
     return {
       name: 'Field label',
-      _field_id:"",
-      _field_footer_label:"",
-      _footer_label_style:"background:#c3c3ff"
+      local_field_id: '',
+      local_field_footer_label: '',
+      local_footer_label_style: 'background:#c3c3ff',
     };
   },
   mixins: [],
   components: {},
   computed: {
-    fieldFooterLabel:{
-      get(){
-        return this.$props.field_footer_label || this._field_footer_label;
+    fieldFooterLabel: {
+      get() {
+        return this.$props.field_footer_label || this.local_field_footer_label;
       },
-      set(v){
-        this._field_footer_label = v;
-      }
+      set(v) {
+        this.local_field_footer_label = v;
+      },
     },
-    footerLabelStyle:{
-      get(){
-        return this.$props.footer_label_style || this._footer_label_style;
+    footerLabelStyle: {
+      get() {
+        return this.$props.footer_label_style || this.local_footer_label_style;
       },
-      set(v){
-        this._footer_label_style = v;
-      }
+      set(v) {
+        this.local_footer_label_style = v;
+      },
     },
-    fieldID:{
-      get(){
-        return this.$props.field_id || this._field_id;
+    fieldID: {
+      get() {
+        return this.$props.field_id || this.local_field_id;
       },
-      set(v){
-        this._field_id = v;
-      }
+      set(v) {
+        this.local_field_id = v;
+      },
     },
   },
   methods: {},
-  props: ["field_id","footer_label_style","field_footer_label"],
+  props: ['field_id', 'footer_label_style', 'field_footer_label'],
   beforeCreate() {},
   created() {},
   beforeMount() {},

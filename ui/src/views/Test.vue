@@ -16,9 +16,10 @@
 </template>
 <script>
 import mixinLayoutComponents from '@/mixins/layout-components';
-import constants from '../../../api/rules/constants';
-import nseq from 'nseq';
+import Nseq from 'nseq';
+// import constants from '../../../api/rules/constants';
 import fields from '../../../api/rules/fields_master_user';
+
 export default {
   name: 'test',
   data() {
@@ -27,7 +28,7 @@ export default {
       test_time: 1,
       local_fields_ref: false,
       test_result: '',
-      server_info:""
+      server_info: '',
     };
   },
   routes: [
@@ -39,13 +40,13 @@ export default {
   mixins: [mixinLayoutComponents],
   components: {},
   computed: {
-    serverInfo:{
-      get(){
+    serverInfo: {
+      get() {
         return this.server_info;
       },
-      set(v){
+      set(v) {
         this.server_info = v;
-      }
+      },
     },
     testResult: {
       get() {
@@ -64,27 +65,24 @@ export default {
       },
     },
     formFields() {
-      if (this.local_fields_ref == false) {
-        this.local_fields_ref = fields.fields.array.filter((f) => {
-          console.log('TEST DEBUG 211128 (33 at Test.vue)[18:11]: ', { f });
-          return typeof f.label != 'undefined';
-        });
+      if (this.local_fields_ref === false) {
+        this.local_fields_ref = fields.fields.array.filter((f) => typeof f.label !== 'undefined');
       }
       return this.local_fields_ref;
     },
   },
   methods: {},
   beforeCreate() {
-    console.log(this.name + ' beforeCreate');
+    console.log(`${this.name} beforeCreate`);
   },
   created() {
-    console.log(this.name + ' created');
+    console.log(`${this.name} created`);
   },
   beforeMount() {
-    console.log(this.name + ' beforeMount');
+    console.log(`${this.name} beforeMount`);
   },
   mounted() {
-    new nseq().do([
+    (new Nseq()).do([
       (self) => {
         this.testResult += 'Starting the test!<br>';
         this.testResult += 'Test page javascript : ';
@@ -94,26 +92,35 @@ export default {
         }, 100);
       },
       (self) => {
+        this.testResult += 'Test localStorage  : ';
+        localStorage.app_tested = '1234';
+        if (localStorage.app_tested === '1234') {
+          this.testResult += 'OK <br>';
+          self.next();
+        } else {
+          this.testResult += 'ERROR, failed to load local storage <br>';
+        }
+      },
+      (self) => {
         this.testResult += 'Test access to API : ';
         this.$ajax.get('/test/access', (err, data) => {
-          console.log('TEST DEBUG 211121 (34 at Test.vue)[18:27]: ', { err, data });
           if (err) {
-            this.testResult += 'ERROR ' + err + ' <br>';
+            this.testResult += `ERROR ${err} <br>`;
           }
-          if (data.code == 123) {
+          if (data.code === 123) {
             this.testResult += 'OK <br>';
-            this.serverInfo = data.server_info
+            this.serverInfo = data.server_info;
             self.next();
           } else {
-            this.testResult += 'ERROR, unexpected result ' + JSON.stringify(data) + ' <br>';
+            this.testResult += `ERROR, unexpected result ${JSON.stringify(data)} <br>`;
           }
         });
       },
       (self) => {
         this.testResult += 'Test disk access at API : ';
-        this.$ajax.get('/test/disk', (err, data) => {
+        this.$ajax.get('/test/disk', (err, _data) => {
           if (err) {
-            this.testResult += 'ERROR ' + err + ' <br>';
+            this.testResult += `ERROR ${err} <br>`;
           } else {
             this.testResult += 'OK <br>';
             self.next();
@@ -122,9 +129,9 @@ export default {
       },
       (self) => {
         this.testResult += 'Test database access at API : ';
-        this.$ajax.get('/test/db', (err, data) => {
+        this.$ajax.get('/test/db', (err, _data) => {
           if (err) {
-            this.testResult += 'ERROR ' + err + ' <br>';
+            this.testResult += `ERROR ${err} <br>`;
           } else {
             this.testResult += 'OK <br>';
             self.next();
@@ -141,31 +148,31 @@ export default {
     ]);
   },
   beforeUpdate() {
-    console.log(this.name + ' beforeUpdate');
+    console.log(`${this.name} beforeUpdate`);
   },
   updated() {
-    console.log(this.name + ' updated');
+    console.log(`${this.name} updated`);
   },
   beforeUnmount() {
-    console.log(this.name + ' beforeUnmount');
+    console.log(`${this.name} beforeUnmount`);
   },
   unmounted() {
-    console.log(this.name + ' unmounted');
+    console.log(`${this.name} unmounted`);
   },
   errorCaptured() {
-    console.log(this.name + ' errorCaptured');
+    console.log(`${this.name} errorCaptured`);
   },
   renderTracked() {
-    console.log(this.name + ' renderTracked');
+    console.log(`${this.name} renderTracked`);
   },
   renderTriggered() {
-    console.log(this.name + ' renderTriggered');
+    console.log(`${this.name} renderTriggered`);
   },
   activated() {
-    console.log(this.name + ' activated');
+    console.log(`${this.name} activated`);
   },
   deactivated() {
-    console.log(this.name + ' deactivated');
+    console.log(`${this.name} deactivated`);
   },
 };
 </script>

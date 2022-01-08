@@ -13,8 +13,7 @@ export default {
   components: {},
   computed: {
     fieldID() {
-      console.log('TEST DEBUG 211128 (15 at input.vue)[17:51]: ', { test: this.$props['fieldInfo'] });
-      return this.$props['fieldInfo'].id;
+      return this.$props.fieldInfo.id;
     },
   },
   methods: {},

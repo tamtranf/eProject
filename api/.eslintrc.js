@@ -1,0 +1,37 @@
+module.exports = {
+  env: {
+    commonjs: true,
+  },
+  extends: 'airbnb-base',
+  parserOptions: {
+    ecmaVersion: 13,
+  },
+  plugins: [
+    'sql',
+  ],
+  rules: {
+    'import/no-relative-packages': 'off',
+    'operator-linebreak': ['error', 'none'],
+    'max-len': ['error', { code: 200 }],
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'import/no-dynamic-require': 'off',
+    camelcase: ['off'],
+    'global-require': 'off',
+    'no-console': 'off',
+    eqeqeq: ['error', 'smart'],
+    indent: ['error', 2],
+    'linebreak-style': ['error', 'unix'],
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
+    'sql/format': [2, { ignoreExpressions: false, ignoreInline: true, ignoreTagless: true }],
+    'sql/no-unsafe-query': ['off'],
+    'class-methods-use-this': 'off',
+    'consistent-return': 'off',
+    radix: ['error', 'as-needed'],
+    'no-restricted-syntax': 'off',
+    'guard-for-in': 'off',
+    'no-case-declarations': 'off',
+    'no-param-reassign': 'off',
+    'function-paren-newline': ['error', 'never'],
+  },
+};

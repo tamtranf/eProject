@@ -2,16 +2,40 @@ const _ = require('lodash');
 const async = require('async');
 const uuid = require('uuid');
 const moment = require('moment');
-const nseq = require('nseq');
+const Nseq = require('nseq');
+const LRU = require('lru-cache');
 const DataUtil = require('./data_utils');
 const ResponseUtil = require('./response_utils');
 const constants = require('../rules/constants');
-const LRU = require('lru-cache');
 
 const cache = new LRU({
   max: 500,
   maxAge: 1000 * 10,
 });
+
+let field_sizes_all = require('../db_info/version_info.json');
+
+const field_sizes = {};
+for (const t in field_sizes_all.tables) {
+  field_sizes[t] = {};
+  for (const fk in field_sizes_all.tables[t]) {
+    const f = field_sizes_all.tables[t][fk];
+    const obj_type = {};
+    const type = f.Type;
+    if (type.indexOf('varchar') === 0) {
+      const s = type.split('(');
+      obj_type.type = 'varchar';
+      obj_type.size = parseInt(s[1].replace(')', ''));
+    } else {
+      obj_type.type = type;
+    }
+    // if(types.indexOf(obj_type.type) < 0){
+    //   types.push(obj_type.type)
+    // }
+    field_sizes[t][fk] = obj_type;
+  }
+}
+field_sizes_all = null;
 
 class BaseModel {
   constructor() {
@@ -20,39 +44,39 @@ class BaseModel {
     // this.permissionMode = constants.PERMISSION_MODE;
 
     setTimeout(() => {
-      //validate fields
-      var fields_arr = this.tab_fields || this.form_fields;
-      if (fields_arr && fields_arr.length > 0 && Array.isArray(this.get_fields()) && this.get_fields().length >0 ) {
+      // validate fields
+      const fields_arr = this.tab_fields || this.form_fields;
+      if (fields_arr && fields_arr.length > 0 && Array.isArray(this.get_fields()) && this.get_fields().length > 0) {
         fields_arr.split(',').forEach((field) => {
-          var ignore_system_fields = ['seq_id'];
+          const ignore_system_fields = ['seq_id'];
 
-          if (ignore_system_fields.indexOf(field) < 0 && this.table.indexOf('v_') != 0) {
-            if(typeof this.get_fields != "function"){
-              console.error('The function get_fields was not found at ' + this.table );
-            }else if( Array.isArray(this.get_fields()) == false || this.get_fields().length  < 1){
-              console.error('The function get_fields has no fields at ' + this.table );
-            }else if (typeof this.get_fields().fields[field] == 'undefined') {
+          if (ignore_system_fields.indexOf(field) < 0 && this.table.indexOf('v_') !== 0) {
+            if (typeof this.get_fields !== 'function') {
+              console.error(`The function get_fields was not found at ${this.table}`);
+            } else if (Array.isArray(this.get_fields()) === false || this.get_fields().length < 1) {
+              console.error(`The function get_fields has no fields at ${this.table}`);
+            } else if (typeof this.get_fields().fields[field] === 'undefined') {
               console.log('\n\n\n========================================');
               console.log({ fields_arr });
-              console.error('Field ' + field + ' not found at ' + this.table);
+              console.error(`Field ${field} not found at ${this.table}`);
               console.log('========================================\n\n\n');
             }
           }
         });
-      } else {
       }
     }, 3000);
   }
+
   ifNull(val, def = '') {
-    if (typeof val == 'undefined' || (val == null) || (val == false) || val == '') {
+    if (typeof val === 'undefined' || (val === null) || (val === false) || val === '') {
       return def;
-    } else {
-      return val;
     }
+    return val;
   }
-  checkServerUserPermission(req, res, model_acl, permission, requester = '', custom_error_message = false) {
+
+  checkServerUserPermission(req, res, model_acl, permission, _requester = '', _custom_error_message = false) {
     // FIXME: To be implemented
-    // if (model_acl == null || model_acl == true) {
+    // if (model_acl === null || model_acl === true) {
     //   model_acl = this.model_acl;
     // }
     // var user_role = req.user_token_session.user_role || 'none';
@@ -66,82 +90,82 @@ class BaseModel {
     // ResponseUtil.response(req, res, null, custom_error_message || 'アクセスが許可されていません。');
     return true;
   }
+
   form_fields_formatted(options) {
-    var temp = _.clone(this.form_fields);
-    if (options && typeof options.force_fields != 'undefined') {
+    let temp = _.clone(this.form_fields);
+    if (options && typeof options.force_fields !== 'undefined') {
       temp = _.clone(options.force_fields);
     }
-    if (options && typeof options.extend_fields == 'string') {
-      temp = temp + ',' + options.extend_fields;
+    if (options && typeof options.extend_fields === 'string') {
+      temp = `${temp},${options.extend_fields}`;
     }
-    var m = temp.split(',').map((o) => {
-      return '`' + o + '`';
-    });
+    const m = temp.split(',').map((o) => `\`${o}\``);
     return m.join(',');
   }
+
   base_datasource_position(req, res, options = {}) {
-    var pos_start = 0;
-    var load_length = 1000000;
-    var params = [];
-    var conditions = '';
-    if (typeof options.conditions != 'undefined' && typeof options.params != 'undefined') {
+    const pos_start = 0;
+    const load_length = 1000000;
+    let params = [];
+    let conditions = '';
+    if (typeof options.conditions !== 'undefined' && typeof options.params !== 'undefined') {
       params = options.params;
       conditions = options.conditions;
     }
-    var filter_condition = this.base_datasource_filter_parser(req, conditions, params);
+    const filter_condition = this.base_datasource_filter_parser(req, conditions, params);
     if (filter_condition.error) {
       return ResponseUtil.response(req, res, null, filter_condition.error);
     }
-    var orderby = this.base_datasource_sort_parser(req);
-    var table = options.table || this.table;
-    var sql = 'SELECT seq_id FROM ' + table + ' ' + filter_condition.condition + ' ORDER BY ' + orderby + ' LIMIT ' + pos_start + ',' + load_length;
+    const orderby = this.base_datasource_sort_parser(req);
+    const table = options.table || this.table;
+    const sql = `SELECT seq_id FROM ${table} ${filter_condition.condition} ORDER BY ${orderby} LIMIT ${pos_start},${load_length}`;
     DataUtil.query(sql, filter_condition.params, {}, (err, data) => {
-      var find_seq_id = req.params.id;
-      var position = _.findIndex(data, (i) => {
-        return i.seq_id == find_seq_id;
-      });
-      var l = data.length;
-      for (var i = 0; i < l; i++) {
-        if (data[i].seq_id == find_seq_id) {
+      const find_seq_id = req.params.id;
+      let position = _.findIndex(data, (i) => i.seq_id === find_seq_id);
+      const l = data.length;
+      for (let i = 0; i < l; i += 1) {
+        if (data[i].seq_id === find_seq_id) {
           position = i;
         }
       }
       return ResponseUtil.response(req, res, { data: position }, err);
     });
   }
+
   base_datasource_load(req, res, options = {}, cb = false) {
-    var pos_start = parseInt(req.params.start || 0);
-    var pos_end = parseInt(req.params.end || 0);
-    var load_length = pos_end - pos_start;
+    const pos_start = parseInt(req.params.start || 0);
+    const pos_end = parseInt(req.params.end || 0);
+    let load_length = pos_end - pos_start;
     if (load_length < 1) {
       load_length = 1;
     } else if (load_length > 1000000) {
       load_length = 1000000;
     }
-    load_length = load_length + 10;
-    var params = [];
-    var conditions = '';
-    if (typeof options.conditions != 'undefined' && typeof options.params != 'undefined') {
+    load_length += 10;
+    let params = [];
+    let conditions = '';
+    if (typeof options.conditions !== 'undefined' && typeof options.params !== 'undefined') {
       params = options.params;
       conditions = options.conditions;
     }
-    var filter_condition = this.base_datasource_filter_parser(req, conditions, params);
+    const filter_condition = this.base_datasource_filter_parser(req, conditions, params);
     if (filter_condition.error) {
       return ResponseUtil.response(req, res, null, filter_condition.error);
     }
-    var orderby = this.base_datasource_sort_parser(req);
-    var table = options.table || this.table;
-    var sql = 'SELECT ' + this.form_fields_formatted(options) + ' FROM ' + table + ' ' + filter_condition.condition + ' ORDER BY ' + orderby + ' LIMIT ' + pos_start + ',' + load_length;
+    const orderby = this.base_datasource_sort_parser(req);
+    const table = options.table || this.table;
+    let sql = `SELECT ${this.form_fields_formatted(options)} FROM ${table} ${filter_condition.condition} `;
+    sql += `ORDER BY ${orderby} LIMIT ${pos_start},${load_length}`;
     // console.log('base_datasource_load',JSON.stringify({table, params:req.params,body:req.body, sql, sql_params:filter_condition.params},null,4));
-    var query_options = {};
-    if (options.show_query == true) {
+    const query_options = {};
+    if (options.show_query === true) {
       query_options.show_query = true;
     }
-    var cache_key = false;
+    let cache_key = false;
     if (options.cache_ttl > 0) {
       cache_key = JSON.stringify({ sql, params: filter_condition.params });
-      var cached = cache.get(cache_key);
-      if (typeof cached != 'undefined') {
+      const cached = cache.get(cache_key);
+      if (typeof cached !== 'undefined') {
         return ResponseUtil.response(req, res, cached, null, {}, cb);
       }
     }
@@ -153,25 +177,26 @@ class BaseModel {
       ResponseUtil.response(req, res, data, err, {}, cb);
     });
   }
+
   base_datasource_count(req, res, options = {}, cb = false) {
-    var params = [];
-    var conditions = '';
-    if (typeof options.conditions != 'undefined' && typeof options.params != 'undefined') {
+    let params = [];
+    let conditions = '';
+    if (typeof options.conditions !== 'undefined' && typeof options.params !== 'undefined') {
       params = options.params;
       conditions = options.conditions;
     }
-    var filter_condition = this.base_datasource_filter_parser(req, conditions, params);
+    const filter_condition = this.base_datasource_filter_parser(req, conditions, params);
     if (filter_condition.error) {
       return ResponseUtil.response(req, res, null, filter_condition.error, {}, cb);
     }
-    var table = options.table || this.table;
+    const table = options.table || this.table;
 
-    var sql = 'SELECT count(*) as qty FROM ' + table + ' ' + filter_condition.condition;
-    var cache_key = false;
+    const sql = `SELECT count(*) as qty FROM ${table} ${filter_condition.condition}`;
+    let cache_key = false;
     if (options.cache_ttl > 0) {
       cache_key = JSON.stringify({ sql, params: filter_condition.params });
-      var cached = cache.get(cache_key);
-      if (typeof cached != 'undefined') {
+      const cached = cache.get(cache_key);
+      if (typeof cached !== 'undefined') {
         return ResponseUtil.response(req, res, cached, null, {}, cb);
       }
     }
@@ -183,22 +208,23 @@ class BaseModel {
       ResponseUtil.response(req, res, data, err, {}, cb);
     });
   }
+
   base_get(req, res, options = {}, cb = false) {
-    var local_connection = false;
+    let local_connection = false;
     if (options && options.connection) {
       local_connection = options.connection;
     }
-    var seq_id = req.params.id;
-    if (isNaN(options.force_seq_id) == false && options.force_seq_id > -1) {
+    let seq_id = req.params.id;
+    if (Number.isNaN(options.force_seq_id) === false && options.force_seq_id > -1) {
       seq_id = options.force_seq_id;
     }
-    if (isNaN(seq_id) == true) {
-      return ResponseUtil.response(req, res, null, 'invalid seq_id: ' + seq_id, {}, cb);
+    if (Number.isNaN(seq_id) === true) {
+      return ResponseUtil.response(req, res, null, `invalid seq_id: ${seq_id}`, {}, cb);
     }
 
-    var conditions = ' seq_id = ? ';
-    var params = [seq_id];
-    if (typeof options.conditions != 'undefined' && typeof options.params != 'undefined') {
+    let conditions = ' seq_id = ? ';
+    const params = [seq_id];
+    if (typeof options.conditions !== 'undefined' && typeof options.params !== 'undefined') {
       if (Array.isArray(options.params) && options.params.length > 0) {
         options.params.forEach((o) => {
           params.push(o);
@@ -211,114 +237,120 @@ class BaseModel {
         conditions += options.conditions;
       }
     }
-    var table = options.table || this.table;
-    var load_fields = this.form_fields_formatted(options);
-    if (options.load_all_fields == true) {
+    const table = options.table || this.table;
+    let load_fields = this.form_fields_formatted(options);
+    if (options.load_all_fields === true) {
       load_fields = '*';
     }
-    DataUtil.query('SELECT ' + load_fields + ' FROM ' + table + ' WHERE ' + conditions + ' LIMIT 0,1', params, { connection: local_connection, show_query: true }, (err, data) => {
-      if (data && data.length == 1) {
+    const sql = `SELECT ${load_fields} FROM ${table} WHERE ${conditions} LIMIT 0,1`;
+    DataUtil.query(sql, params, { connection: local_connection, show_query: true }, (err, data) => {
+      if (data && data.length === 1) {
         ResponseUtil.response(req, res, { data: data[0] }, err, {}, cb);
       } else {
         ResponseUtil.response(req, res, null, 'Data not found at base_get.', {}, cb);
       }
     });
   }
+
   base_get_all(req, res, options = false, cb = false) {
-    var local_connection = false;
+    let local_connection = false;
     if (options && options.connection) {
       local_connection = options.connection;
     }
-    var seq_id = req.params.id;
-    if (isNaN(seq_id) == true) {
-      return ResponseUtil.response(req, res, null, 'invalid seq_id: ' + seq_id, {}, cb);
+    const seq_id = req.params.id;
+    if (Number.isNaN(seq_id) === true) {
+      return ResponseUtil.response(req, res, null, `invalid seq_id: ${seq_id}`, {}, cb);
     }
-    var local_table = this.table;
+    let local_table = this.table;
     if (options && options.force_get_table) {
       local_table = options.force_get_table;
     }
-    var sql = 'SELECT * FROM ' + local_table + ' WHERE seq_id = ? LIMIT 0,1';
+    const sql = `SELECT * FROM ${local_table} WHERE seq_id = ? LIMIT 0,1`;
     DataUtil.query(sql, [seq_id], { connection: local_connection }, (err, data) => {
-      if (data && data.length == 1) {
+      if (data && data.length === 1) {
         ResponseUtil.response(req, res, { data: data[0] }, err, {}, cb);
       } else {
         ResponseUtil.response(req, res, null, 'Data not found at base _get_all.', {}, cb);
       }
     });
   }
+
   validate_field_data_type(req, table, field, val) {
-    if (typeof val == 'undefined' || (val == null) | (val == false) || val == '') {
+    if (typeof val === 'undefined' || (val === null) || (val === false) || val === '') {
       return false;
     }
-    if (field == 'last_changed_uuid') {
+    if (field === 'last_changed_uuid') {
       return false;
     }
 
-    var field_info = field_sizes[table][field];
-    if (typeof field_info == 'undefined') {
+    const field_info = field_sizes[table][field];
+    if (typeof field_info === 'undefined') {
       req.log.warn({ table, field, val }, 'Field not found');
       console.trace('Field not found', { table, field, val });
       return false; // Allow the request now
     }
     switch (field_info.type) {
-      case 'varchar':
-      case 'text':
-        var data_len = _.size(val);
-        if (data_len > field_info.size) {
-          var label = this.get_fields().fields[field].label;
-          return { field, field_info, data_len, err: label + 'は文字数オーバーです。　最大値は' + field_info.size + 'です。現状値は' + data_len + 'です。' };
-        }
-        break;
-      case 'date':
-      case 'datetime':
-      case 'timestamp':
-        if (new Date(val).getTime() !== new Date(val).getTime()) {
-          return { field, field_info, err: 'Invalid format for date' };
-        }
-        break;
-      case 'int':
-      case 'int unsigned':
-      case 'tinyint':
-      case 'smallint':
-        if (isNaN(val) == true) {
-          return { field, field_info, err: 'Invalid value, it should be a number' };
-        }
-        break;
-      default:
-        console.trace('Unexpected field type', { field_info });
-        req.log.warn({ table, field, val, field_info }, 'Unexpected field type');
-        break;
+    case 'varchar':
+    case 'text':
+      const data_len = _.size(val);
+      if (data_len > field_info.size) {
+        const { label } = this.get_fields().fields[field];
+        return {
+          field, field_info, data_len, err: `${label}は文字数オーバーです。 最大値は${field_info.size}です。現状値は${data_len}です。`,
+        };
+      }
+      break;
+    case 'date':
+    case 'datetime':
+    case 'timestamp':
+      if (parseInt(new Date(val).getTime()) !== new Date(val).getTime()) {
+        return { field, field_info, err: 'Invalid format for date' };
+      }
+      break;
+    case 'int':
+    case 'int unsigned':
+    case 'tinyint':
+    case 'smallint':
+      if (Number.isNaN(val) === true) {
+        return { field, field_info, err: 'Invalid value, it should be a number' };
+      }
+      break;
+    default:
+      console.trace('Unexpected field type', { field_info });
+      req.log.warn({
+        table, field, val, field_info,
+      }, 'Unexpected field type');
+      break;
     }
     return false;
   }
+
   base_set(req, res, options, cb = false) {
-    var local_connection = false;
+    let local_connection = false;
     if (options && options.connection) {
       local_connection = options.connection;
     }
-    var temp = req.body.changes;
-    var changes = {};
-    var invalid_size_fields = [];
-    var s_fields = this.form_fields.split(',');
+    const temp = req.body.changes;
+    const changes = {};
+    const invalid_size_fields = [];
+    const s_fields = this.form_fields.split(',');
     s_fields.forEach((f) => {
-      if (typeof temp[f] != 'undefined') {
+      if (typeof temp[f] !== 'undefined') {
         changes[f] = temp[f];
-        var validate_err = this.validate_field_data_type(req.log, this.table, f, changes[f]);
-        if (validate_err != false) {
+        const validate_err = this.validate_field_data_type(req.log, this.table, f, changes[f]);
+        if (validate_err !== false) {
           invalid_size_fields.push(validate_err);
         }
       }
     });
     if (Array.isArray(s_fields) && s_fields.length > 0 && s_fields.indexOf('last_update_date') > -1) {
-      changes['last_update_date'] = new Date();
+      changes.last_update_date = new Date();
     }
-    if (req.body.check_field_size == true) {
+    if (req.body.check_field_size === true) {
       if (invalid_size_fields.length > 0) {
         console.log();
-        var err = invalid_size_fields
-          .map((e) => {
-            return e.err;
-          })
+        const err = invalid_size_fields
+          .map((e) => e.err)
           .join('<br>');
         return ResponseUtil.response(req, res, null, { err, invalid_size_fields, err_type: 'invalid_size' }, {}, cb);
       }
@@ -326,43 +358,43 @@ class BaseModel {
       // console.log("It is not checking the field size for ",req.body);
     }
 
-    var seq_id = req.params.id;
-    if (isNaN(seq_id) == true) {
-      return ResponseUtil.response(req, res, null, 'invalid seq_id: ' + seq_id, {}, cb);
+    let seq_id = req.params.id;
+    if (Number.isNaN(seq_id) === true) {
+      return ResponseUtil.response(req, res, null, `invalid seq_id: ${seq_id}`, {}, cb);
     }
-    if (seq_id == constant.IDS.ADD_NEW_RECORD_ID) {
+    if (seq_id === constants.IDS.ADD_NEW_RECORD_ID) {
       if (Array.isArray(s_fields) && s_fields.length > 0 && s_fields.indexOf('registration_date') > -1) {
-        changes['registration_date'] = new Date();
+        changes.registration_date = new Date();
       }
-      new nseq().do([
+      new Nseq().do([
         (self) => {
-          var method = 'INSERT';
-          if (options.use_replace == true) {
+          let method = 'INSERT';
+          if (options.use_replace === true) {
             method = 'REPLACE';
           }
-          var sql = method + ' INTO ' + this.table + ' SET ?';
+          const sql = `${method} INTO ${this.table} SET ?`;
           DataUtil.query(sql, changes, { connection: local_connection }, (err, result) => {
-            req.log.info({ sql, changes, err, result, transaction: local_connection != false }, 'base_set insert');
+            req.log.info({
+              sql, changes, err, result, transaction: local_connection !== false,
+            }, 'base_set insert');
             if (err) {
               return ResponseUtil.response(req, res, result, err, {}, cb);
-            } else if (result && result.insertId && result.insertId > -1) {
-              debug_base_set('INSERT STAGE 1: ', result);
+            } if (result && result.insertId && result.insertId > -1) {
               req.params.id = result.insertId;
               seq_id = result.insertId;
               self.next();
             } else {
-              debug_base_set('INSERT STAGE 4: ');
               return ResponseUtil.response(req, res, result, '新しいデータの保存に失敗しました。', {}, cb);
             }
           });
         },
         (self) => {
-          if (options.save_change_history == true) {
-            var ops = {
+          if (options.save_change_history === true) {
+            const ops = {
               changes,
               seq_id,
               history_mode: constants.HISTORY_MODE.NEW,
-              requester: 'base_model/base_set/' + this.table,
+              requester: `base_model/base_set/${this.table}`,
               table_id: options.table_id,
             };
             if (options && options.connection) {
@@ -379,28 +411,26 @@ class BaseModel {
             self.next();
           }
         },
-        (self) => {
-          if (cb == false) {
-            debug_base_set('INSERT STAGE 2: ');
-            var ops = { base_set_request: true };
+        (_self) => {
+          if (cb === false) {
+            const ops = { base_set_request: true };
             return this.get(req, res, ops);
-          } else {
-            debug_base_set('INSERT STAGE 3: ');
-            var ops = { base_set_request: true };
-            if (options && options.connection) {
-              ops.connection = options.connection;
-            }
-            if (options && options.force_get_table) {
-              ops.force_get_table = options.force_get_table;
-            }
-            return this.base_get_all(req, res, ops, cb);
           }
+          const ops = { base_set_request: true };
+          if (options && options.connection) {
+            ops.connection = options.connection;
+          }
+          if (options && options.force_get_table) {
+            ops.force_get_table = options.force_get_table;
+          }
+          return this.base_get_all(req, res, ops, cb);
         },
       ]);
     } else {
-      new nseq().do([
+      new Nseq().do([
         (self) => {
-          if (false && options.save_log == true) {
+          const local_save_log = false;
+          if (local_save_log && options.save_log === true) {
             // var ops = {changes,seq_id,requester: "base_model/base_set/" + this.table,table_id:options.table_id}
             // if(options && options.connection){
             //   ops.connection = options.connection
@@ -417,13 +447,15 @@ class BaseModel {
           }
         },
         (self) => {
-          var last_changed_uuid = (changes.last_changed_uuid || '') + '';
+          const last_changed_uuid = `${changes.last_changed_uuid || ''}`;
           if (last_changed_uuid.length > 0) {
-            var sql = 'SELECT COUNT(*) as qty FROM ' + this.table + ' WHERE  seq_id = ? AND last_changed_uuid = ?';
-            var params = [seq_id, changes.last_changed_uuid];
+            const sql = `SELECT COUNT(*) as qty FROM ${this.table} WHERE  seq_id = ? AND last_changed_uuid = ?`;
+            const params = [seq_id, changes.last_changed_uuid];
             DataUtil.query_one(sql, params, options, (err, row) => {
               if (row.qty < 1) {
-                req.log.warn('他のユーザがデータを使用しています。result at base_set', { params, row, err, sql });
+                req.log.warn('他のユーザがデータを使用しています。result at base_set', {
+                  params, row, err, sql,
+                });
                 return ResponseUtil.response(req, res, null, '::他のユーザがデータを使用しています。', {}, cb);
               }
               self.next();
@@ -433,12 +465,12 @@ class BaseModel {
           }
         },
         (self) => {
-          if (options.save_change_history == true) {
-            var ops = {
+          if (options.save_change_history === true) {
+            const ops = {
               changes,
               seq_id,
               history_mode: constants.HISTORY_MODE.UPDATE,
-              requester: 'base_model/base_set/' + this.table,
+              requester: `base_model/base_set/${this.table}`,
               table_id: options.table_id,
             };
             if (options && options.connection) {
@@ -456,32 +488,28 @@ class BaseModel {
           }
         },
 
-        (self) => {
-          var { upd_query, upd_data } = this.parse_upd_changed(changes, seq_id);
-          debug_base_set('UPDATE STAGE 1: ');
+        (_self) => {
+          const { upd_query, upd_data } = this.parse_upd_changed(changes, seq_id);
           DataUtil.query(upd_query, upd_data, { connection: local_connection }, (err, data) => {
-            req.log.info({ upd_query, upd_data, err, result: data, transaction: local_connection != false }, 'base_set update');
+            req.log.info({
+              upd_query, upd_data, err, result: data, transaction: local_connection !== false,
+            }, 'base_set update');
             if (err) {
-              debug_base_set('UPDATE STAGE 2: ');
               return ResponseUtil.response(req, res, data, err, {}, cb);
-            } else if (data.affectedRows < 1 && changes.last_changed_uuid) {
+            } if (data.affectedRows < 1 && changes.last_changed_uuid) {
               return ResponseUtil.response(req, res, data, 'Data was not updated.', {}, cb);
-            } else {
-              var ops = {};
-              if (options && options.connection) {
-                ops.connection = options.connection;
-              }
-              if (options && options.force_get_table) {
-                ops.force_get_table = options.force_get_table;
-              }
-              if (cb == false) {
-                debug_base_set('UPDATE STAGE 3: ');
-                return this.get(req, res, ops);
-              } else {
-                debug_base_set('UPDATE STAGE 4: ');
-                return this.base_get_all(req, res, ops, cb);
-              }
             }
+            const ops = {};
+            if (options && options.connection) {
+              ops.connection = options.connection;
+            }
+            if (options && options.force_get_table) {
+              ops.force_get_table = options.force_get_table;
+            }
+            if (cb === false) {
+              return this.get(req, res, ops);
+            }
+            return this.base_get_all(req, res, ops, cb);
           });
         },
       ]);
@@ -490,32 +518,32 @@ class BaseModel {
 
   base_save_change_history(req, res, options, cb) {
     // It should be here and not in the log_history model to avoid cross reference.
-    if (typeof this.table_id == 'undefined' && typeof options.table_id == 'undefined') {
-      return cb('No table_id (' + options.requester + ')');
+    if (typeof this.table_id === 'undefined' && typeof options.table_id === 'undefined') {
+      return cb(`No table_id (${options.requester})`);
     }
     const do_not_log_fields = ['last_changed_fields', 'approval_status_flag'];
-    var now = new Date();
-    var is_new = options.history_mode == constants.HISTORY_MODE.NEW; // TODO: In case of new, need first to insert the record, to get the seq_id
-    var changes = options.changes;
-    var fk_tab = options.table_id || this.table_id;
-    var seq_id = options.seq_id;
-    var user_id = req.user_token_session.user;
-    var user_seq_id = req.user_token_session.user_seq_id || 0;
-    var description = '';
-    var get_options = {
+    const now = new Date();
+    const is_new = options.history_mode === constants.HISTORY_MODE.NEW; // TODO: In case of new, need first to insert the record, to get the seq_id
+    const { changes } = options;
+    const fk_tab = options.table_id || this.table_id;
+    const { seq_id } = options;
+    const user_id = req.user_token_session.user;
+    const user_seq_id = req.user_token_session.user_seq_id || 0;
+    let description = '';
+    const get_options = {
       load_all_fields: true,
       force_seq_id: seq_id,
       table: options.table || this.table,
     };
-    var local_connection = false;
+    let local_connection = false;
     if (options && options.connection) {
       get_options.connection = options.connection;
       local_connection = options.connection;
     }
-    var data_id = '-';
-    var old_data = {};
-    var new_data = {};
-    new nseq().do([
+    let data_id = '-';
+    let old_data = {};
+    let new_data = {};
+    new Nseq().do([
       (self) => {
         self.next();
       },
@@ -528,7 +556,7 @@ class BaseModel {
       (self) => {
         if (is_new) {
           this.base_get(req, res, get_options, (err, _new_data) => {
-            if (typeof _new_data == 'undefined' || typeof _new_data.data == 'undefined') {
+            if (typeof _new_data === 'undefined' || typeof _new_data.data === 'undefined') {
               _new_data = { data: {} };
             }
             new_data = _new_data.data;
@@ -539,70 +567,65 @@ class BaseModel {
           });
         } else {
           this.base_get(req, res, get_options, (err, _old_data) => {
-            if (typeof _old_data == 'undefined' || typeof _old_data.data == 'undefined') {
+            if (typeof _old_data === 'undefined' || typeof _old_data.data === 'undefined') {
               _old_data = { data: {} };
             }
             old_data = _old_data.data;
-            var change_keys = Object.keys(changes);
+            const change_keys = Object.keys(changes);
 
-            async.mapLimit(
-              change_keys,
-              1,
-              (key, done) => {
-                var old_val = old_data[key];
-                if (typeof old_data[key] == 'undefined') {
-                  old_val = '?';
-                }
-                var new_val = changes[key];
-                if (old_val == null || old_val == false) {
-                  old_val = '';
-                }
-                if (new_val == null || new_val == false) {
-                  new_val = '';
-                }
-                if (old_val == new_val) {
-                  // D0 nothing
-                } else if (do_not_log_fields.indexOf(key) > -1) {
-                  // D0 nothing
-                } else {
-                  new_data[key] = new_val;
-                }
-                done();
-              },
-              (err, _allDone) => {
-                if (err) {
-                  return cb(err);
-                }
-                self.next();
+            async.mapLimit(change_keys, 1, (key, done) => {
+              let old_val = old_data[key];
+              if (typeof old_data[key] === 'undefined') {
+                old_val = '?';
               }
-            );
+              let new_val = changes[key];
+              if (old_val === null || old_val === false) {
+                old_val = '';
+              }
+              if (new_val === null || new_val === false) {
+                new_val = '';
+              }
+              if (old_val === new_val) {
+                // D0 nothing
+              } else if (do_not_log_fields.indexOf(key) > -1) {
+                // D0 nothing
+              } else {
+                new_data[key] = new_val;
+              }
+              done();
+            }, (err2, _allDone) => {
+              if (err2) {
+                return cb(err2 || err);
+              }
+              self.next();
+            });
           });
         }
       },
       (self) => {
         // FIXME: FIX this part. On the table config at settings, should have information about the virtual PK
-        // if (fk_tab == constants.TABLE_ID.CERTIFICATE) {
+        // if (fk_tab === constants.TABLE_ID.CERTIFICATE) {
         //   if (this.ifNull(old_data.certificate_management_number).length > 0) {
         //     data_id = old_data.certificate_management_number;
         //   } else if (this.ifNull(new_data.certificate_management_number).length > 0) {
         //     data_id = new_data.certificate_management_number;
         //   }
         //   self.next();
-        // } else if (fk_tab == constants.TABLE_ID.CERTIFICATE_SOFTWARE) {
+        // } else if (fk_tab === constants.TABLE_ID.CERTIFICATE_SOFTWARE) {
         //   if (this.ifNull(old_data.certificate_software_number).length > 0) {
         //     data_id = old_data.certificate_software_number;
         //   } else if (this.ifNull(new_data.certificate_software_number).length > 0) {
         //     data_id = new_data.certificate_software_number;
         //   }
         //   self.next();
-        // } else if (fk_tab == constants.TABLE_ID.DEVICE_EMBEDDED_INFORMATION) {
+        // } else if (fk_tab === constants.TABLE_ID.DEVICE_EMBEDDED_INFORMATION) {
         //   if (this.ifNull(old_data.device_control_number).length > 0) {
         //     data_id = old_data.device_control_number;
         //   } else if (this.ifNull(new_data.device_control_number).length > 0) {
         //     data_id = new_data.device_control_number;
         //   }
         //   self.next();
-        // } else if (fk_tab == constants.TABLE_ID.DEVICE_EMBEDDED_DETAIL) {
+        // } else if (fk_tab === constants.TABLE_ID.DEVICE_EMBEDDED_DETAIL) {
         //   if (this.ifNull(old_data.ref_id).length > 0) {
         //     data_id = old_data.ref_id;
         //   } else if (this.ifNull(new_data.ref_id).length > 0) {
@@ -610,20 +633,19 @@ class BaseModel {
         //   }
         //   self.next();
         // } else {
-          data_id = 'test ' + fk_tab;
-          self.next();
+        data_id = `test ${fk_tab}`;
+        self.next();
         // }
       },
       (self) => {
-        var local_fields = this.get_fields().fields;
+        const local_fields = this.get_fields().fields;
         if (local_fields) {
-          var change_keys = Object.keys(changes);
-          async.mapLimit(
-            change_keys,
+          const change_keys = Object.keys(changes);
+          async.mapLimit(change_keys,
             1,
             (key, done) => {
               if (local_fields[key] && this.ifNull(local_fields[key].label).length > 0 && key.indexOf('seq_id') < 0) {
-                description += local_fields[key].label + ":'" + changes[key] + "';";
+                description += `${local_fields[key].label}:'${changes[key]}';`;
               }
               done();
             },
@@ -632,11 +654,10 @@ class BaseModel {
                 return cb(err);
               }
               if (description.length > 510) {
-                description = description.substring(0, 508) + '...';
+                description = `${description.substring(0, 508)}...`;
               }
               self.next();
-            }
-          );
+            });
         } else {
           self.next();
         }
@@ -644,27 +665,30 @@ class BaseModel {
       (self) => {
         self.next();
       },
-      (self) => {
-        var log_changes = {
+      (_self) => {
+        const log_changes = {
           change_time: now,
-          user_id: user_id,
+          user_id,
           user_seq_id: user_seq_id || 0,
-          fk_tab: fk_tab,
+          fk_tab,
           fk_id: seq_id,
-          data_id: data_id,
+          data_id,
           mode: options.history_mode || 0,
-          description: description,
+          description,
           old_data: JSON.stringify(old_data),
           new_data: JSON.stringify(new_data),
         };
-        if (options.history_mode == constants.HISTORY_MODE.UPDATE && Object.keys(new_data).length == 0) {
+        if (options.history_mode === constants.HISTORY_MODE.UPDATE && Object.keys(new_data).length === 0) {
           // Dont need to save the log.
           return cb();
-        } else if (options.history_mode == constants.HISTORY_MODE.UPDATE && Object.keys(new_data).length == 1 && typeof new_data['last_update_date'] != 'undefined') {
-          // Dont need to save the log only for last_update_date.
-          return cb();
         }
-        DataUtil.query('INSERT INTO change_history SET ?', log_changes, { connection: local_connection }, (err, result) => {
+        if (options.history_mode === constants.HISTORY_MODE.UPDATE && Object.keys(new_data).length === 1) {
+          if (typeof new_data.last_update_date !== 'undefined') {
+            // Dont need to save the log only for last_update_date.
+            return cb();
+          }
+        }
+        DataUtil.query('INSERT INTO change_history SET ?', log_changes, { connection: local_connection }, (err, _result) => {
           cb(err);
         });
       },
@@ -672,98 +696,95 @@ class BaseModel {
   }
 
   base_check_pk(mode, changes, req, res, options, cb) {
-    if (mode == 'update' && typeof changes[this.pk] == 'undefined') {
+    if (mode === 'update' && typeof changes[this.pk] === 'undefined') {
       return cb(null);
     }
     if (this.allow_empty_pk) {
-      if (typeof changes[this.pk] == 'undefined' || changes[this.pk] == null || changes[this.pk] == false || changes[this.pk].trim() == '') {
+      if (typeof changes[this.pk] === 'undefined' || changes[this.pk] === null || changes[this.pk] === false || changes[this.pk].trim() === '') {
         changes[this.pk] = '';
         return cb(null);
       }
     }
-    var sql = 'SELECT count(*) as qty FROM ' + this.table + ' WHERE ' + this.pk + ' = ? ';
-    var params = [changes[this.pk]];
-    if (mode == 'update') {
-      sql += ' AND seq_id != ?';
+    let sql = `SELECT count(*) as qty FROM ${this.table} WHERE ${this.pk} = ? `;
+    const params = [changes[this.pk]];
+    if (mode === 'update') {
+      sql += ' AND seq_id !== ?';
       params.push(req.params.id);
     }
     DataUtil.query(sql, params, {}, (err, data) => {
-      if (!data || data.length == 0) {
-        err = 'Failed to load PK data.' + sql + ' / [' + params.join(',') + ']';
+      if (!data || data.length === 0) {
+        err = `Failed to load PK data.${sql} / [${params.join(',')}]`;
       }
       if (err) {
         console.log('Error while check the PK', err);
         return cb(err);
       }
-      if (data[0].qty != 0) {
+      if (data[0].qty !== 0) {
         if (this.table && this.table.indexOf('master_user') > -1) {
-          return cb('ユーザID　' + '=　' + changes[this.pk] + '　はすでに登録されています。');
-        } else {
-          return cb('PK ' + this.pk + '=' + changes[this.pk] + ' はすでに登録されています。');
+          return cb(`ユーザID = ${changes[this.pk]} はすでに登録されています。`);
         }
-      } else {
-        return cb(null);
+        return cb(`PK ${this.pk}=${changes[this.pk]} はすでに登録されています。`);
       }
+      return cb(null);
     });
   }
+
   base_delete(req, res, options = {}, cb = false) {
-    var seq_id = req.body.seq_id;
-    var seq_id_match3 = req.body.seq_id_match3;
-    if (seq_id * 3 != seq_id_match3) {
+    const { seq_id } = req.body;
+    const { seq_id_match3 } = req.body;
+    if (seq_id * 3 !== seq_id_match3) {
       return ResponseUtil.response(req, res, {}, 'Invalid seq_id_match3 value', {}, cb);
-    } else {
-      new nseq().do([
-        (self) => {
-          self.next();
-        },
-        (self) => {
-          if (options.save_change_history == true) {
-            var ops = {
-              changes: {},
-              seq_id,
-              history_mode: constants.HISTORY_MODE.DELETE,
-              requester: 'base_model/base_delete/' + this.table,
-              table_id: options.table_id,
-            };
-            if (options && options.connection) {
-              ops.connection = options.connection;
-            }
-            this.base_save_change_history(req, res, ops, (err) => {
-              if (err) {
-                console.log('ERROR TO SAVE base_ set_log_history', err);
-                return ResponseUtil.response(req, res, null, err, {}, cb);
-              }
-              self.next();
-            });
-          } else {
-            self.next();
-          }
-        },
-        (self) => {
-          req.log.info({ seq_id, table: this.table }, 'Delete a record');
-          DataUtil.query('DELETE FROM ' + this.table + ' WHERE seq_id = ?;', seq_id, options, (err, result) => {
-            return ResponseUtil.response(req, res, result, err, {}, cb);
-          });
-        },
-      ]);
     }
+    new Nseq().do([
+      (self) => {
+        self.next();
+      },
+      (self) => {
+        if (options.save_change_history === true) {
+          const ops = {
+            changes: {},
+            seq_id,
+            history_mode: constants.HISTORY_MODE.DELETE,
+            requester: `base_model/base_delete/${this.table}`,
+            table_id: options.table_id,
+          };
+          if (options && options.connection) {
+            ops.connection = options.connection;
+          }
+          this.base_save_change_history(req, res, ops, (err) => {
+            if (err) {
+              console.log('ERROR TO SAVE base_ set_log_history', err);
+              return ResponseUtil.response(req, res, null, err, {}, cb);
+            }
+            self.next();
+          });
+        } else {
+          self.next();
+        }
+      },
+      (_self) => {
+        req.log.info({ seq_id, table: this.table }, 'Delete a record');
+        DataUtil.query(`DELETE FROM ${this.table} WHERE seq_id = ?;`, seq_id, options, (err, result) => ResponseUtil.response(req, res, result, err, {}, cb));
+      },
+    ]);
   }
+
   parse_upd_changed(changes, seq_id = false) {
-    var data_type = this.get_fields().fields;
-    var upd_query = 'UPDATE ' + this.table + ' SET ';
-    var upd_data = [];
-    var comma = '';
-    for (var key in changes) {
-      if (key == 'last_changed_uuid' || key == 'bulk_last_changed_uuid') {
+    const data_type = this.get_fields().fields;
+    let upd_query = `UPDATE ${this.table} SET `;
+    const upd_data = [];
+    let comma = '';
+    for (const key in changes) {
+      if (key === 'last_changed_uuid' || key === 'bulk_last_changed_uuid') {
         // Will set a new last_changed_uuid.
-        upd_query += comma + '`last_changed_uuid`=?';
+        upd_query += `${comma}\`last_changed_uuid\`=?`;
         upd_data.push(moment(new Date()).format('YYYYMMDD_HHmmss_') + uuid.v4());
-      } else if (changes[key] == null) {
-        upd_query += comma + '`' + key + '`=NULL';
+      } else if (changes[key] === null) {
+        upd_query += `${comma}\`${key}\`=NULL`;
       } else {
-        upd_query += comma + '`' + key + '`=?';
-        if (typeof data_type[key] != 'undefined' && data_type[key].type.indexOf('date') > -1) {
-          var date_obj = new Date(changes[key]);
+        upd_query += `${comma}\`${key}\`=?`;
+        if (typeof data_type[key] !== 'undefined' && data_type[key].type.indexOf('date') > -1) {
+          const date_obj = new Date(changes[key]);
           upd_data.push(date_obj);
         } else {
           upd_data.push(changes[key]);
@@ -771,12 +792,14 @@ class BaseModel {
       }
       comma = ', ';
     }
-    if (seq_id && isNaN(seq_id) == false && seq_id > -1) {
+    if (seq_id && Number.isNaN(seq_id) === false && seq_id > -1) {
       upd_query += ' WHERE seq_id = ?';
       upd_data.push(seq_id);
-      if (typeof changes.last_changed_uuid != 'undefined' && (changes.last_changed_uuid + '').length > 30 && this.form_fields && this.form_fields.indexOf('last_changed_uuid') > -1) {
-        upd_query += ' AND last_changed_uuid = ?';
-        upd_data.push(changes.last_changed_uuid);
+      if (typeof changes.last_changed_uuid !== 'undefined' && (`${changes.last_changed_uuid}`).length > 30) {
+        if (this.form_fields && this.form_fields.indexOf('last_changed_uuid') > -1) {
+          upd_query += ' AND last_changed_uuid = ?';
+          upd_data.push(changes.last_changed_uuid);
+        }
       }
     } else {
       upd_query += ' WHERE seq_id = -1';
@@ -784,26 +807,25 @@ class BaseModel {
     return { upd_query, upd_data };
   }
 
-  base_save_from_import(data, options, cb) {
-    DataUtil.query('INSERT INTO ' + this.table + ' SET ?', data, options, (err, data) => {
-      return cb(err, data);
-    });
+  base_save_from_import(save_data, options, cb) {
+    DataUtil.query(`INSERT INTO ${this.table} SET ?`, save_data, options, (err, data) => cb(err, data));
   }
+
   base_datasource_sort_parser(req, def = 'seq_id') {
-    var sort = req.body.sort || false;
-    var orderby = def || 'seq_id';
+    const sort = req.body.sort || false;
+    let orderby = def || 'seq_id';
     if (sort) {
-      var temp_order_by = '';
+      let temp_order_by = '';
       sort.forEach((s) => {
         if (['button_options', 'more_details'].indexOf(s.colId) < 0) {
-          if (s.colId == 'id') {
+          if (s.colId === 'id') {
             s.colId = 'seq_id';
           }
-          var d = s.sort == 'desc' ? 'DESC' : 'ASC';
+          const d = s.sort === 'desc' ? 'DESC' : 'ASC';
           if (temp_order_by.length > 0) {
             temp_order_by += ', ';
           }
-          temp_order_by += ' ' + s.colId + ' ' + d;
+          temp_order_by += ` ${s.colId} ${d}`;
         }
       });
       if (temp_order_by.length > 0) {
@@ -812,106 +834,107 @@ class BaseModel {
     }
     return orderby;
   }
+
   base_datasource_filter_parser(req, condition, params) {
-    var filter = req.body.filter || false;
-    var fcondition = '';
-    var r_block1 = '';
-    var r_block2 = '';
-    var r_block3 = '';
-    var r_block1_field = ''; // search_with_between step5.1
-    var r_block2_field = '';
-    var r_block3_field = '';
-    var r_block1_val = '';
-    var r_block2_val = '';
-    var r_block3_val = '';
+    const filter = req.body.filter || false;
+    let fcondition = '';
+    let r_block1 = '';
+    let r_block2 = '';
+    let r_block3 = '';
+    let r_block1_field = ''; // search_with_between step5.1
+    let r_block2_field = '';
+    let r_block3_field = '';
+    let r_block1_val = '';
+    let r_block2_val = '';
+    let r_block3_val = '';
 
     [1, 2, 3].forEach((f) => {
-      var temp_condition = '';
-      if (filter && filter[f] && filter[f].value && filter[f].value.length > 0 && filter[f].field && filter[f].field.indexOf('emulate_search') != 0) {
-        if (this.get_fields().fields[filter[f].field] && this.get_fields().fields[filter[f].field].exact_value == true) {
+      let temp_condition = '';
+      if (filter && filter[f] && filter[f].value && filter[f].value.length > 0 && filter[f].field && filter[f].field.indexOf('emulate_search') !== 0) {
+        if (this.get_fields().fields[filter[f].field] && this.get_fields().fields[filter[f].field].exact_value === true) {
           filter[f].exact_value = true;
         }
-        var val = filter[f].value;
-        if (filter[f].starting_with == true) {
-          temp_condition += filter[f].field + ' LIKE ?';
-          val = '' + val + '%';
-        } else if (filter[f].exact_value == true) {
-          temp_condition += filter[f].field + ' = ?';
-        } else if (val == 'SELECTED_EMPTY_SELECT_BOX') {
-          temp_condition += ' (' + filter[f].field + ' = ? OR ' + filter[f].field + ' IS NULL ) ';
+        let val = filter[f].value;
+        if (filter[f].starting_with === true) {
+          temp_condition += `${filter[f].field} LIKE ?`;
+          val = `${val}%`;
+        } else if (filter[f].exact_value === true) {
+          temp_condition += `${filter[f].field} = ?`;
+        } else if (val === 'SELECTED_EMPTY_SELECT_BOX') {
+          temp_condition += ` (${filter[f].field} = ? OR ${filter[f].field} IS NULL ) `;
           val = '';
-        } else if (val == 'NOT_EMPTY_VALUE') {
-          temp_condition += ' (' + filter[f].field + ' <> ? AND ' + filter[f].field + ' IS NOT NULL ) ';
+        } else if (val === 'NOT_EMPTY_VALUE') {
+          temp_condition += ` (${filter[f].field} <> ? AND ${filter[f].field} IS NOT NULL ) `;
           val = '';
-        } else if (filter[f].t.indexOf('select') == 0 && filter[f].t.indexOf('select3') < 0) {
-          temp_condition += filter[f].field + ' = ?';
-        } else if (filter[f].t.indexOf('datetime_picker') == 0 || filter[f].t.indexOf('current_time') == 0 || filter[f].t.indexOf('date_picker') == 0) {
+        } else if (filter[f].t.indexOf('select') === 0 && filter[f].t.indexOf('select3') < 0) {
+          temp_condition += `${filter[f].field} = ?`;
+        } else if (filter[f].t.indexOf('datetime_picker') === 0 || filter[f].t.indexOf('current_time') === 0 || filter[f].t.indexOf('date_picker') === 0) {
           if (val.length > 10) {
-            temp_condition += filter[f].field + ' = ?'; // Search for date and time
+            temp_condition += `${filter[f].field} = ?`; // Search for date and time
           } else {
-            temp_condition += ' DATE(' + filter[f].field + ') = ?'; // Search only for date
+            temp_condition += ` DATE(${filter[f].field}) = ?`; // Search only for date
           }
-        } else if (this.get_fields().fields[filter[f].field] && this.get_fields().fields[filter[f].field].field_type == 'number') {
-          temp_condition += filter[f].field + ' = ?';
+        } else if (this.get_fields().fields[filter[f].field] && this.get_fields().fields[filter[f].field].field_type === 'number') {
+          temp_condition += `${filter[f].field} = ?`;
           // val = '' + val + '';
         } else {
-          temp_condition += filter[f].field + ' LIKE ?';
-          val = '%' + val + '%';
+          temp_condition += `${filter[f].field} LIKE ?`;
+          val = `%${val}%`;
         }
-        if (f == 1) {
+        if (f === 1) {
           r_block1_val = val; // search_with_between step5.2
           r_block1_field = filter[f].field;
           r_block1 = temp_condition;
-        } else if (f == 2) {
+        } else if (f === 2) {
           r_block2_val = val;
           r_block2_field = filter[f].field;
           r_block2 = temp_condition;
-        } else if (f == 3) {
+        } else if (f === 3) {
           r_block3_val = val;
           r_block3_field = filter[f].field;
           r_block3 = temp_condition;
         }
       }
     });
-    if (r_block1.length == 0) {
+    if (r_block1.length === 0) {
       // do nothing
-    } else if (r_block2.length == 0) {
+    } else if (r_block2.length === 0) {
       // only 1
-      fcondition += ' ( ' + r_block1 + ' ) ';
+      fcondition += ` ( ${r_block1} ) `;
       params.push(r_block1_val);
-    } else if (filter.j1 == 'BETWEEN' && r_block1_field == r_block2_field && r_block3.length == 0) {
+    } else if (filter.j1 === 'BETWEEN' && r_block1_field === r_block2_field && r_block3.length === 0) {
       // search_with_between step6
-      //only 2 but is BETWEEN
-      fcondition += ' ( ' + r_block1_field + ' BETWEEN ? AND ?  ) ';
+      // only 2 but is BETWEEN
+      fcondition += ` ( ${r_block1_field} BETWEEN ? AND ?  ) `;
       params.push(r_block1_val);
       params.push(r_block2_val);
-    } else if (r_block3.length == 0) {
-      //only 2
-      fcondition += ' ( ( ' + r_block1 + ' ) ' + filter.j1 + ' ( ' + r_block2 + ' ) ) ';
+    } else if (r_block3.length === 0) {
+      // only 2
+      fcondition += ` ( ( ${r_block1} ) ${filter.j1} ( ${r_block2} ) ) `;
       params.push(r_block1_val);
       params.push(r_block2_val);
     } else {
       // are 3
-      var add_3_params = true;
-      if (filter.j1 == 'OR' && filter.j2 == 'OR') {
-        fcondition += ' ( ( ' + r_block1 + ' ) ' + filter.j1 + ' ( ' + r_block2 + ' ) ' + filter.j2 + ' ( ' + r_block3 + ' ) ) ';
-      } else if (filter.j1 == 'AND' && filter.j2 == 'AND') {
-        fcondition += ' ( ( ' + r_block1 + ' ) ' + filter.j1 + ' ( ' + r_block2 + ' ) ' + filter.j2 + ' ( ' + r_block3 + ' ) ) ';
-      } else if (filter.j1 == 'AND' && filter.j2 == 'OR') {
-        fcondition += ' ( ( ' + r_block1 + ' ) ' + filter.j1 + ' ( ( ' + r_block2 + ' ) ' + filter.j2 + ' ( ' + r_block3 + ' ) ) ) ';
-      } else if (filter.j1 == 'OR' && filter.j2 == 'AND') {
-        fcondition += ' ( (( ' + r_block1 + ' ) ' + filter.j1 + ' ( ' + r_block2 + ' )) ' + filter.j2 + ' ( ' + r_block3 + ' ) ) ';
-      } else if (filter.j1 == 'BETWEEN' && filter.j2 == 'OR' && r_block1_field == r_block2_field) {
+      let add_3_params = true;
+      if (filter.j1 === 'OR' && filter.j2 === 'OR') {
+        fcondition += ` ( ( ${r_block1} ) ${filter.j1} ( ${r_block2} ) ${filter.j2} ( ${r_block3} ) ) `;
+      } else if (filter.j1 === 'AND' && filter.j2 === 'AND') {
+        fcondition += ` ( ( ${r_block1} ) ${filter.j1} ( ${r_block2} ) ${filter.j2} ( ${r_block3} ) ) `;
+      } else if (filter.j1 === 'AND' && filter.j2 === 'OR') {
+        fcondition += ` ( ( ${r_block1} ) ${filter.j1} ( ( ${r_block2} ) ${filter.j2} ( ${r_block3} ) ) ) `;
+      } else if (filter.j1 === 'OR' && filter.j2 === 'AND') {
+        fcondition += ` ( (( ${r_block1} ) ${filter.j1} ( ${r_block2} )) ${filter.j2} ( ${r_block3} ) ) `;
+      } else if (filter.j1 === 'BETWEEN' && filter.j2 === 'OR' && r_block1_field === r_block2_field) {
         // search_with_between step8
-        fcondition += ' ( ( ' + r_block2_field + ' BETWEEN ? AND ?   ) ' + filter.j2 + ' ( ' + r_block3 + ' ) ) ';
-      } else if (filter.j1 == 'BETWEEN' && filter.j2 == 'AND' && r_block1_field == r_block2_field) {
-        fcondition += ' ( (  ' + r_block2_field + ' BETWEEN ? AND ?   ) ' + filter.j2 + ' ( ' + r_block3 + ' ) ) ';
-      } else if (filter.j1 == 'AND' && filter.j2 == 'BETWEEN' && r_block3_field == r_block2_field) {
-        fcondition += ' ( ( ' + r_block1 + ' ) ' + filter.j1 + ' ( (  ' + r_block2_field + ' BETWEEN ? AND ?  ) ) ) ';
-      } else if (filter.j1 == 'OR' && filter.j2 == 'BETWEEN' && r_block3_field == r_block2_field) {
-        fcondition += ' ( ( ' + r_block1 + ' ) ' + filter.j1 + ' (  ' + r_block2_field + ' BETWEEN ? AND ?   ) ) ';
-      } else if (filter.j1 == 'BETWEEN' && filter.j2 == 'BETWEEN' && r_block1_field == r_block2_field && r_block3_field == r_block2_field) {
-        fcondition += ' ( (  ' + r_block2_field + ' BETWEEN ? AND ?  ) OR (  ' + r_block2_field + ' BETWEEN ? AND ?   ) ) ';
+        fcondition += ` ( ( ${r_block2_field} BETWEEN ? AND ?   ) ${filter.j2} ( ${r_block3} ) ) `;
+      } else if (filter.j1 === 'BETWEEN' && filter.j2 === 'AND' && r_block1_field === r_block2_field) {
+        fcondition += ` ( (  ${r_block2_field} BETWEEN ? AND ?   ) ${filter.j2} ( ${r_block3} ) ) `;
+      } else if (filter.j1 === 'AND' && filter.j2 === 'BETWEEN' && r_block3_field === r_block2_field) {
+        fcondition += ` ( ( ${r_block1} ) ${filter.j1} ( (  ${r_block2_field} BETWEEN ? AND ?  ) ) ) `;
+      } else if (filter.j1 === 'OR' && filter.j2 === 'BETWEEN' && r_block3_field === r_block2_field) {
+        fcondition += ` ( ( ${r_block1} ) ${filter.j1} (  ${r_block2_field} BETWEEN ? AND ?   ) ) `;
+      } else if (filter.j1 === 'BETWEEN' && filter.j2 === 'BETWEEN' && r_block1_field === r_block2_field && r_block3_field === r_block2_field) {
+        fcondition += ` ( (  ${r_block2_field} BETWEEN ? AND ?  ) OR (  ${r_block2_field} BETWEEN ? AND ?   ) ) `;
         params.push(r_block1_val);
         params.push(r_block2_val);
         params.push(r_block2_val);
@@ -921,32 +944,36 @@ class BaseModel {
         // It should return an error
         return { condition: '', params, error: 'Unexpected BETWEEN condition' };
       }
-      if (add_3_params == true) {
+      if (add_3_params === true) {
         params.push(r_block1_val);
         params.push(r_block2_val);
         params.push(r_block3_val);
       }
     }
 
-    if (condition != '' && fcondition != '') {
-      condition = ' WHERE ' + condition + ' AND ( ' + fcondition + ' )';
-    } else if (condition != '' && fcondition == '') {
-      condition = ' WHERE ' + condition;
-    } else if (condition == '' && fcondition != '') {
-      condition = ' WHERE ( ' + fcondition + ' )';
+    if (condition !== '' && fcondition !== '') {
+      condition = ` WHERE ${condition} AND ( ${fcondition} )`;
+    } else if (condition !== '' && fcondition === '') {
+      condition = ` WHERE ${condition}`;
+    } else if (condition === '' && fcondition !== '') {
+      condition = ` WHERE ( ${fcondition} )`;
     }
-    console.log('base_datasource_filter_parser', { fcondition, params, condition, filter });
+    console.log('base_datasource_filter_parser', {
+      fcondition, params, condition, filter,
+    });
     return { condition, params, error: false };
   }
+
   reset_cache() {
     cache.reset();
   }
+
   cached_query(sql, params, options, cb) {
-    var cache_key = false;
+    let cache_key = false;
     if (options.cache_ttl > 0) {
       cache_key = JSON.stringify({ sql, params });
-      var cached = cache.get(cache_key);
-      if (typeof cached != 'undefined') {
+      const cached = cache.get(cache_key);
+      if (typeof cached !== 'undefined') {
         return cb(null, cached);
       }
     }
@@ -959,9 +986,9 @@ class BaseModel {
   }
 
   print_query(sql, params) {
-    var temp = _.clone(sql);
+    let temp = _.clone(sql);
     params.forEach((e) => {
-      temp = temp.replace('?', " '" + e + "' ");
+      temp = temp.replace('?', ` '${e}' `);
     });
     return temp;
   }
