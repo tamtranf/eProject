@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import mixinLayoutComponents from '@/mixins/layout-components';
+import mixinLayoutComponents from '@/mixins/layout_components';
 
 export default {
   name: 'e-home',

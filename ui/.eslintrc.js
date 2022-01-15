@@ -20,7 +20,7 @@ module.exports = {
     'import/no-relative-packages': 'off',
     'vue/multi-word-component-names': 'off',
     'vue/no-side-effects-in-computed-properties': 'off',
-    'operator-linebreak': ['error', 'none'],
+    'operator-linebreak': ['error', 'none', { overrides: { '&&': 'ignore', '||': 'ignore' } }],
     'max-len': ['error', { code: 160 }],
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'import/no-dynamic-require': 'off',
@@ -28,6 +28,7 @@ module.exports = {
     'no-param-reassign': ['error', { props: false }],
     'global-require': 'off',
     'no-console': 'off',
+    'no-alert': 'off',
     'import/extensions': ['error', {
       vue: 'never',
     }],

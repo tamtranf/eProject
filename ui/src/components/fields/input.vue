@@ -1,23 +1,32 @@
 <template>
-  <div style="background: red" :class="{ 'col-12': true, 'form-control': true }">Field data sample for {{ fieldID }}</div>
+  <input
+  @input="onLocalUpdateValue($event.target.value)"
+  v-model="field_value"
+  :type="fieldType || 'text'"
+  class="form-control"
+  :style="fieldStyle"
+  :disabled="isDisabled"
+  :min="minVal"
+  :max="maxVal"
+  :id="fieldID"
+  :name="fieldID"
+  :read_only="isReadOnly"
+  :placeholder="fieldID" />
+  {{ refresher }}
 </template>
 <script>
+import common_field from '@/components/fields/mixins/common_field';
+
 export default {
-  name: 'field-label',
+  mixins: [common_field],
+  name: 'field-input',
   data() {
-    return {
-      name: 'Field label',
-    };
+    return {};
   },
-  mixins: [],
   components: {},
-  computed: {
-    fieldID() {
-      return this.$props.fieldInfo.id;
-    },
-  },
+  computed: {},
   methods: {},
-  props: ['fieldInfo'],
+  props: [],
   beforeCreate() {},
   created() {},
   beforeMount() {},

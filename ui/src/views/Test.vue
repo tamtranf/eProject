@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-import mixinLayoutComponents from '@/mixins/layout-components';
+import mixinLayoutComponents from '@/mixins/layout_components';
 import Nseq from 'nseq';
 // import constants from '../../../api/rules/constants';
 import fields from '../../../api/rules/fields_master_user';

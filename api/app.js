@@ -64,7 +64,9 @@ new Nseq().do([
 ]);
 
 if (process.version !== 'v16.13.0') {
-  console.log('Unexpected node version:', process.version);
+  setInterval(() => { console.log('Unexpected node version:', process.version, ' Expected is v16.13.0.\nTo fix it run: \nnvm use v16.13.0 '); }, 1000);
+} else {
+  console.log('Confirmed version:', process.version);
 }
 
 module.exports = app;

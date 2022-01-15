@@ -4,12 +4,15 @@
     <h1>This is the {{ name }} page. Time:{{ testTime }}</h1>
 
     <div class="col-6" style="">
-      <form-field v-for="f in formFields" :key="f.id" :field_info="f"></form-field>
+      <form-field v-for="f in formFields" :key="f.id" :field_info="f" ></form-field>
+      <button class="btn btn-primary" style="float: right;" @click="testbBtn"> Test</button>
     </div>
+
   </div>
 </template>
 <script>
-import mixinLayoutComponents from '@/mixins/layout-components';
+import mixinLayoutComponents from '@/mixins/layout_components';
+import mixinFormController from '@/mixins/form_controller';
 // import constants from '../../../api/rules/constants';
 import fields from '../../../api/rules/fields_master_user';
 
@@ -28,7 +31,7 @@ export default {
       name: 'dev',
     },
   ],
-  mixins: [mixinLayoutComponents],
+  mixins: [mixinLayoutComponents, mixinFormController],
   components: {},
   computed: {
     formFields() {
@@ -46,7 +49,12 @@ export default {
       },
     },
   },
-  methods: {},
+  methods: {
+    testbBtn() {
+      const values = this.getFormFieldsValues();
+      console.log('TEST BTN: ', values);
+    },
+  },
 
   beforeCreate() {
     console.log(`${this.name} beforeCreate`);
@@ -58,15 +66,34 @@ export default {
     console.log(`${this.name} beforeMount`);
   },
   mounted() {
-    setInterval(() => {
-      this.testTime += 1;
-      this.local_fields_ref[0].orig_label = this.local_fields_ref[0].orig_label || this.local_fields_ref[0].label;
-      this.local_fields_ref[0].label = `${this.local_fields_ref[0].orig_label} : ${this.testTime}`;
-    }, 100000);
-    console.log(`${this.name} mounted`);
-    this.$ajax.get('/test/', (err, data) => {
-      console.log('TEST DEBUG 220108 (67 at Dev.vue)[21:42]: ', { err, data });
-    });
+    // this.local_fields_ref[0].ref_field.valueModel = `v ${this.testTime}`;
+
+    // setInterval(() => {
+    // //   this.testTime += 1;
+    // //   this.local_fields_ref[0].orig_label = this.local_fields_ref[0].orig_label || this.local_fields_ref[0].label;
+    // //   this.local_fields_ref[0].label = `${this.local_fields_ref[0].orig_label} : ${this.testTime}`;
+    // //   this.local_fields_ref[0].label = `${this.local_fields_ref[0].orig_label} : ${this.testTime}`;
+    // //   this.local_fields_ref[0].ref_field.setValue(`v ${this.testTime}`);
+    // }, 2000);
+    // setInterval(() => {
+    // }, 1000);
+    // this.local_fields_ref[0].ref_field.onUpdateValue = (v) => {
+    // };
+    // console.log(`${this.name} mounted`);
+    // this.$ajax.get('/test/', (err, data) => {
+    // });
+    const test_data = {
+      seq_id: 1,
+      user_id: 'test_user',
+      user_shimei: 'Test user name',
+      login_failure_count: 37,
+      password: '1234567',
+
+      test1: 'opt3',
+      test2: 'opt2',
+      test3: 215,
+    };
+    this.setFormFields(test_data);
   },
   beforeUpdate() {
     console.log(`${this.name} beforeUpdate`);

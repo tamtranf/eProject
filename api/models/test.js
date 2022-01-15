@@ -1,5 +1,6 @@
 const os = require('os');
 const fs = require('fs');
+const md5 = require('md5');
 const path = require('path');
 const DataUtils = require('../libs/data_utils');
 const ResponseUtils = require('../libs/response_utils');
@@ -26,6 +27,9 @@ class TestModel extends BaseModel {
       },
       test_db: {
         method: 'get', func: 'test_db', path: '/db', no_login: true,
+      },
+      get_options: {
+        method: 'post', func: 'get_options', path: '/get_options', no_login: true,
       },
     };
   }
@@ -91,6 +95,129 @@ class TestModel extends BaseModel {
         ResponseUtils.response(req, res, { data: data[0] });
       });
     });
+  }
+
+  get_options(req, res) {
+    // this is a sample list of options, for test usage, it will not collect it from the DB, but local
+    const list = [
+      {
+        id: 100 + 1, name: 'Microsoft', group: 'opt1', code: 'MS',
+      },
+      {
+        id: 100 + 2, name: 'IBM', group: 'opt1', code: 'IBM',
+      },
+      {
+        id: 100 + 3, name: 'Oracle', group: 'opt1', code: 'O',
+      },
+      {
+        id: 100 + 4, name: 'SAP', group: 'opt1', code: '',
+      },
+      {
+        id: 100 + 5, name: 'Tata Consultancy Services', group: 'opt1', code: 'TCS',
+      },
+      {
+        id: 100 + 6, name: 'PayPal', group: 'opt1', code: 'PP',
+      },
+      {
+        id: 100 + 7, name: 'Salesforce', group: 'opt1', code: 'SF',
+      },
+      {
+        id: 100 + 8, name: 'Fiserv', group: 'opt1', code: 'F',
+      },
+      {
+        id: 100 + 9, name: 'ADP', group: 'opt1', code: 'ADP',
+      },
+      {
+        id: 100 + 10, name: 'Adobe', group: 'opt1', code: 'ADB',
+      },
+      {
+        id: 200 + 11, name: 'Infosys', group: 'opt2', code: 'I',
+      },
+      {
+        id: 200 + 12, name: 'VMware', group: 'opt2', code: 'VW',
+      },
+      {
+        id: 200 + 13, name: 'Global Payments Inc', group: 'opt2', code: 'GPI',
+      },
+      {
+        id: 200 + 14, name: 'Intuit', group: 'opt2', code: 'IT',
+      },
+      {
+        id: 200 + 15, name: 'SS&C Technologies', group: 'opt2', code: 'SSC',
+      },
+      {
+        id: 200 + 16, name: 'NetApp', group: 'opt2', code: 'NA',
+      },
+      {
+        id: 200 + 17, name: 'ServiceNow', group: 'opt2', code: 'SN',
+      },
+      {
+        id: 200 + 18, name: 'Workday', group: 'opt2', code: 'WD',
+      },
+      {
+        id: 200 + 19, name: 'Broadridge Financial Solutions', group: 'opt2', code: 'BFS',
+      },
+      {
+        id: 200 + 20, name: 'Palo Alto Networks ', group: 'opt2', code: 'PAN',
+      },
+      {
+        id: 300 + 21, name: 'Paychex', group: 'opt3', code: 'PC',
+      },
+      {
+        id: 300 + 22, name: 'NortonLifeLock', group: 'opt3', code: 'MLL',
+      },
+      {
+        id: 300 + 23, name: 'Amdocs', group: 'opt3', code: 'ADS',
+      },
+      {
+        id: 300 + 24, name: 'Autodesk', group: 'opt3', code: 'ADK',
+      },
+      {
+        id: 300 + 25, name: 'Synopsys', group: 'opt3', code: 'SYN',
+      },
+      {
+        id: 300 + 26, name: 'Akamai Technologies ', group: 'opt3', code: 'AT',
+      },
+      {
+        id: 300 + 27, name: 'Citrix Systems', group: 'opt3', code: 'CS',
+      },
+      {
+        id: 300 + 28, name: 'Zoom Video Communications', group: 'opt3', code: 'ZVC',
+      },
+      {
+        id: 300 + 29, name: 'Cadence Design Systems ', group: 'opt3', code: 'CDS',
+      },
+      {
+        id: 300 + 30, name: 'Epam systems', group: 'opt3', code: 'ES',
+      },
+      {
+        id: 400 + 31, name: 'Splunk', group: 'opt4', code: 'SPL',
+      },
+      {
+        id: 400 + 32, name: 'Ansys ', group: 'opt4', code: 'AS',
+      },
+      {
+        id: 400 + 33, name: 'Twilio', group: 'opt4', code: 'TWL',
+      },
+      {
+        id: 400 + 34, name: 'Veeva Systems', group: 'opt4', code: 'VS',
+      },
+      {
+        id: 400 + 35, name: 'DocuSign', group: 'opt4', code: 'DS',
+      },
+      {
+        id: 400 + 36, name: 'RingCentral ', group: 'opt4', code: 'RC',
+      },
+      {
+        id: 400 + 37, name: 'Palantir Technologies ', group: 'opt4', code: 'PT',
+      },
+    ];
+    list.forEach((l) => {
+      l.key = md5(l.id);
+      l.key2 = md5(l.id * l.id);
+      l.name = `${l.id} ${l.name}`;
+    });
+    ResponseUtils.response(req, res, { list });
   }
 }
 

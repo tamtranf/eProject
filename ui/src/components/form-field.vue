@@ -6,9 +6,8 @@
       <div v-if="fieldInfo.type === types.INPUT">
         <input-box
           :field-info="fieldInfo"
-          :value="valInfo"
           :option="optionInfo"
-          :read="readOnly"
+          :read_only="readOnly"
           @error_msg="onErrorMsg"
           @on_update="onUpdate"
         ></input-box>
@@ -16,22 +15,22 @@
       <div v-else-if="fieldInfo.type === types.SELECT_BOX">
         <select-box
           @on_update="onUpdate"
-          :field-info="fieldInfo" :value="valInfo" :option="optionInfo" :read="readOnly"></select-box>
+          :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></select-box>
       </div>
       <div v-else-if="fieldInfo.type === types.DATE_PICKER  || fieldInfo.type === types.CURRENT_TIME || fieldInfo.type === types.DATETIME_PICKER">
-        <date-box :field-info="fieldInfo" :value="valInfo" :option="optionInfo" :read="readOnly"></date-box>
+        <date-box :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></date-box>
       </div>
       <div v-else-if="fieldInfo.type === types.PASSWORD">
-        <password-box :field-info="fieldInfo" :value="valInfo" :option="optionInfo" :read="readOnly"></password-box>
+        <password-box :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></password-box>
       </div>
       <div v-else-if="fieldInfo.type === types.RADIO_BUTTON">
-        <radio-button :field-info="fieldInfo" :value="valInfo" :option="optionInfo" :read="readOnly"></radio-button>
+        <radio-button :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></radio-button>
       </div>
       <div v-else-if="fieldInfo.type === types.TEXT_AREA">
-        <text-area :field-info="fieldInfo" :value="valInfo" :option="optionInfo" :read="readOnly"></text-area>
+        <text-area :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></text-area>
       </div>
       <div v-else-if="fieldInfo.type === types.CHECKBOX">
-        <check-box :field-info="fieldInfo" :value="valInfo" :option="optionInfo" :read="readOnly"></check-box>
+        <check-box :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></check-box>
       </div>
       <div v-else-if="fieldInfo.type === types.SPACE">
         <div class="form-group e_form_group">
@@ -39,7 +38,7 @@
         </div>
       </div>
     </div>
-    <field-footer :field_footer_label="'Error for '+ fieldInfo.label"></field-footer>
+    <field-footer v-if="false" :field_footer_label="'Error for '+ fieldInfo.label"></field-footer>
 
   </div>
 </template>
