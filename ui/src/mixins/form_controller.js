@@ -23,6 +23,16 @@ export default {
       return base_field.ref_field.getValue();
     },
     setupFieldRelations() {
+      let not_yet_loaded = false;
+      this.local_fields_ref.forEach((field) => {
+        if (typeof field.ref_field == 'undefined') {
+          console.log('Failed to load setupFieldRelations at field ', { id: field.id });
+          not_yet_loaded = true;
+        }
+      });
+      if (not_yet_loaded) {
+        return false;
+      }
       this.local_fields_ref.forEach((field) => {
         field.ref_field.getGlobalValue = this.getGlobalValue;
         const has_remote_watch = _.get(field, 'api.filter.remote_watch', false);
@@ -44,9 +54,16 @@ export default {
           }
         }
       });
+      return true;
     },
   },
   mounted() {
-    this.setupFieldRelations();
+    if (this.setupFieldRelations() === false) {
+      setTimeout(() => {
+        if (this.setupFieldRelations() === false) {
+          console.log('Failed to load setupFieldRelations');
+        }
+      }, 100);
+    }
   },
 };

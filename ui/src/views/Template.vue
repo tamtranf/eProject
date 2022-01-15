@@ -53,7 +53,7 @@ export default {
     console.log(`${this.name} errorCaptured`);
   },
   renderTracked() {
-    console.log(`${this.name} renderTracked`);
+
   },
   renderTriggered() {
     console.log(`${this.name} renderTriggered`);

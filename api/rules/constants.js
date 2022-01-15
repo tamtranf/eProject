@@ -17,7 +17,6 @@ module.exports = {
     RADIO_BUTTON: 'radio_button',
     INPUT: 'input',
     DATE_PICKER: 'date_picker',
-    DATETIME_PICKER: 'datetime_picker',
     CURRENT_TIME: 'current_time',
     PASSWORD: 'password',
     TEXT_AREA: 'text_area',

@@ -88,7 +88,8 @@ export default {
       user_shimei: 'Test user name',
       login_failure_count: 37,
       password: '1234567',
-
+      my_date1: '2021/12/20 12:43',
+      my_date2: '2021/12/21 12:45',
       test1: 'opt3',
       test2: 'opt2',
       test3: 215,
@@ -111,7 +112,7 @@ export default {
     console.log(`${this.name} errorCaptured`);
   },
   renderTracked() {
-    console.log(`${this.name} renderTracked`);
+
   },
   renderTriggered() {
     console.log(`${this.name} renderTriggered`);

@@ -17,7 +17,7 @@
           @on_update="onUpdate"
           :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></select-box>
       </div>
-      <div v-else-if="fieldInfo.type === types.DATE_PICKER  || fieldInfo.type === types.CURRENT_TIME || fieldInfo.type === types.DATETIME_PICKER">
+      <div v-else-if="fieldInfo.type === types.DATE_PICKER  || fieldInfo.type === types.CURRENT_TIME">
         <date-box :field-info="fieldInfo" :option="optionInfo" :read_only="readOnly"></date-box>
       </div>
       <div v-else-if="fieldInfo.type === types.PASSWORD">

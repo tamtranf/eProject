@@ -13,14 +13,12 @@ const arr = [
   //     "下書中", // In draft
   //     "差戻",
   //   ],
-  //   import: { enabled: false },
   // },
   {
     id: 'user_id',
     label: 'ユーザID',
     type: TYPES.INPUT,
     error_if_blank: true,
-    import: { enabled: true },
     export: {
       enabled: true,
       sequence: 1000,
@@ -32,7 +30,6 @@ const arr = [
     label: 'ユーザ氏名（ﾌﾙﾈｰﾑ）',
     type: TYPES.INPUT,
     error_if_blank: true,
-    import: { enabled: true },
     export: {
       enabled: true,
       sequence: 1000,
@@ -52,7 +49,6 @@ const arr = [
   //     "保守担当"                    // Maintenance staff      // Hoshu tantō
   //   ],
 
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -96,7 +92,6 @@ const arr = [
   //   api:"/master_belongs/list_department_for_user_control",
   //   api_field_name:"department",
   //   page_controller:true,
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -123,7 +118,6 @@ const arr = [
   //   page_controller:true,
   //   api: "/master_belongs/list_department_for_user_control",
   //   api_field_name:"team",
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -180,14 +174,12 @@ const arr = [
     id: 'login_failure_count',
     label: 'ログイン失敗回数',
     type: TYPES.INPUT,
-    import: { enabled: true },
   },
   {
     id: 'password',
     label: 'パスワード',
     type: TYPES.PASSWORD,
     error_if_blank: true,
-    import: { enabled: false },
   },
   // {
   //   id: "mail_address",
@@ -195,14 +187,21 @@ const arr = [
   //   type: TYPES.EMAIL,
   //   error_if_blank:true,
   //   options: ["@mizuhofg.co.jp","@mizuho-bk.co.jp","@mizuhotb.co.jp"],
-  //   import: { enabled: true },
   // },
-  // {
-  //   id: "last_login_date",
-  //   label: "最終ログイン日時",
-  //   type: TYPES.DATETIME_PICKER,
-  //   import: { enabled: false },
-  // },
+  {
+    id: 'my_date1',
+    label: 'My Date',
+    type: TYPES.DATE_PICKER,
+    show_time: false,
+    format: 'YYYY/MM/DD',
+  },
+  {
+    id: 'my_date2',
+    label: 'My Date Time',
+    type: TYPES.DATE_PICKER,
+    show_time: true,
+    format: 'YYYY/MM/DD HH:mm',
+  },
   // {
   //   id: "last_password_changed_date",
   //   label: "パスワード最終更新日",
@@ -234,7 +233,6 @@ const arr = [
   //   label: "兼務設定【１】",
   //   type: TYPES.CHECKBOX,
   //   global_emit:"authority_1_selected",
-  //   import: { enabled: false },
   // },
   // {
   //   id: "role_1",
@@ -248,7 +246,6 @@ const arr = [
   //     "システム管理者",              // System Administrator
   //     "保守担当"                    // Maintenance staff
   //   ],
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -278,7 +275,6 @@ const arr = [
   //   error_if_blank:true,
   //   api:"/master_belongs/list_department_for_user_control",
   //   api_field_name:"department",
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -294,7 +290,6 @@ const arr = [
   //   api: "/master_belongs/list_department_for_user_control",
   //   api_field_name:"team",
   //   page_controller:true,
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -306,7 +301,6 @@ const arr = [
   //   label: "兼務設定【２】",
   //   type: TYPES.CHECKBOX,
   //   global_emit:"authority_2_selected",
-  //   import: { enabled: false },
   // },
   // {
   //   id: "role_2",
@@ -320,7 +314,6 @@ const arr = [
   //     "システム管理者",              // System Administrator
   //     "保守担当"                    // Maintenance staff
   //   ],
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -350,7 +343,6 @@ const arr = [
   //   error_if_blank:true,
   //   api:"/master_belongs/list_department_for_user_control",
   //   api_field_name:"department",
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
@@ -366,7 +358,6 @@ const arr = [
   //   api: "/master_belongs/list_department_for_user_control",
   //   api_field_name:"team",
   //   page_controller:true,
-  //   import: { enabled: true },
   //   export: {
   //     enabled: true,
   //     sequence: 1000,

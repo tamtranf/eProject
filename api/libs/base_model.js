@@ -868,7 +868,7 @@ class BaseModel {
           val = '';
         } else if (filter[f].t.indexOf('select') === 0 && filter[f].t.indexOf('select3') < 0) {
           temp_condition += `${filter[f].field} = ?`;
-        } else if (filter[f].t.indexOf('datetime_picker') === 0 || filter[f].t.indexOf('current_time') === 0 || filter[f].t.indexOf('date_picker') === 0) {
+        } else if (filter[f].t.indexOf('current_time') === 0 || filter[f].t.indexOf('date_picker') === 0) {
           if (val.length > 10) {
             temp_condition += `${filter[f].field} = ?`; // Search for date and time
           } else {
