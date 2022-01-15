@@ -8,12 +8,20 @@
       <button class="btn btn-primary" style="float: right;" @click="testbBtn"> Test</button>
     </div>
 
+    <div class="col-12" style="">
+      <ag-grid-vue style="width: 800px; height: 200px;"
+          class="ag-theme-alpine"
+          :columnDefs="columnDefs"
+          :rowData="rowData">
+      </ag-grid-vue>
+    </div>
   </div>
 </template>
 <script>
 import mixinLayoutComponents from '@/mixins/layout_components';
 import mixinFormController from '@/mixins/form_controller';
 // import constants from '../../../api/rules/constants';
+import { AgGridVue } from 'ag-grid-vue3';
 import fields from '../../../api/rules/fields_master_user';
 
 export default {
@@ -23,6 +31,16 @@ export default {
       name: 'Dev',
       test_time: 1,
       local_fields_ref: false,
+      columnDefs: [
+        { headerName: 'Make', field: 'make' },
+        { headerName: 'Model', field: 'model' },
+        { headerName: 'Price', field: 'price' },
+      ],
+      rowData: [
+        { make: 'Toyota', model: 'Celica', price: 35000 },
+        { make: 'Ford', model: 'Mondeo', price: 32000 },
+        { make: 'Porsche', model: 'Boxter', price: 72000 },
+      ],
     };
   },
   routes: [
@@ -32,8 +50,9 @@ export default {
     },
   ],
   mixins: [mixinLayoutComponents, mixinFormController],
-  components: {},
+  components: { AgGridVue },
   computed: {
+
     formFields() {
       if (this.local_fields_ref === false) {
         this.local_fields_ref = fields.fields.array.filter((f) => typeof f.label !== 'undefined');
