@@ -27,6 +27,7 @@ const config = {
   tables: [
     'master_user',
     'master_test',
+    'master_template',
   ],
   admin_user: {
     username: 'admin',

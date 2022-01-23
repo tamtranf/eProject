@@ -1,12 +1,12 @@
 <template>
   <app-header></app-header>
-  <div class="home">
+  <div :class="[name,'page']">
     <h1>Project "e"</h1>
     <br />
     <br /><br /><br />
     <img alt="Vue logo" src="../assets/logo.png" />
+    <div>{{ now }}</div>
   </div>
-  <div>{{ now }}</div>
 </template>
 
 <script>
@@ -29,3 +29,8 @@ export default {
   routes: [{ path: '/', name: 'Home', component: this }],
 };
 </script>
+<style scoped>
+.Home{
+  text-align: center;
+}
+</style>

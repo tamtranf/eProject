@@ -1,6 +1,6 @@
 <template>
   <app-header></app-header>
-  <div :class="[name]">
+  <div :class="[name,'page']">
     <h1>This is the {{ name }} page</h1>
   </div>
 </template>
@@ -8,16 +8,16 @@
 import mixinLayoutComponents from '@/mixins/layout_components';
 
 export default {
-  name: 'base-template',
+  name: 'template-form',
   data() {
     return {
-      name: 'Base Template',
+      name: 'TemplateForm',
     };
   },
   routes: [
     {
-      path: '/template',
-      name: 'template',
+      path: '/template-form',
+      name: 'template-form',
     },
   ],
   mixins: [mixinLayoutComponents],

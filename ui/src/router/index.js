@@ -3,11 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [];
 // Define here the name of each file that should be part to the router
 [
-  require('../views/Home'),
-  require('../views/About'),
-  require('../views/Template'),
-  require('../views/Test'),
-  require('../views/Dev'),
+  require('../views/home'),
+  require('../views/about'),
+  require('../views/templates'),
+  require('../views/template-form'),
+  require('../views/template-list'),
+  require('../views/test'),
+  require('../views/dev'),
 ].forEach((file) => {
   file.default.routes.forEach((r) => {
     r.component = file.default;

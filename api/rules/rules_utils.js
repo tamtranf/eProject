@@ -1,6 +1,7 @@
+/* eslint-disable prefer-destructuring */
 module.exports = {
   arrToObj: (arr) => {
-    var obj = {};
+    const obj = {};
     arr.forEach((a) => {
       obj[a[0]] = a[1];
     });

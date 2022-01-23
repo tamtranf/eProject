@@ -2,7 +2,7 @@
   <div :class="['app-header']">
     <div id="nav">
       <router-link to="/">Home</router-link>  |  <router-link to="/test">Test</router-link> | <router-link to="/about">About</router-link> |
-       <router-link to="/template">Template</router-link> | <router-link to="/dev">Dev</router-link>
+       <router-link to="/templates">Templates</router-link> | <router-link to="/dev">Dev</router-link>
     </div>
   </div>
 </template>

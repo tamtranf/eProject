@@ -1,19 +1,20 @@
 <template>
   <app-header></app-header>
-  <div :class="[name]">
+  <div :class="[name,'page']">
     <h1>This is the {{ name }} page. Time:{{ testTime }}</h1>
+    <div >
+      <div class="col-6" style="">
+        <form-field v-for="f in formFields" :key="f.id" :field_info="f" ></form-field>
+        <button class="btn btn-primary" style="float: right;" @click="testbBtn"> Test</button>
+      </div>
 
-    <div class="col-6" style="">
-      <form-field v-for="f in formFields" :key="f.id" :field_info="f" ></form-field>
-      <button class="btn btn-primary" style="float: right;" @click="testbBtn"> Test</button>
-    </div>
-
-    <div class="col-12" style="">
-      <ag-grid-vue style="width: 800px; height: 200px;"
-          class="ag-theme-alpine"
-          :columnDefs="columnDefs"
-          :rowData="rowData">
-      </ag-grid-vue>
+      <div class="col-12" style="">
+        <ag-grid-vue style="width: 800px; height: 200px;"
+            class="ag-theme-alpine"
+            :columnDefs="columnDefs"
+            :rowData="rowData">
+        </ag-grid-vue>
+      </div>
     </div>
   </div>
 </template>

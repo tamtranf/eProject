@@ -72,7 +72,7 @@ export default {
       this.selectAllIcon = 'unchecked';
       this.isAllSelected = false;
       this.selectedRowArr = [];
-      this.gridOptions.api.refreshView();
+      this.gridOptions.api.redrawRows();
     },
 
     searchByListDatasource(filter) {
@@ -181,7 +181,7 @@ export default {
           }
         }
       });
-      this.gridOptions.api.refreshView();
+      this.gridOptions.api.redrawRows();
 
       this.formOutputQty = this.selectedRowArr.length;
       if (this.selectedRowArr.length === 0) {
@@ -208,7 +208,7 @@ export default {
           }
         }
       });
-      this.gridOptions.api.refreshView();
+      this.gridOptions.api.redrawRows();
       this.formOutputQty = this.selectedRowArr.length;
       if (this.selectedRowArr.length === 0) {
         this.selectAllIcon = 'unchecked';
@@ -326,7 +326,7 @@ export default {
           this.gridOptions.api.forEachNode((node) => {
             node.data.is_selected = true;
           });
-          this.gridOptions.api.refreshView();
+          this.gridOptions.api.redrawRows();
           this.selectAllIcon = 'checked';
           this.isAllSelected = true;
           this.formOutputQty = this.selectedRowArr.length;
@@ -361,9 +361,9 @@ export default {
     setAsZeroRows() {
       const result = 0;
       if (this.gridOptions.api) {
-        this.gridOptions.api.setInfiniteRowCount(parseInt(result), true);
+        this.gridOptions.api.setRowCount(parseInt(result), true);
       } else if (this.state.gridOptions.api) {
-        this.state.gridOptions.api.setInfiniteRowCount(parseInt(result), true);
+        this.state.gridOptions.api.setRowCount(parseInt(result), true);
       }
       this.totalNumberOfRows = result;
     },
@@ -373,9 +373,9 @@ export default {
       }
       const result = n;
       if (this.gridOptions.api) {
-        this.gridOptions.api.setInfiniteRowCount(parseInt(result), true);
+        this.gridOptions.api.setRowCount(parseInt(result), true);
       } else if (this.state.gridOptions.api) {
-        this.state.gridOptions.api.setInfiniteRowCount(parseInt(result), true);
+        this.state.gridOptions.api.setRowCount(parseInt(result), true);
       }
       this.totalNumberOfRows = result;
     },
@@ -412,7 +412,7 @@ export default {
           }
         }
       }
-      this.$ajax.post_cached_ttl(`/${this.api_name}/datasource_count/`, req_data, this.post_cached_timeout || 0, (err, _result) => {
+      this.$ajax.post(`/${this.api_name}/datasource_count/`, req_data, (err, _result) => {
         let result = _result;
         if (err === null) {
           // page12_debug("total rows", result);
@@ -427,14 +427,14 @@ export default {
             }
           }
           if (this.gridOptions.api) {
-            this.gridOptions.api.setInfiniteRowCount(parseInt(result), true);
+            this.gridOptions.api.setRowCount(parseInt(result), true);
             if (result === 0) {
               this.gridOptions.api.showNoRowsOverlay();
             } else {
               this.gridOptions.api.hideOverlay();
             }
           } else if (this.state.gridOptions.api) {
-            this.state.gridOptions.api.setInfiniteRowCount(
+            this.state.gridOptions.api.setRowCount(
               parseInt(result),
               true,
             );
@@ -555,11 +555,11 @@ export default {
                 this.state.countRows('initDatasource 2');
               }
             }
-            this.$store.state[this.stateLastFilterOptions][this.api_name] = {
-              filter: this.last_data_source_filter,
-              sort: this.last_data_source_sort,
-              sort_key: this.last_data_source_sort_key,
-            };
+            // this.$store.state[this.stateLastFilterOptions][this.api_name] = {
+            //   filter: this.last_data_source_filter,
+            //   sort: this.last_data_source_sort,
+            //   sort_key: this.last_data_source_sort_key,
+            // };
             if (err === null) {
               let select_on_load_found = false;
               result.forEach((d) => {
