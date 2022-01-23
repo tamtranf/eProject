@@ -1,0 +1,27 @@
+{
+  "cSpell.words": [
+    "camelcase",
+    "datasource",
+    "datetime",
+    "eqeqeq",
+    "esma",
+    "fcondition",
+    "fileupload",
+    "FULLTEXT",
+    "jconv",
+    "jschardet",
+    "linebreak",
+    "MHTB",
+    "Millis",
+    "mysqldump",
+    "shimei",
+    "Tagless",
+    "tinyint",
+    "varchar",
+    "vuex"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript","vue"],
+ }

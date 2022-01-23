@@ -15,10 +15,12 @@ pnpm-debug.log*
 
 # Editor directories and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 api/logs/sma_app_*
+local_files/*
+api/temp/*
+api/temp/test_file.txt

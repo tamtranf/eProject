@@ -1,5 +1,3 @@
-/* eslint-disable import/order */
-
 const express = require('express');
 const Nseq = require('nseq');
 const path = require('path');
