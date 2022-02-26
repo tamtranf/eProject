@@ -36,6 +36,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'consistent-return': 'off',
     radix: ['error', 'as-needed'],
+    'linebreak-style': ['error', 'unix', 'off', 'windows'],
   },
   settings: {
     'import/resolver': {

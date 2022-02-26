@@ -179,10 +179,45 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "master_template": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "test_field_1": {
+                "Field": "test_field_1",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "test_field_2": {
+                "Field": "test_field_2",
+                "Type": "varchar(128)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "select_field_1": {
+                "Field": "select_field_1",
+                "Type": "varchar(8)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
         "master_user": {},
-        "master_test": {}
+        "master_test": {},
+        "master_template": {}
     }
 }

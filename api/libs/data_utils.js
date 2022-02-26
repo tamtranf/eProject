@@ -110,6 +110,7 @@ class DataUtils {
       return cb(null, result);
     });
   }
+
   /**
    * Check the error and decide for commit or rollback then return
    * @param {*} req

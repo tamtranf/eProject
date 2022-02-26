@@ -20,7 +20,7 @@ module.exports = {
     'no-console': 'off',
     eqeqeq: ['error', 'smart'],
     indent: ['error', 2],
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': ['error', 'unix', 'off', 'windows'],
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
     'sql/format': [2, { ignoreExpressions: false, ignoreInline: true, ignoreTagless: true }],
