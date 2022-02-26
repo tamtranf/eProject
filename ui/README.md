@@ -17,3 +17,10 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+
+### Dev start
+cd ui
+nvm use 16.13.0
+npm run start

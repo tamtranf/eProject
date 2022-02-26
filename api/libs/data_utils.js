@@ -95,6 +95,22 @@ class DataUtils {
   }
 
   /**
+   * Execute a query, then return the result
+   * @param {*} connection
+   * @param {*} query
+   * @param {*} params
+   * @param {*} cb
+   */
+  execute_query(connection, query, params, cb) {
+    console.log(`${(new Date()).getTime()}POOL_CONTROL:  execute_query:`, { query });
+    connection.query(query, params, (err, result) => {
+      if (err) {
+        return cb(err);
+      }
+      return cb(null, result);
+    });
+  }
+  /**
    * Check the error and decide for commit or rollback then return
    * @param {*} req
    * @param {*} res
