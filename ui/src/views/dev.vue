@@ -23,7 +23,7 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import mixinFormController from '@/mixins/form_controller';
 // import constants from '../../../api/rules/constants';
 import { AgGridVue } from 'ag-grid-vue3';
-import fields from '../../../api/rules/fields_master_user';
+import fields from '../../../api/rules/fields_master_dev';
 
 export default {
   name: 'dev',

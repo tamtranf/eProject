@@ -26,7 +26,7 @@
                 "Extra": ""
             }
         },
-        "master_user": {
+        "master_dev": {
             "seq_id": {
                 "Field": "seq_id",
                 "Type": "int unsigned",
@@ -216,7 +216,7 @@
         }
     },
     "indexes": {
-        "master_user": {},
+        "master_dev": {},
         "master_test": {},
         "master_template": {}
     }

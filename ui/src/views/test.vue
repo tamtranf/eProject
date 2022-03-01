@@ -18,7 +18,7 @@
 import mixinLayoutComponents from '@/mixins/layout_components';
 import Nseq from 'nseq';
 // import constants from '../../../api/rules/constants';
-import fields from '../../../api/rules/fields_master_user';
+import fields from '../../../api/rules/fields_master_dev';
 
 export default {
   name: 'test',

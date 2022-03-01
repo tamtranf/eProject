@@ -25,7 +25,7 @@ const config = {
   auto_create_database: true,
   auto_create_tables: true,
   tables: [
-    'master_user',
+    'master_dev',
     'master_test',
     'master_template',
   ],

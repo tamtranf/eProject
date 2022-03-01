@@ -720,7 +720,7 @@ class BaseModel {
         return cb(err);
       }
       if (data[0].qty !== 0) {
-        if (this.table && this.table.indexOf('master_user') > -1) {
+        if (this.table && this.table.indexOf('master_dev') > -1) {
           return cb(`ユーザID = ${changes[this.pk]} はすでに登録されています。`);
         }
         return cb(`PK ${this.pk}=${changes[this.pk]} はすでに登録されています。`);

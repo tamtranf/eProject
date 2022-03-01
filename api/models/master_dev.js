@@ -5,7 +5,7 @@ const uuid = require('uuid');
 // const _ = require('lodash');
 // const moment = require('moment');
 const debug = require('debug')('MasterUser');
-const local_fields = require('../rules/fields_master_user');
+const local_fields = require('../rules/fields_master_dev');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
 // const constants = require('../rules/constants');
@@ -22,13 +22,13 @@ class MasterUser extends base_model {
     super();
     this.PASS_HISTORY_SALT = '5691CC36-7284-44C1-BF44-BF40D3A75DCE'; // DO NOT CHANGE THIS VALUE.
     // this.table_id = constants.TABLE_ID.USER;
-    this.table = 'master_user';
+    this.table = 'master_dev';
     debug('Started');
     this.routes = [];
     this.form_fields = 'seq_id,user_id';
     this.tab_fields = 'seq_id,user_id';
     this.pk = 'user_id';
-    // this.model_acl = this.acl.master_user;
+    // this.model_acl = this.acl.master_dev;
     // this.set_routes();
   }
 

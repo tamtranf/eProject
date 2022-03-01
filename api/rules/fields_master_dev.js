@@ -22,7 +22,7 @@ const arr = [
     export: {
       enabled: true,
       sequence: 1000,
-      master_user: 'B',
+      master_dev: 'B',
     },
   },
   {
@@ -33,7 +33,7 @@ const arr = [
     export: {
       enabled: true,
       sequence: 1000,
-      master_user: 'C',
+      master_dev: 'C',
     },
   },
   // {
@@ -52,7 +52,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "D"
+  //     master_dev: "D"
   //   },
   // },
   // {
@@ -69,7 +69,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "E"
+  //     master_dev: "E"
   //   },
   //   search_dependency:{
   //     algorithm:"company",
@@ -95,7 +95,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "F"
+  //     master_dev: "F"
   //   },
   //   search_dependency:{
   //     algorithm:"company",
@@ -121,7 +121,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "G"
+  //     master_dev: "G"
   //   },
   //   search_dependency:{
   //     algorithm:"company",
@@ -225,7 +225,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "A"
+  //     master_dev: "A"
   //   },
   // },
   // {
@@ -249,7 +249,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "D"
+  //     master_dev: "D"
   //   },
   // },
   // {
@@ -263,7 +263,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "E"
+  //     master_dev: "E"
   //   },
   // },
   // {
@@ -278,7 +278,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "F"
+  //     master_dev: "F"
   //   },
   // },
   // {
@@ -293,7 +293,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "G"
+  //     master_dev: "G"
   //   },
   // },
   // {
@@ -317,7 +317,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "D"
+  //     master_dev: "D"
   //   },
   // },
   // {
@@ -331,7 +331,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "E"
+  //     master_dev: "E"
   //   },
   // },
   // {
@@ -346,7 +346,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "F"
+  //     master_dev: "F"
   //   },
   // },
   // {
@@ -361,7 +361,7 @@ const arr = [
   //   export: {
   //     enabled: true,
   //     sequence: 1000,
-  //     master_user: "G"
+  //     master_dev: "G"
   //   },
   // },
   // {

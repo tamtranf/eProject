@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `master_user` (
+CREATE TABLE IF NOT EXISTS `master_dev` (
   `seq_id` int unsigned NOT NULL AUTO_INCREMENT,
   `approval_status` varchar(32) DEFAULT NULL,
   `user_id` varchar(64) DEFAULT NULL,

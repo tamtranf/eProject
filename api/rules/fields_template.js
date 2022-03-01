@@ -12,7 +12,7 @@ const arr = [
     export: {
       enabled: true,
       sequence: 1000,
-      master_user: 'B',
+      master_dev: 'B',
     },
   },
   {
@@ -23,7 +23,7 @@ const arr = [
     export: {
       enabled: true,
       sequence: 1000,
-      master_user: 'C',
+      master_dev: 'C',
     },
   },
   {

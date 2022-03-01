@@ -526,16 +526,16 @@ const TableValidator = {
   },
   validate_admin_user: (cb) => {
     // FIXME: Let it more generic.
-    connection.query('select count(*) as qty from master_user where user_id = ?', [config.admin_user.username], (err, rows_admin) => {
+    connection.query('select count(*) as qty from master_dev where user_id = ?', [config.admin_user.username], (err, rows_admin) => {
       if (err) {
         throw err;
       }
-      connection.query('select count(*) as qty from master_user where role = ? or role = ? or user_id = ?', ['管理責任者', '保守担当', config.admin_user.username], (err3, rows_any_admin) => {
+      connection.query('select count(*) as qty from master_dev where role = ? or role = ? or user_id = ?', ['管理責任者', '保守担当', config.admin_user.username], (err3, rows_any_admin) => {
         if (err3) {
           throw err3;
         }
         if ((rows_admin[0].qty < 1 && config.admin_user.mode === 'admin') || (rows_any_admin[0].qty < 1 && config.admin_user.mode === 'any_admin')) {
-          require('../models/master_user').local_add_user({
+          require('../models/master_dev').local_add_user({
             password: config.admin_user.default_password,
             user_id: config.admin_user.username,
             role: config.admin_user.role,
