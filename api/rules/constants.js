@@ -28,6 +28,7 @@ module.exports = {
     SELECT_BOX2: 'select2',
     SELECT_BOX3: 'select3',
     SELECT_BOX4: 'select4',
+    SYSTEM: 'system',
   },
   SELECT_FIELD_MODE: {
     ARRAY: 'ARRAY',
@@ -36,6 +37,6 @@ module.exports = {
     FORM_CONTROL: 'FORM_CONTROL',
   },
   IDS: {
-    ADD_NEW_RECORD_ID: Number.MAX_SAFE_INTEGER,
+    ADD_NEW_RECORD_ID: `${Number.MAX_SAFE_INTEGER}`,
   },
 };

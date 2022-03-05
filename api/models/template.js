@@ -23,7 +23,8 @@ class Template extends base_model {
 
     this.id = 'template';
     this.table = 'master_template';
-    this.form_fields = 'seq_id,test_field_1,test_field_2,select_field_1';
+    this.form_fields = 'seq_id,user_name,maker,car,user_password,retrieve_date_time,return_date';
+
     this.routes = {
       datasource_load: {
         method: 'post', func: 'datasource_load', path: '/datasource_load/:start/:end', no_login: false,
@@ -39,6 +40,9 @@ class Template extends base_model {
       },
       delete: {
         method: 'post', func: 'delete', path: '/delete', no_login: false,
+      },
+      delete_arr: {
+        method: 'post', func: 'delete_arr', path: '/delete_arr', no_login: false,
       },
     };
     debug('started');
@@ -70,6 +74,10 @@ class Template extends base_model {
 
   delete(req, res) {
     return this.base_delete(req, res);
+  }
+
+  delete_arr(req, res) {
+    return this.base_delete_arr(req, res);
   }
 }
 

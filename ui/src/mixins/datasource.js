@@ -44,12 +44,7 @@ export default {
     },
 
     get_def(val, def = '') {
-      if (
-        typeof val === 'undefined' ||
-        val === null ||
-        val === false ||
-        val === ''
-      ) {
+      if (typeof val === 'undefined' || val === null || val === false || val === '') {
         return def;
       }
       return val;
@@ -76,11 +71,7 @@ export default {
     },
 
     searchByListDatasource(filter) {
-      const filter_key = `${this.get_def(filter.by_list)
-      }_${
-        this.get_def(filter.filter_by)
-      }_${
-        this.get_def(filter.list)}`;
+      const filter_key = `${this.get_def(filter.by_list)}_${this.get_def(filter.filter_by)}_${this.get_def(filter.list)}`;
       debug_pageDatasource('searchByOneDatasource', filter, filter_key);
 
       if (filter_key === this.last_data_source_filter_key) {
@@ -97,9 +88,7 @@ export default {
       if (!this.state.gridOptions.api) {
         return;
       }
-      const filterComponent = this.state.gridOptions.api.getFilterInstance(
-        'search_flow_control',
-      );
+      const filterComponent = this.state.gridOptions.api.getFilterInstance('search_flow_control');
       filterComponent.getModel();
       filterComponent.setModel({
         type: 'contains',
@@ -111,11 +100,7 @@ export default {
     },
 
     searchByOneDatasource(filter) {
-      const filter_key = `${this.get_def(filter.by_one)
-      }_${
-        this.get_def(filter.filter_by)
-      }_${
-        this.get_def(filter.one_value)}`;
+      const filter_key = `${this.get_def(filter.by_one)}_${this.get_def(filter.filter_by)}_${this.get_def(filter.one_value)}`;
       debug_pageDatasource('searchByOneDatasource', filter, filter_key);
 
       if (filter_key === this.last_data_source_filter_key) {
@@ -132,9 +117,7 @@ export default {
       if (!this.state.gridOptions.api) {
         return;
       }
-      const filterComponent = this.state.gridOptions.api.getFilterInstance(
-        'search_flow_control',
-      );
+      const filterComponent = this.state.gridOptions.api.getFilterInstance('search_flow_control');
       filterComponent.getModel();
       filterComponent.setModel({
         type: 'contains',
@@ -192,7 +175,7 @@ export default {
         this.isAllSelected = false;
       }
       if (typeof this.onArraySelected !== 'undefined') {
-        this.onArraySelected({ row: selected_row, select_action });
+        this.onArraySelected(ev, { row: selected_row, select_action });
       }
     },
 
@@ -253,13 +236,7 @@ export default {
         }
         filter_key += `${v}_`;
       });
-      filter_key += `${this.get_def(f.b2_disabled)
-      }_${
-        this.get_def(f.b3_disabled)
-      }_${
-        this.get_def(f.j1)
-      }_${
-        this.get_def(f.j2)}`;
+      filter_key += `${this.get_def(f.b2_disabled)}_${this.get_def(f.b3_disabled)}_${this.get_def(f.j1)}_${this.get_def(f.j2)}`;
       debug_pageDatasource('search ControlChangedDatasource', f, filter_key);
       if (this.search_timer) {
         clearTimeout(this.search_timer);
@@ -271,18 +248,12 @@ export default {
           cont,
         });
         if (filter_key !== this.last_data_source_filter_key && cont === true) {
-          debug_pageDatasource(
-            'search ControlChangedDatasource PROCESSING',
-            f,
-            filter_key,
-          );
+          debug_pageDatasource('search ControlChangedDatasource PROCESSING', f, filter_key);
           this.last_data_source_filter = f;
           if (!this.state.gridOptions.api) {
             return;
           }
-          const filterComponent = this.state.gridOptions.api.getFilterInstance(
-            'search_flow_control',
-          );
+          const filterComponent = this.state.gridOptions.api.getFilterInstance('search_flow_control');
           filterComponent.getModel();
           filterComponent.setModel({
             type: 'contains',
@@ -314,24 +285,20 @@ export default {
       // debug_pageDatasource("select_AllDatasource clear and continue")
       this.clearSelectionsDatasource();
       this.state.gridOptions.api.showLoadingOverlay();
-      this.state.$ajax.post(
-        `/${this.api_name}/datasource_load_for_select_all/`,
-        { filter: this.last_data_source_filter },
-        (err, result) => {
-          this.state.gridOptions.api.hideOverlay();
-          result.forEach((selected_row) => {
-            this.selectedRowArr.push(selected_row);
-          });
+      this.state.$ajax.post(`/${this.api_name}/datasource_load_for_select_all/`, { filter: this.last_data_source_filter }, (err, result) => {
+        this.state.gridOptions.api.hideOverlay();
+        result.forEach((selected_row) => {
+          this.selectedRowArr.push(selected_row);
+        });
 
-          this.gridOptions.api.forEachNode((node) => {
-            node.data.is_selected = true;
-          });
-          this.gridOptions.api.redrawRows();
-          this.selectAllIcon = 'checked';
-          this.isAllSelected = true;
-          this.formOutputQty = this.selectedRowArr.length;
-        },
-      );
+        this.gridOptions.api.forEachNode((node) => {
+          node.data.is_selected = true;
+        });
+        this.gridOptions.api.redrawRows();
+        this.selectAllIcon = 'checked';
+        this.isAllSelected = true;
+        this.formOutputQty = this.selectedRowArr.length;
+      });
     },
 
     refreshNewRowDatasource(result, mode) {
@@ -346,16 +313,12 @@ export default {
         obj.sort = this.last_data_source_sort;
       }
 
-      this.$ajax.post(
-        `/${mode}/datasource_position/${seq_id}`,
-        obj,
-        (err, result2) => {
-          this.select_on_load = seq_id;
-          this.select_on_load_position = result2.data;
-          this.gridOptions.api.ensureIndexVisible(result2.data);
-          this.gridOptions.api.purgeInfiniteCache();
-        },
-      );
+      this.$ajax.post(`/${mode}/datasource_position/${seq_id}`, obj, (err, result2) => {
+        this.select_on_load = seq_id;
+        this.select_on_load_position = result2.data;
+        this.gridOptions.api.ensureIndexVisible(result2.data);
+        this.gridOptions.api.purgeInfiniteCache();
+      });
     },
 
     setAsZeroRows() {
@@ -368,7 +331,8 @@ export default {
       this.totalNumberOfRows = result;
     },
     setManualCountRows(n, force_count = false) {
-      if (n > 100 || force_count > 0) { // if there is more then 100 rows, then need to query again.
+      if (n > 100 || force_count > 0) {
+        // if there is more then 100 rows, then need to query again.
         return this.state.countRows('set_ManualCountRows 2', { ignore_count_from_result: true });
       }
       const result = n;
@@ -384,12 +348,8 @@ export default {
       if (this.count_from_result === true && options.ignore_count_from_result !== true) {
         return 1;
       }
-      if (
-        this.load_only_with_filter &&
-        (this.last_data_source_filter === false ||
-          (this.last_data_source_filter[1] &&
-            this.last_data_source_filter[1].value === ''))
-      ) {
+      if (this.load_only_with_filter && (this.last_data_source_filter === false || (this.last_data_source_filter[1]
+        && this.last_data_source_filter[1].value === ''))) {
         return this.setAsZeroRows();
       }
       const req_data = { filter: this.last_data_source_filter, requester };
@@ -434,10 +394,7 @@ export default {
               this.gridOptions.api.hideOverlay();
             }
           } else if (this.state.gridOptions.api) {
-            this.state.gridOptions.api.setRowCount(
-              parseInt(result),
-              true,
-            );
+            this.state.gridOptions.api.setRowCount(parseInt(result), true);
             if (result === 0) {
               this.state.gridOptions.api.showNoRowsOverlay();
             } else {
@@ -459,7 +416,7 @@ export default {
       this.load_mode = 'ds';
       this.gridOptions.columnDefs = this.createColumnDefs();
       this.gridOptions.rowModelType = 'infinite';
-      this.gridOptions.enableServerSideSorting = true;
+      // this.gridOptions.enableServerSideSorting = true;
       this.gridOptions.sortingOrder = ['desc', 'asc'];
       this.gridOptions.blockLoadDebounceMillis = 200;
       this.gridOptions.cacheOverflowSize = 100;
@@ -474,12 +431,8 @@ export default {
         },
         getRows: (params) => {
           let load_data = true;
-          if (
-            this.init_data_source_options.load_only_with_filter === true &&
-            (this.last_data_source_filter === false ||
-              (this.last_data_source_filter[1] &&
-                this.last_data_source_filter[1].value === ''))
-          ) {
+          if (this.init_data_source_options.load_only_with_filter === true && (this.last_data_source_filter === false
+            || (this.last_data_source_filter[1] && this.last_data_source_filter[1].value === ''))) {
             this.load_only_with_filter = true;
             initial_count_rows = false;
             load_data = false;
@@ -573,9 +526,7 @@ export default {
 
               params.successCallback(result);
               if (select_on_load_found) {
-                this.gridOptions.api.ensureIndexVisible(
-                  _.clone(this.select_on_load_position),
-                );
+                this.gridOptions.api.ensureIndexVisible(_.clone(this.select_on_load_position));
                 this.selectSeqId(_.clone(this.select_on_load), 20);
                 this.select_on_load = false;
                 this.select_on_load_position = 0;
@@ -585,8 +536,7 @@ export default {
               }
             } else if (err === 'Not logged') {
               this.state.$notify({
-                title:
-                      'セッションの有効期限が切れましたので、もう一度ログインを行ってください',
+                title: 'セッションの有効期限が切れましたので、もう一度ログインを行ってください',
                 // text: "",
                 type: 'error',
                 duration: 5000,
@@ -615,7 +565,6 @@ export default {
         this.setAsZeroRows();
       }
     },
-
   },
   mounted() {},
 };

@@ -7,8 +7,12 @@
       <ag-grid-vue style="width: 100%; height: 325px;"
           class="ag-theme-blue"
            :gridOptions="gridOptions"
-          :rowData="rowData">
+          >
       </ag-grid-vue>
+      <br>
+      <button style="float:right;" class="btn btn-primary" @click="onAddNew">New</button>
+      <button style="float:right;margin-right:10px" class="btn btn-danger"
+      :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
     </div>
   </div>
 </template>
@@ -25,35 +29,8 @@ export default {
     return {
       name: 'TemplateList',
       api_name: 'template',
-      // columnDefs: [
-      //   { headerName: 'Make', field: 'make' },
-      //   { headerName: 'Model', field: 'model' },
-      //   { headerName: 'Price', field: 'price' },
-      // ],
-      rowData: [
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-
-      ],
+      detail_page: 'template-form',
+      delete_disabled: true,
     };
   },
   routes: [
@@ -70,17 +47,64 @@ export default {
     },
     tabFieldList() {
       const r = [
-        _.extend(fields.test_field_1, {}),
-        _.extend(fields.test_field_2, {}),
-        _.extend(fields.select_field_1, {}),
+        _.extend(fields.user_name, {}),
+        _.extend(fields.maker, {}),
+        _.extend(fields.car, {}),
+        _.extend(fields.retrieve_date_time, {}),
       ];
       return r;
+    },
+    // deleteDisabled() {
+    //   return this.delete_disabled;
+    // },
+    deleteDisabled: {
+      get() {
+        return this.delete_disabled;
+      },
+      set(v) {
+        this.delete_disabled = v;
+      },
     },
 
   },
   methods: {
+    onAddNew() {
+      return this.$router.push({
+        name: this.detail_page,
+        params: { seq_id: 'new' },
+      });
+    },
     createColumnDefs() {
       return this.commonCreateColumnDefs({ show_details: true, show_checkbox: true });
+    },
+    onDetailsClick(_ev, data) {
+      console.log('onDetailsClick', { data });
+      return this.$router.push({
+        name: this.detail_page,
+        params: { seq_id: data.seq_id },
+      });
+    },
+    onArraySelected(_ev, data) {
+      console.log('onArraySelected', { _ev, data });
+      this.deleteDisabled = Array.isArray(this.selectedRowArr) ? this.selectedRowArr.length < 1 : true;
+    },
+    onDeleteSelected() {
+      console.log('onDeleteSelected');
+      this.commonDeleteSelected((err) => {
+        if (err) {
+          this.$notify({
+            type: 'error',
+            title: 'Error',
+            text: err,
+          });
+        } else {
+          this.$notify({
+            type: 'success',
+            title: 'Deleted',
+            text: 'Success',
+          });
+        }
+      });
     },
   },
   props: [],
@@ -90,7 +114,7 @@ export default {
   },
   beforeMount() {
     this.gridOptions = _.extend(this.commonGridOptions, {});
-    this.initDatasource({ });
+    this.initDatasource({});
   },
   mounted() {
     this.gridOptions.api.sizeColumnsToFit();

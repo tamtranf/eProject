@@ -2,11 +2,17 @@ const express = require('express');
 const Nseq = require('nseq');
 const path = require('path');
 const fs = require('fs');
+const uuid = require('uuid');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const bunyan = require('bunyan');
 const RouteUtil = require('./libs/route_utils');
 const config = require('./config/default');
 const table_validator = require('./libs/table_validator');
+
+const log = bunyan.createLogger(config.bunyan_logger);
+
+log.info('Starting APP');
 
 Object.keys(config.env).forEach((c) => {
   process.env[c] = config.env[c];
@@ -20,10 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const models = fs
-  .readdirSync(path.join(__dirname, 'models'))
-  .filter((f) => f.indexOf('base_') !== 0)
-  .map((m) => require(`./models/${m}`));
+app.use((req, _res, next) => {
+  req.log = log.child({ req_id: uuid.v4() });
+  next();
+});
+
+const models = fs.readdirSync(path.join(__dirname, 'models')).filter((f) => f.indexOf('base_') !== 0).map((m) => require(`./models/${m}`));
 
 // Register the models routes (without login)
 RouteUtil.set(app, models, false);

@@ -189,26 +189,50 @@
                 "Default": null,
                 "Extra": "auto_increment"
             },
-            "test_field_1": {
-                "Field": "test_field_1",
+            "user_name": {
+                "Field": "user_name",
+                "Type": "varchar(256)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "maker": {
+                "Field": "maker",
                 "Type": "varchar(64)",
-                "Null": "NO",
+                "Null": "YES",
                 "Key": "",
                 "Default": null,
                 "Extra": ""
             },
-            "test_field_2": {
-                "Field": "test_field_2",
-                "Type": "varchar(128)",
-                "Null": "NO",
+            "car": {
+                "Field": "car",
+                "Type": "varchar(256)",
+                "Null": "YES",
                 "Key": "",
                 "Default": null,
                 "Extra": ""
             },
-            "select_field_1": {
-                "Field": "select_field_1",
-                "Type": "varchar(8)",
-                "Null": "NO",
+            "user_password": {
+                "Field": "user_password",
+                "Type": "varchar(64)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "retrieve_date_time": {
+                "Field": "retrieve_date_time",
+                "Type": "datetime",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "return_date": {
+                "Field": "return_date",
+                "Type": "date",
+                "Null": "YES",
                 "Key": "",
                 "Default": null,
                 "Extra": ""

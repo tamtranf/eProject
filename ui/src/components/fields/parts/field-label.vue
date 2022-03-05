@@ -12,7 +12,7 @@ export default {
       name: 'Field label',
       local_field_id: '',
       local_field_label: '',
-      local_label_style: 'background:grey;',
+      local_label_style: 'background:#d8f3e1;',
     };
   },
   mixins: [],

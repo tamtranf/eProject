@@ -1,4 +1,4 @@
-const worker_id = process.env.pm_id || '';
+const worker_id = process.env.pm_id || '1';
 const config = {
   port: 4001,
   env: {

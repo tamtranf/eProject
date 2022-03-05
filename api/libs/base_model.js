@@ -332,32 +332,15 @@ class BaseModel {
     }
     const temp = req.body.changes;
     const changes = {};
-    const invalid_size_fields = [];
     const s_fields = this.form_fields.split(',');
     s_fields.forEach((f) => {
       if (typeof temp[f] !== 'undefined') {
         changes[f] = temp[f];
-        const validate_err = this.validate_field_data_type(req.log, this.table, f, changes[f]);
-        if (validate_err !== false) {
-          invalid_size_fields.push(validate_err);
-        }
       }
     });
     if (Array.isArray(s_fields) && s_fields.length > 0 && s_fields.indexOf('last_update_date') > -1) {
       changes.last_update_date = new Date();
     }
-    if (req.body.check_field_size === true) {
-      if (invalid_size_fields.length > 0) {
-        console.log();
-        const err = invalid_size_fields
-          .map((e) => e.err)
-          .join('<br>');
-        return ResponseUtil.response(req, res, null, { err, invalid_size_fields, err_type: 'invalid_size' }, {}, cb);
-      }
-    } else {
-      // console.log("It is not checking the field size for ",req.body);
-    }
-
     let seq_id = req.params.id;
     if (Number.isNaN(seq_id) === true) {
       return ResponseUtil.response(req, res, null, `invalid seq_id: ${seq_id}`, {}, cb);
@@ -372,6 +355,14 @@ class BaseModel {
           if (options.use_replace === true) {
             method = 'REPLACE';
           }
+
+          Object.keys(changes).forEach((f) => {
+            const field_info = this.get_fields().fields[f];
+            if (changes[f] === '' && field_info.type === constants.TYPES.DATE_PICKER) {
+              changes[f] = null;
+            }
+          });
+
           const sql = `${method} INTO ${this.table} SET ?`;
           DataUtil.query(sql, changes, { connection: local_connection }, (err, result) => {
             req.log.info({
@@ -388,29 +379,29 @@ class BaseModel {
             }
           });
         },
-        (self) => {
-          if (options.save_change_history === true) {
-            const ops = {
-              changes,
-              seq_id,
-              history_mode: constants.HISTORY_MODE.NEW,
-              requester: `base_model/base_set/${this.table}`,
-              table_id: options.table_id,
-            };
-            if (options && options.connection) {
-              ops.connection = options.connection;
-            }
-            this.base_save_change_history(req, res, ops, (err) => {
-              if (err) {
-                console.log('ERROR TO SAVE base_ set_log_history', err);
-                return ResponseUtil.response(req, res, null, err, {}, cb);
-              }
-              self.next();
-            });
-          } else {
-            self.next();
-          }
-        },
+        // (self) => {
+        //   if (options.save_change_history === true) {
+        //     const ops = {
+        //       changes,
+        //       seq_id,
+        //       history_mode: constants.HISTORY_MODE.NEW,
+        //       requester: `base_model/base_set/${this.table}`,
+        //       table_id: options.table_id,
+        //     };
+        //     if (options && options.connection) {
+        //       ops.connection = options.connection;
+        //     }
+        //     this.base_save_change_history(req, res, ops, (err) => {
+        //       if (err) {
+        //         console.log('ERROR TO SAVE base_ set_log_history', err);
+        //         return ResponseUtil.response(req, res, null, err, {}, cb);
+        //       }
+        //       self.next();
+        //     });
+        //   } else {
+        //     self.next();
+        //   }
+        // },
         (_self) => {
           if (cb === false) {
             const ops = { base_set_request: true };
@@ -428,72 +419,72 @@ class BaseModel {
       ]);
     } else {
       new Nseq().do([
-        (self) => {
-          const local_save_log = false;
-          if (local_save_log && options.save_log === true) {
-            // var ops = {changes,seq_id,requester: "base_model/base_set/" + this.table,table_id:options.table_id}
-            // if(options && options.connection){
-            //   ops.connection = options.connection
-            // }
-            // this.base_set_log_history(req,res,ops,(err)=>{
-            //   if(err){
-            //     console.log("ERROR TO SAVE base_ set_log_history",err)
-            //     return ResponseUtil.response(req, res, null, err,{},cb);
-            //   }
-            //   self.next();
-            // })
-          } else {
-            self.next();
-          }
-        },
-        (self) => {
-          const last_changed_uuid = `${changes.last_changed_uuid || ''}`;
-          if (last_changed_uuid.length > 0) {
-            const sql = `SELECT COUNT(*) as qty FROM ${this.table} WHERE  seq_id = ? AND last_changed_uuid = ?`;
-            const params = [seq_id, changes.last_changed_uuid];
-            DataUtil.query_one(sql, params, options, (err, row) => {
-              if (row.qty < 1) {
-                req.log.warn('他のユーザがデータを使用しています。result at base_set', {
-                  params, row, err, sql,
-                });
-                return ResponseUtil.response(req, res, null, '::他のユーザがデータを使用しています。', {}, cb);
-              }
-              self.next();
-            });
-          } else {
-            self.next();
-          }
-        },
-        (self) => {
-          if (options.save_change_history === true) {
-            const ops = {
-              changes,
-              seq_id,
-              history_mode: constants.HISTORY_MODE.UPDATE,
-              requester: `base_model/base_set/${this.table}`,
-              table_id: options.table_id,
-            };
-            if (options && options.connection) {
-              ops.connection = options.connection;
-            }
-            this.base_save_change_history(req, res, ops, (err) => {
-              if (err) {
-                console.log('ERROR TO SAVE base_ set_log_history', err);
-                return ResponseUtil.response(req, res, null, err, {}, cb);
-              }
-              self.next();
-            });
-          } else {
-            self.next();
-          }
-        },
+        // (self) => {
+        //   const local_save_log = false;
+        //   if (local_save_log && options.save_log === true) {
+        //     // var ops = {changes,seq_id,requester: "base_model/base_set/" + this.table,table_id:options.table_id}
+        //     // if(options && options.connection){
+        //     //   ops.connection = options.connection
+        //     // }
+        //     // this.base_set_log_history(req,res,ops,(err)=>{
+        //     //   if(err){
+        //     //     console.log("ERROR TO SAVE base_ set_log_history",err)
+        //     //     return ResponseUtil.response(req, res, null, err,{},cb);
+        //     //   }
+        //     //   self.next();
+        //     // })
+        //   } else {
+        //     self.next();
+        //   }
+        // },
+        // (self) => {
+        //   const last_changed_uuid = `${changes.last_changed_uuid || ''}`;
+        //   if (last_changed_uuid.length > 0) {
+        //     const sql = `SELECT COUNT(*) as qty FROM ${this.table} WHERE  seq_id = ? AND last_changed_uuid = ?`;
+        //     const params = [seq_id, changes.last_changed_uuid];
+        //     DataUtil.query_one(sql, params, options, (err, row) => {
+        //       if (row.qty < 1) {
+        //         req.log.warn('他のユーザがデータを使用しています。result at base_set', {
+        //           params, row, err, sql,
+        //         });
+        //         return ResponseUtil.response(req, res, null, '::他のユーザがデータを使用しています。', {}, cb);
+        //       }
+        //       self.next();
+        //     });
+        //   } else {
+        //     self.next();
+        //   }
+        // },
+        // (self) => {
+        //   if (options.save_change_history === true) {
+        //     const ops = {
+        //       changes,
+        //       seq_id,
+        //       history_mode: constants.HISTORY_MODE.UPDATE,
+        //       requester: `base_model/base_set/${this.table}`,
+        //       table_id: options.table_id,
+        //     };
+        //     if (options && options.connection) {
+        //       ops.connection = options.connection;
+        //     }
+        //     this.base_save_change_history(req, res, ops, (err) => {
+        //       if (err) {
+        //         console.log('ERROR TO SAVE base_ set_log_history', err);
+        //         return ResponseUtil.response(req, res, null, err, {}, cb);
+        //       }
+        //       self.next();
+        //     });
+        //   } else {
+        //     self.next();
+        //   }
+        // },
 
         (_self) => {
           const { upd_query, upd_data } = this.parse_upd_changed(changes, seq_id);
           DataUtil.query(upd_query, upd_data, { connection: local_connection }, (err, data) => {
-            req.log.info({
-              upd_query, upd_data, err, result: data, transaction: local_connection !== false,
-            }, 'base_set update');
+            // req.log.info({
+            //   upd_query, upd_data, err, result: data, transaction: local_connection !== false,
+            // }, 'base_set update');
             if (err) {
               return ResponseUtil.response(req, res, data, err, {}, cb);
             } if (data.affectedRows < 1 && changes.last_changed_uuid) {
@@ -739,32 +730,78 @@ class BaseModel {
       (self) => {
         self.next();
       },
-      (self) => {
-        if (options.save_change_history === true) {
-          const ops = {
-            changes: {},
-            seq_id,
-            history_mode: constants.HISTORY_MODE.DELETE,
-            requester: `base_model/base_delete/${this.table}`,
-            table_id: options.table_id,
-          };
-          if (options && options.connection) {
-            ops.connection = options.connection;
-          }
-          this.base_save_change_history(req, res, ops, (err) => {
-            if (err) {
-              console.log('ERROR TO SAVE base_ set_log_history', err);
-              return ResponseUtil.response(req, res, null, err, {}, cb);
-            }
-            self.next();
-          });
-        } else {
-          self.next();
-        }
-      },
+      // (self) => {
+      //   if (options.save_change_history === true) {
+      //     const ops = {
+      //       changes: {},
+      //       seq_id,
+      //       history_mode: constants.HISTORY_MODE.DELETE,
+      //       requester: `base_model/base_delete/${this.table}`,
+      //       table_id: options.table_id,
+      //     };
+      //     if (options && options.connection) {
+      //       ops.connection = options.connection;
+      //     }
+      //     this.base_save_change_history(req, res, ops, (err) => {
+      //       if (err) {
+      //         console.log('ERROR TO SAVE base_ set_log_history', err);
+      //         return ResponseUtil.response(req, res, null, err, {}, cb);
+      //       }
+      //       self.next();
+      //     });
+      //   } else {
+      //     self.next();
+      //   }
+      // },
       (_self) => {
         req.log.info({ seq_id, table: this.table }, 'Delete a record');
         DataUtil.query(`DELETE FROM ${this.table} WHERE seq_id = ?;`, seq_id, options, (err, result) => ResponseUtil.response(req, res, result, err, {}, cb));
+      },
+    ]);
+  }
+
+  base_delete_arr(req, res) {
+    const arr = req.body.array;
+    if (Array.isArray(arr) === false || arr.length === 0 || req.body.array_match3 !== arr.length * 3) {
+      return ResponseUtil.response(req, res, [], 'arrayまたはarray_match3のバリデーターが失敗しました。');
+    }
+    let connection = false;
+    const opt = {};
+    (new Nseq()).do([
+      (self) => {
+        DataUtil.get_connection('base_model/delete_arr', (err, _connection) => {
+          if (err) {
+            return ResponseUtil.response(req, res, [], '接続に失敗しました。');
+          }
+          connection = _connection;
+          self.next();
+        });
+      },
+      (self) => {
+        DataUtil.begin_transaction(connection, (err) => {
+          if (err) {
+            return ResponseUtil.response(req, res, [], 'トランザクションの開始に失敗しました。');
+          }
+          opt.connection = connection;
+          self.next();
+        });
+      },
+      (_self) => {
+        async.mapLimit(arr, 1, (item, done) => {
+          req.body.seq_id = item;
+          req.body.seq_id_match3 = item * 3;
+          // opt.save_change_history = true;
+          req.log.info(`Deleting the record id ${item} from ${this.table}`);
+          this.base_delete(req, res, opt, (err) => {
+            done(err);
+          });
+        }, (err, _allDone) => {
+          if (err) {
+            DataUtil.transaction_rollback_and_release(connection, (err2) => ResponseUtil.response(req, res, [], err2 || err));
+          } else {
+            DataUtil.transaction_commit_or_rollback(connection, (err3) => ResponseUtil.response(req, res, [], err3));
+          }
+        });
       },
     ]);
   }

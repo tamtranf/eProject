@@ -46,8 +46,10 @@ export default {
       if (this.watch_is_disabled === false) {
         if (value === '' || value === null || value === false) {
           this.onLocalUpdateValue('');
+        } else if (this.$props.fieldInfo.show_time === true) {
+          this.onLocalUpdateValue(moment(value).format('YYYY/MM/DD HH:mm:ss'));
         } else {
-          this.onLocalUpdateValue(moment(this.field_value).format('YYYY/MM/DD HH:mm'));
+          this.onLocalUpdateValue(moment(value).format('YYYY/MM/DD'));
         }
       }
     },
@@ -74,8 +76,10 @@ export default {
     getValue() {
       if (this.field_value === '' || this.field_value === null || this.field_value === false) {
         return '';
+      } if (this.$props.fieldInfo.show_time === true) {
+        return moment(this.field_value).format('YYYY/MM/DD HH:mm:ss');
       }
-      return moment(this.field_value).format('YYYY/MM/DD HH:mm');
+      return moment(this.field_value).format('YYYY/MM/DD');
     },
     setValue(v) {
       this.refresher = this.refresher === ' ' ? '' : ' ';

@@ -69,8 +69,24 @@ export default {
     },
   },
   methods: {
-    onDetailsClick() {
-
+    commonDeleteSelected(cb = () => {}) {
+      if (this.selectedRowArr.length === 0) {
+        return cb('No selected items');
+      }
+      const body = {
+        array: this.selectedRowArr.map((m) => m.seq_id),
+      };
+      body.array_match3 = body.array.length * 3;
+      this.$ajax.post(`/${this.api_name}/delete_arr/`, body, (err, result) => {
+        this.retrieved_value = (result && result.data) || {};
+        this.is_new = false;
+        this.gridOptions.api.purgeInfiniteCache();
+        this.countRows('commonDeleteSelected');
+        cb(err, result);
+      });
+    },
+    onDetailsClick(_ev, data) {
+      console.log('No listener set to onDetailsClick at .vue file ', { data });
     },
     format_date(d) {
       if (typeof d == 'undefined' || d === false || d === null || d === '') {

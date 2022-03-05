@@ -99,124 +99,76 @@ class TestModel extends BaseModel {
 
   get_options(req, res) {
     // this is a sample list of options, for test usage, it will not collect it from the DB, but local
+
     const list = [
-      {
-        id: 100 + 1, name: 'Microsoft', group: 'opt1', code: 'MS',
-      },
-      {
-        id: 100 + 2, name: 'IBM', group: 'opt1', code: 'IBM',
-      },
-      {
-        id: 100 + 3, name: 'Oracle', group: 'opt1', code: 'O',
-      },
-      {
-        id: 100 + 4, name: 'SAP', group: 'opt1', code: '',
-      },
-      {
-        id: 100 + 5, name: 'Tata Consultancy Services', group: 'opt1', code: 'TCS',
-      },
-      {
-        id: 100 + 6, name: 'PayPal', group: 'opt1', code: 'PP',
-      },
-      {
-        id: 100 + 7, name: 'Salesforce', group: 'opt1', code: 'SF',
-      },
-      {
-        id: 100 + 8, name: 'Fiserv', group: 'opt1', code: 'F',
-      },
-      {
-        id: 100 + 9, name: 'ADP', group: 'opt1', code: 'ADP',
-      },
-      {
-        id: 100 + 10, name: 'Adobe', group: 'opt1', code: 'ADB',
-      },
-      {
-        id: 200 + 11, name: 'Infosys', group: 'opt2', code: 'I',
-      },
-      {
-        id: 200 + 12, name: 'VMware', group: 'opt2', code: 'VW',
-      },
-      {
-        id: 200 + 13, name: 'Global Payments Inc', group: 'opt2', code: 'GPI',
-      },
-      {
-        id: 200 + 14, name: 'Intuit', group: 'opt2', code: 'IT',
-      },
-      {
-        id: 200 + 15, name: 'SS&C Technologies', group: 'opt2', code: 'SSC',
-      },
-      {
-        id: 200 + 16, name: 'NetApp', group: 'opt2', code: 'NA',
-      },
-      {
-        id: 200 + 17, name: 'ServiceNow', group: 'opt2', code: 'SN',
-      },
-      {
-        id: 200 + 18, name: 'Workday', group: 'opt2', code: 'WD',
-      },
-      {
-        id: 200 + 19, name: 'Broadridge Financial Solutions', group: 'opt2', code: 'BFS',
-      },
-      {
-        id: 200 + 20, name: 'Palo Alto Networks ', group: 'opt2', code: 'PAN',
-      },
-      {
-        id: 300 + 21, name: 'Paychex', group: 'opt3', code: 'PC',
-      },
-      {
-        id: 300 + 22, name: 'NortonLifeLock', group: 'opt3', code: 'MLL',
-      },
-      {
-        id: 300 + 23, name: 'Amdocs', group: 'opt3', code: 'ADS',
-      },
-      {
-        id: 300 + 24, name: 'Autodesk', group: 'opt3', code: 'ADK',
-      },
-      {
-        id: 300 + 25, name: 'Synopsys', group: 'opt3', code: 'SYN',
-      },
-      {
-        id: 300 + 26, name: 'Akamai Technologies ', group: 'opt3', code: 'AT',
-      },
-      {
-        id: 300 + 27, name: 'Citrix Systems', group: 'opt3', code: 'CS',
-      },
-      {
-        id: 300 + 28, name: 'Zoom Video Communications', group: 'opt3', code: 'ZVC',
-      },
-      {
-        id: 300 + 29, name: 'Cadence Design Systems ', group: 'opt3', code: 'CDS',
-      },
-      {
-        id: 300 + 30, name: 'Epam systems', group: 'opt3', code: 'ES',
-      },
-      {
-        id: 400 + 31, name: 'Splunk', group: 'opt4', code: 'SPL',
-      },
-      {
-        id: 400 + 32, name: 'Ansys ', group: 'opt4', code: 'AS',
-      },
-      {
-        id: 400 + 33, name: 'Twilio', group: 'opt4', code: 'TWL',
-      },
-      {
-        id: 400 + 34, name: 'Veeva Systems', group: 'opt4', code: 'VS',
-      },
-      {
-        id: 400 + 35, name: 'DocuSign', group: 'opt4', code: 'DS',
-      },
-      {
-        id: 400 + 36, name: 'RingCentral ', group: 'opt4', code: 'RC',
-      },
-      {
-        id: 400 + 37, name: 'Palantir Technologies ', group: 'opt4', code: 'PT',
-      },
+      // {
+
     ];
+    const toyota = ['Harrier', 'Corola', 'Camry', 'Avalon', 'Auris', 'Yaris', 'Prius', 'Altis', 'Civic', 'CR-V', 'Hilux', 'Land Cruiser',
+      'RAV4', 'Avalon Hybrid', 'Altis Hybrid', 'C-HR', 'Highlander', 'Highlander Hybrid'];
+    const honda = ['Accord', 'Civic', 'CR-V', 'Hilux', 'Land Cruiser', 'RAV4', 'Avalon Hybrid', 'Altis Hybrid', 'C-HR', 'Highlander', 'Highlander Hybrid'];
+    const nissan = ['Versa', 'Sentra', 'Maxima', 'Altima', 'Pathfinder', 'Frontier', 'Versa Note', 'Sentra Note', 'Maxima Note', 'Altima Note', 'Pathfinder Note', 'Frontier Note'];
+    const mazda = ['CX-3', 'CX-5', 'CX-7', 'CX-9', 'Mazda3', 'Mazda5', 'Mazda6', 'MazdaCX-7', 'MazdaCX-9', 'MazdaCX-30'];
+    const mitsubishi = ['Lancer', 'Lancer Evolution', 'Outlander', 'Lancer EVO', 'Lancer Sportback', 'Lancer EVO II', 'Lancer EVO XJ'];
+
+    let seq = 100;
+    toyota.forEach((car) => {
+      list.push({
+        id: seq += 1, name: car, group: 'Toyota', code: 'TOY',
+      });
+    });
+    seq = 200;
+    honda.forEach((car) => {
+      list.push({
+        id: seq += 1, name: car, group: 'Honda', code: 'HON',
+      });
+    });
+    seq = 300;
+    nissan.forEach((car) => {
+      list.push({
+        id: seq += 1, name: car, group: 'Nissan', code: 'NIS',
+      });
+    });
+    seq = 400;
+    mazda.forEach((car) => {
+      list.push({
+        id: seq += 1, name: car, group: 'Mazda', code: 'MAZ',
+      });
+    });
+    seq = 500;
+    mitsubishi.forEach((car) => {
+      list.push({
+        id: seq += 1, name: car, group: 'Mitsubishi', code: 'MIT',
+      });
+    });
+
     list.forEach((l) => {
+      l.id = l.name;
       l.key = md5(l.id);
       l.key2 = md5(l.id * l.id);
-      l.name = `${l.id} ${l.name}`;
+      l.name = `${l.name}`;
     });
+
+    // const async = require('async');
+    // const moment = require('moment');
+    // async.mapLimit(list, 1, (_item, done) => {
+    //   const rand = function (min, max) {
+    //     return Math.floor(Math.random() * (max - min + 1)) + min;
+    //   };
+    //   const names = ['John', 'Peter', 'Sally', 'Jane', 'Jack', 'Paul', 'Mark', 'Samantha', 'Emily', 'Kate', 'Emily', 'Kate', 'Jack', 'Paul', 'Mark', 'Samantha', 'Jane', 'Sally', 'Peter', 'John'];
+    //   const surnames = ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor',
+    //     'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Robinson'];
+
+    //   const name = `${names[rand(0, names.length - 1)]} ${surnames[rand(0, surnames.length - 1)]}`;
+    //   const sql = 'INSERT INTO master_template (`user_name`, `maker`, `car`, `user_password`, `retrieve_date_time`, `return_date`)VALUES(?,?,?,?,?,?)';
+    //   const params = [name, _item.group, _item.name, rand(10000000, 90000000), moment().subtract(rand(2000, 200000), 'minutes').format('YYYY/MM/DD HH:mm:ss'),
+    //     moment().add(rand(10000, 200000), 'minutes').format('YYYY/MM/DD')];
+    //   DataUtils.query(sql, params, {}, (err) => {
+    //     done(err);
+    //   });
+    // }, (_err, _allDone) => {
+    //   ResponseUtils.response(req, res, { list });
+    // });
     ResponseUtils.response(req, res, { list });
   }
 }
