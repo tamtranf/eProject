@@ -2,6 +2,7 @@
   <app-header></app-header>
   <div :class="[name,'page']">
     <h1>This is the {{ name }} page. Time:{{ testTime }}</h1>
+    <div>This is a test from lesson 3002</div>
     <div >
       <div class="col-6" style="">
         <form-field v-for="f in formFields" :key="f.id" :field_info="f" ></form-field>
