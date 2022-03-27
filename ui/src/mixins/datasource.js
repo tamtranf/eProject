@@ -1,7 +1,7 @@
 import debug from 'debug';
 import _ from 'lodash';
 
-const debug_pageDatasource = debug('esma:datasource');
+const debug_pageDatasource = debug('e:datasource');
 
 export default {
   components: {},
@@ -69,7 +69,8 @@ export default {
       this.selectedRowArr = [];
       this.gridOptions.api.redrawRows();
     },
-
+    cancelCurrentSelection() {
+    },
     searchByListDatasource(filter) {
       const filter_key = `${this.get_def(filter.by_list)}_${this.get_def(filter.filter_by)}_${this.get_def(filter.list)}`;
       debug_pageDatasource('searchByOneDatasource', filter, filter_key);
@@ -94,7 +95,7 @@ export default {
         type: 'contains',
         filter: new Date().getTime(),
       });
-      filterComponent.onFilterChanged();
+      this.state.gridOptions.api.onFilterChanged();
       this.state.gridOptions.api.setDatasource(this.pageDataSource);
       this.state.countRows('searchByListDatasource');
     },
@@ -123,7 +124,7 @@ export default {
         type: 'contains',
         filter: new Date().getTime(),
       });
-      filterComponent.onFilterChanged();
+      this.state.gridOptions.api.onFilterChanged();
       this.state.gridOptions.api.setDatasource(this.pageDataSource);
       this.state.countRows('searchByOneDatasource');
     },
@@ -212,7 +213,11 @@ export default {
     },
 
     searchControlChangedDatasource(f) {
-      console.log('search ControlChangedDatasource IN ', f);
+      console.log('search ControlChangedDatasource IN ', { f });
+      if (f.is_block_info !== true) {
+        console.log('search ControlChangedDatasource IGNORING ', { f });
+        return false;
+      }
       if (this.load_mode !== 'ds') {
         return this.searchControlChanged(f);
       }
@@ -259,7 +264,7 @@ export default {
             type: 'contains',
             filter: new Date().getTime(),
           });
-          filterComponent.onFilterChanged();
+          this.state.gridOptions.api.onFilterChanged();
           this.state.gridOptions.api.setDatasource(this.pageDataSource);
           this.state.countRows('search ControlChangedDatasource');
         }

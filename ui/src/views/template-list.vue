@@ -1,13 +1,16 @@
 <template>
   <app-header></app-header>
   <div :class="[name,'page']">
-    <h1>This is the {{ name }} page..</h1>
-
+    <h1>{{ name }} </h1>
     <div class="col-12" style="">
+      <search-control
+        style="padding-bottom: 10px;"
+        @change="searchControlChangedDatasource"
+        :field_names="tabFieldList"></search-control>
       <ag-grid-vue style="width: 100%; height: 325px;"
-          class="ag-theme-blue"
-           :gridOptions="gridOptions"
-          >
+        class="ag-theme-blue"
+        :gridOptions="gridOptions"
+        >
       </ag-grid-vue>
       <br>
       <button style="float:right;" class="btn btn-primary" @click="onAddNew">New</button>
@@ -40,7 +43,6 @@ export default {
     },
   ],
   mixins: [mixinLayoutComponents, agListController, datasource],
-  components: { },
   computed: {
     fieldList() {
       return fields;
@@ -51,12 +53,10 @@ export default {
         _.extend(fields.maker, {}),
         _.extend(fields.car, {}),
         _.extend(fields.retrieve_date_time, {}),
+        _.extend(fields.return_date, {}),
       ];
       return r;
     },
-    // deleteDisabled() {
-    //   return this.delete_disabled;
-    // },
     deleteDisabled: {
       get() {
         return this.delete_disabled;

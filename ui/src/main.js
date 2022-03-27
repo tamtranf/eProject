@@ -6,7 +6,9 @@ import router from './router';
 import store from './store';
 import ajax from './libs/ajax';
 
-// Vue.prototype.$ajax = ajax;
+// Enable all for tests
+localStorage.debug = 'e:*';
+localStorage.devMode = 1;
 
 const app = createApp(App);
 app.config.globalProperties.$ajax = ajax;

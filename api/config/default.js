@@ -32,13 +32,13 @@ const config = {
   ],
   admin_user: {
     username: 'admin',
-    default_password: 'iss201907', // This password should be updated, it will be used only when created.
-    mode: 'admin', // 'admin' then the 'admin' user is required with {admin_user.username}, or 'any_admin' with any name is required.
+    default_password: '1234',
+    mode: 'admin',
     role: '保守担当',
     company: 'MHTB',
   },
   bunyan_logger: {
-    name: 'esma',
+    name: 'e',
     src: true,
     streams: [{
       type: 'rotating-file',

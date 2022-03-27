@@ -2,6 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { AgGridVue } from 'ag-grid-vue3';
+import SearchControl from '@/components/search/search-control';
 
 export default {
   data() {
@@ -167,7 +168,11 @@ export default {
           }
         }
         if (f.type === 'date_picker') {
-          fi.cellRenderer = (params) => this.format_date(params.value);
+          if (f.show_time === true) {
+            fi.cellRenderer = (params) => this.format_date_time(params.value);
+          } else {
+            fi.cellRenderer = (params) => this.format_date(params.value);
+          }
         } else if (f.type === 'select') {
           fi.cellRenderer = (params) => {
             if (f.table_field_style && _.size(f.table_field_style) > 0) {
@@ -265,7 +270,7 @@ export default {
     },
 
   },
-  components: { AgGridVue },
+  components: { AgGridVue, SearchControl },
   mounted() {
 
   },

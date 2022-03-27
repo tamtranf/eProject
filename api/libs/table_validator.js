@@ -3,24 +3,11 @@ const path = require('path');
 const mysql = require('mysql');
 const async = require('async');
 const _ = require('lodash');
-const debug = require('debug')('esma:table_validator');
+const debug = require('debug')('e-project:table_validator');
 const config = require('../config/default');
 
 const connection = mysql.createPool(config.db);
 
-/**
- * FIXME: Instead of this, it should have a dedicated command to allow to copy from DB to  File.
- * This command should have parameters:
- * No params, means all tables, indexes and data.
- * first param is  the table name, so only process this table
- * second parameters is the mode, all is by default, index or structure are also options. Or only check is also possible,
- * 3rd parameter is to copy a single field.
- *
- *
- *
- * If COPY_DB_FIELDS_TO_FILE is set to false, then it will load the table structure from file to DB.
- * But if set to true, then will copy from DB to file.
- */
 const COPY_DB_FIELDS_TO_FILE = false; // DO NOT COMMIT IT AS TRUE. ONLY AS FALSE.
 const tabs = config.tables;
 
