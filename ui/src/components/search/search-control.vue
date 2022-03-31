@@ -6,7 +6,7 @@
 
       <div class="join1" >
         <select class="form-control select-box" :disabled="j1_disabled"
-        style="height: 24px; padding: 0px 0px; margin: 0px 0px 0px 0px; font-size: 12px; width: 65px; margin: 0 auto ;"
+        style="height: 24px; padding: 0px 0px; margin: 0px 0px 0px 0px; font-size: 12px; width:45px; text-align: center; margin: 0 auto ;"
         @change="andOr($event.target.value, 'j1')" :value="joinValue1" id="and_or_2" name="and_or_2">
           <option>AND</option>
           <option>OR</option>
@@ -19,7 +19,7 @@
       </div>
       <div class="join2" >
         <select class="form-control select-box" :disabled="j2_disabled"
-        style="height: 24px; padding: 0px 0px; margin: 0px 0px 0px 0px; font-size: 12px; width: 65px; margin: 0 auto ;"
+        style="height: 24px; padding: 0px 0px; margin: 0px 0px 0px 0px; font-size: 12px; width:45px; text-align: center; margin: 0 auto ;"
         @change="andOr($event.target.value, 'j2')" :value="joinValue2" id="and_or_2" name="and_or_2">
           <option>AND</option>
           <option>OR</option>

@@ -2,11 +2,11 @@
   <div class="row" :style="style">
 
           <div class=" col-12" style="padding:0px;margin:0px" v-if="clearingAll === false">
-            <div class="row" >
+            <div class="row" style="padding:0px;margin:0px;">
               <div class=" col-6" style="padding:0px;margin:0px">
                 <select
                   class="form-control select-box limited-height-box"
-                  style="width:100%!important;margin-top: 0px;font-size:12px;padding: 0px;height: 24px;"
+                  style="width:100%!important;margin-top: 0px;font-size:12px;padding: 0px;padding: 0px 5px;height: 24px;"
                   :disabled="allDisabled"
                   @change="onFilterTypeSelected($event.target.value)"
                   :id="'search_block'+block_id"
@@ -30,7 +30,7 @@
                     ref="local_value"
                     type="text"
                     class="form-control"
-                    style="height:24px;font-size:12px;"
+                    style="height:24px;font-size:12px; padding-left: 5px;"
                     @input="updateValue($event.target.value)"
                     :id="'search_local_value_'+block_id"  name="local_value"  :model="localValue" :value="localValue" >
                 </div>
@@ -206,7 +206,7 @@ export default {
         debug_search_control_block('before', f, typeof f);
         if (typeof f !== 'undefined' && f !== null && f !== false) {
           this.selected_field = _.clone(f);
-          this.selected_field.style = 'font-size:12px;padding: 0px;height: 24px;';
+          this.selected_field.style = 'font-size:12px;padding: 0px 5px;height: 24px;';
           this.selected_field_type = f.type;
           if (f.type === filed_types.SELECT_BOX) {
             const temp_options = f.options_original || f.options;
