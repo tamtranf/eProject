@@ -44,7 +44,7 @@ export default {
       return this.$props.fieldInfo.style || '';
     },
     isReadOnly() {
-      return this.$props.fieldInfo.read_only || false;
+      return this.$props.fieldInfo.read_only || this.$props.read_only || false;
     },
     localRefreshSequence: {
       get() {

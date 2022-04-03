@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import { AgGridVue } from 'ag-grid-vue3';
 import SearchControl from '@/components/search/search-control';
+import constants from '../../../api/rules/constants';
 
 export default {
   data() {
@@ -173,7 +174,7 @@ export default {
           } else {
             fi.cellRenderer = (params) => this.format_date(params.value);
           }
-        } else if (f.type === 'select') {
+        } else if (f.type === constants.TYPES.SELECT_BOX) {
           fi.cellRenderer = (params) => {
             if (f.table_field_style && _.size(f.table_field_style) > 0) {
               return `<span style='${f.table_field_style[params.value]}'>${params.value}</span>`;

@@ -3,6 +3,7 @@
     <select  class="form-control form-select"
     :style="fieldStyle"
     :disabled="isDisabled"
+    :readonly="isReadOnly"
     @change="onLocalSelectedUpdateValue($event.target.value)"
     v-model="field_value"
     :id="fieldID"

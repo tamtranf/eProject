@@ -1,10 +1,10 @@
 module.exports = {
-  PERMISSION_MODE: {
-    BROWSE: 'browse',
-    ADD: 'add',
-    EDIT: 'edit',
-    DELETE: 'delete',
-    EXPORT: 'export',
+  ACL_ACTION: {
+    READ: 'READ',
+    ADD: 'ADD',
+    EDIT: 'EDIT',
+    DELETE: 'DELETE',
+    EXPORT: 'EXPORT',
   },
   HISTORY_MODE: {
     NEW: 1,

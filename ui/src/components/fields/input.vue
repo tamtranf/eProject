@@ -10,7 +10,7 @@
   :max="maxVal"
   :id="fieldID"
   :name="fieldID"
-  :read_only="isReadOnly"
+  :readonly="isReadOnly"
   :placeholder="fieldID" />
   {{ refresher }}
 </template>

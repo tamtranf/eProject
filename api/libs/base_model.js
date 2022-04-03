@@ -41,7 +41,7 @@ class BaseModel {
   constructor() {
     // FIXME: All methods should support connection.
     // this.acl = acl_rules;
-    // this.permissionMode = constants.PERMISSION_MODE;
+    // this.aclAction = constants.ACL_ACTION;
 
     setTimeout(() => {
       // validate fields
