@@ -45,7 +45,7 @@ export default {
     setFormDefaultFields(arr, fields) {
       const ret = [];
       arr.forEach((f) => {
-        ret.push(fields[f]);
+        ret.push(_.clone(fields[f]));
       });
       return ret;
     },
