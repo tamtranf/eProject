@@ -132,6 +132,12 @@ class BaseModel {
     });
   }
 
+  base_datasource_load_for_export(req, res, options = {}, cb = false) {
+    req.params.start = parseInt(req.params.start || 0);
+    req.params.end = parseInt(req.params.end || 1000000);
+    this.base_datasource_load(req, res, options, cb);
+  }
+
   base_datasource_load(req, res, options = {}, cb = false) {
     const pos_start = parseInt(req.params.start || 0);
     const pos_end = parseInt(req.params.end || 0);
