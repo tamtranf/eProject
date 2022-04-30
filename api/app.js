@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bunyan = require('bunyan');
+const fileUpload = require('express-fileupload');
 const RouteUtil = require('./libs/route_utils');
 const config = require('./config/default');
 const table_validator = require('./libs/table_validator');
@@ -19,7 +20,7 @@ Object.keys(config.env).forEach((c) => {
 });
 
 const app = express();
-
+app.use(fileUpload({}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

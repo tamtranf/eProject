@@ -2,6 +2,7 @@ const _ = require('lodash');
 const async = require('async');
 const uuid = require('uuid');
 const moment = require('moment');
+const XLSX = require('xlsx');
 const Nseq = require('nseq');
 const LRU = require('lru-cache');
 const DataUtil = require('./data_utils');
@@ -1034,6 +1035,55 @@ class BaseModel {
       temp = temp.replace('?', ` '${e}' `);
     });
     return temp;
+  }
+
+  base_load_uploaded_excel_file(req, res, options, cb) {
+    const post_file_name = options.post_file_name || 'upload';
+
+    const file = req.files[post_file_name];
+    let data = false;
+    const map_fields = [];
+    const lf = _.clone(this.get_fields().fields.array);
+    _.filter(lf, (f) => typeof f.import !== 'undefined' && typeof f.import[this.id] !== 'undefined').forEach((f) => {
+      f.import_key = f.import[this.id];
+      map_fields.push(f);
+    });
+    const insert_rows = [];
+    const workbook = XLSX.read(file.data, { type: 'buffer', cellDates: true, dateNF: 'yyyy/mm/dd;@' });
+    workbook.SheetNames.forEach((sheetName) => {
+      if (data === false) {
+        data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+          header: options.file_header || 0,
+          range: options.file_range || 0,
+          defval: options.file_defval || '',
+          raw: options.file_raw || false,
+        });
+        data.forEach((row) => {
+          const i_row = {};
+          map_fields.forEach((mf) => {
+            if (typeof row[mf.import_key] != 'undefined') {
+              i_row[mf.id] = row[mf.import_key];
+            } else {
+              i_row[mf.id] = mf.import[this.id].default || '';
+            }
+          });
+          insert_rows.push(i_row);
+        });
+      }
+    });
+    cb(null, insert_rows, file);
+  }
+
+  base_insert_new_array(req, res, data_array, _options = {}, cb = false) {
+    async.mapLimit(data_array, 1, (item, done) => {
+      req.body.changes = item;
+      req.params.id = constants.IDS.ADD_NEW_RECORD_ID;
+      this.base_set(req, res, {}, (err2, result) => {
+        done(err2, result);
+      });
+    }, (err3, _allDone) => {
+      ResponseUtil.response(req, res, data_array, err3, cb);
+    });
   }
 }
 module.exports = BaseModel;

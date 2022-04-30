@@ -1,8 +1,10 @@
 {
   "cSpell.words": [
+    "axios",
     "camelcase",
     "datasource",
     "datetime",
+    "defval",
     "eqeqeq",
     "esma",
     "fcondition",
