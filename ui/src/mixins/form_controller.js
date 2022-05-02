@@ -50,7 +50,7 @@ export default {
       return ret;
     },
     setFormFields(data) {
-      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || []);
+      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || [], this.formFieldsSideC || []);
       local_fields_ref.forEach((field) => {
         if (typeof data[field.id] != 'undefined') {
           field.ref_field.setValue(data[field.id]);
@@ -58,7 +58,7 @@ export default {
       });
     },
     getFormFieldsValues(only_changed = false) {
-      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || []);
+      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || [], this.formFieldsSideC || []);
       const data = {};
       local_fields_ref.forEach((field) => {
         let changed = false;
@@ -77,12 +77,12 @@ export default {
       return data;
     },
     getGlobalValue(field) {
-      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || []);
+      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || [], this.formFieldsSideC || []);
       const base_field = _.find(local_fields_ref, (rf) => rf.id === field);
       return base_field.ref_field.getValue();
     },
     setupFieldRelations() {
-      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || []);
+      const local_fields_ref = _.union(this.local_fields_ref || [], this.formFieldsSideA || [], this.formFieldsSideB || [], this.formFieldsSideC || []);
       let not_yet_loaded = false;
       local_fields_ref.forEach((field) => {
         if (typeof field.ref_field === 'undefined') {
