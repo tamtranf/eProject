@@ -197,7 +197,7 @@ export default {
       this.localValue = '*';
       const f = _.find(this.field_names, { id: val });
       let wait_time = 1;
-      if (typeof f !== 'undefined' && f !== null && f !== false && (f.type === filed_types.SELECT_BOX4 || f.type === filed_types.SELECT_BOX2)) {
+      if (typeof f !== 'undefined' && f !== null && f !== false && (f.type === filed_types.SELECT_BOX)) {
         this.selected_field = false;
         this.selected_field_type = false;
         wait_time = 100;
