@@ -79,11 +79,6 @@ class BaseModel {
     return val;
   }
 
-  isDate(date) {
-    // eslint-disable-next-line no-restricted-globals
-    return (new Date(date) !== 'Invalid Date') && !isNaN(new Date(date));
-  }
-
   checkServerUserPermission(req, res, model_acl, permission, _requester = '', _custom_error_message = false) {
     // FIXME: To be implemented
     // if (model_acl === null || model_acl === true) {
@@ -486,6 +481,11 @@ class BaseModel {
         },
       ]);
     }
+  }
+
+  isDate(date) {
+    // eslint-disable-next-line no-restricted-globals
+    return (new Date(date) !== 'Invalid Date') && !isNaN(new Date(date));
   }
 
   base_save_change_history(req, res, options, cb) {
