@@ -2,10 +2,9 @@
 
 class ResponseUtils {
   // constructor() {}
-
   response(req, res, data, error, options = {}, cb = false) {
     if (error != null && req && req.log && req.log.info) {
-      req.log.info({ error }, 'Return error.');
+      req.log.warning({ error }, 'Return error.');
     }
     if (cb !== false) {
       return cb(error, data);

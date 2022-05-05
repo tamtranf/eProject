@@ -484,8 +484,20 @@ class BaseModel {
   }
 
   isDate(date) {
-    // eslint-disable-next-line no-restricted-globals
-    return (new Date(date) !== 'Invalid Date') && !isNaN(new Date(date));
+    if (date === null || date === undefined || date === '' || date === false || date === 0) {
+      return false;
+    }
+    const temp_date = date.toString().trim().replace('  ', ' ').replace('.', '/');
+    if (temp_date.length < 10) {
+      return false;
+    }
+    // eslint-disable-next-line max-len
+    const regexExp = /([0-9]{4}(\/|-)(1[0-2]|0[1-9]|[1-9])(\/|-)([0-9]{1,2})$)|([0-9]{4}(\/|-)(1[0-2]|0[1-9]|[1-9])(\/|-)([0-9]{1,2})\s[0-9]{1,2}:[0-9]{2}:[0-9]{2}$)|([0-9]{4}(\/|-)(1[0-2]|0[1-9]|[1-9])(\/|-)([0-9]{1,2})\s[0-9]{1,2}:[0-9]{2}$)/gi;
+    const r = regexExp.test(temp_date);
+    if (r) {
+      console.log('isDate', { date, r });
+    }
+    return r;
   }
 
   base_save_change_history(req, res, options, cb) {
