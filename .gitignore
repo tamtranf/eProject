@@ -25,4 +25,6 @@ local_files/*
 api/temp/*
 api/temp/test_file.txt
 api/logs/*
+api/local_uploads/*
+api/logs/e_app_*.log*
 dev/output/* 
