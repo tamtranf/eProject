@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const worker_id = process.env.pm_id || '1';
 const config = {
   port: 4001,
@@ -33,6 +36,8 @@ const config = {
   admin_user: {
     username: 'admin',
     default_password: '1234',
+    default_entity: 'personal',
+    default_acl_role: 'ADMIN',
     mode: 'admin',
     role: '保守担当',
     company: 'MHTB',
@@ -49,5 +54,10 @@ const config = {
     }],
   },
 };
+if (fs.existsSync(path.join(__dirname, 'aws_config_file.json'))) {
+  const aws_config_file = require(path.join(__dirname, 'aws_config_file.json'));
+  Object.assign(config, aws_config_file);
+  console.log('USING aws_config_file');
+}
 
 module.exports = config;

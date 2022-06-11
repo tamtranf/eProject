@@ -25,3 +25,4 @@ local_files/*
 api/temp/*
 api/temp/test_file.txt
 api/logs/*
+dev/output/* 

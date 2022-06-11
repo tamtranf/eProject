@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql');
+const Nseq = require('nseq');
+const md5 = require('md5');
 const async = require('async');
 const _ = require('lodash');
 const debug = require('debug')('e-project:table_validator');
@@ -512,38 +514,83 @@ const TableValidator = {
     return a !== b;
   },
   validate_admin_user: (cb) => {
-    // FIXME: Let it more generic.
-    connection.query('select count(*) as qty from master_dev where user_id = ?', [config.admin_user.username], (err, rows_admin) => {
-      if (err) {
-        throw err;
-      }
-      connection.query('select count(*) as qty from master_dev where role = ? or role = ? or user_id = ?', ['管理責任者', '保守担当', config.admin_user.username], (err3, rows_any_admin) => {
-        if (err3) {
-          throw err3;
-        }
-        if ((rows_admin[0].qty < 1 && config.admin_user.mode === 'admin') || (rows_any_admin[0].qty < 1 && config.admin_user.mode === 'any_admin')) {
-          require('../models/master_dev').local_add_user({
-            password: config.admin_user.default_password,
-            user_id: config.admin_user.username,
-            role: config.admin_user.role,
-            company: config.admin_user.company,
-            user_shimei: 'Admin User',
-          },
-          (err2) => {
-            if (err2 === null) {
-              console.log('Default user ', config.admin_user.username, ' was created with default password. Please change the password.');
-            } else {
-              console.log('Can not create the ADMIN user.');
+    (new Nseq()).do([
+      (self) => {
+        if (config.tables.indexOf('master_user') > -1 && config.tables.indexOf('master_user_permission') > -1 && config.tables.indexOf('master_entity') > -1) {
+          connection.query('select count(*) as qty from master_user where user_name = ?', [config.admin_user.username], (err, rows_admin) => {
+            if (err) {
+              throw err;
             }
-            TableValidatorExecutedFixes += 1;
-            cb(err2);
+            if ((rows_admin[0].qty < 1 && config.admin_user.mode === 'admin')) {
+              const sql = 'INSERT INTO master_user (user_name,password,full_name,last_login,status,is_super_admin) VALUES (?,?,?,now(),1,1)';
+              const params = [config.admin_user.username, md5(config.admin_user.default_password), config.admin_user.username];
+              connection.query(sql, params, (err2, _user_inserted) => {
+                if (err2) {
+                  throw err2;
+                }
+                const sql2 = 'REPLACE INTO master_entity (entity_code,entity_name) VALUES (?,?)';
+                const params2 = [config.admin_user.default_entity, config.admin_user.default_entity];
+                connection.query(sql2, params2, (err3, _entity_inserted) => {
+                  if (err3) {
+                    throw err3;
+                  }
+                  const sql3 = 'REPLACE INTO master_user_permission (user_name,entity_code,acl_role) VALUES (?,?,\'ADMIN\')';
+                  const params3 = [config.admin_user.username, config.admin_user.default_entity];
+                  connection.query(sql3, params3, (err4, _master_user_permission) => {
+                    if (err4) {
+                      throw err4;
+                    }
+                    self.next();
+                  });
+                });
+              });
+            }
           });
         } else {
-          console.log('Admin user validated.');
-          cb(null);
+          self.next();
         }
-      });
-    });
+      },
+      (self) => {
+        if (config.tables.indexOf('master_dev') > -1) {
+          connection.query('select count(*) as qty from master_dev where user_id = ?', [config.admin_user.username], (err, rows_admin) => {
+            if (err) {
+              throw err;
+            }
+            connection.query('select count(*) as qty from master_dev where role = ? or role = ? or user_id = ?', ['管理責任者', '保守担当', config.admin_user.username], (err3, rows_any_admin) => {
+              if (err3) {
+                throw err3;
+              }
+              if ((rows_admin[0].qty < 1 && config.admin_user.mode === 'admin') || (rows_any_admin[0].qty < 1 && config.admin_user.mode === 'any_admin')) {
+                require('../models/master_dev').local_add_user({
+                  password: config.admin_user.default_password,
+                  user_id: config.admin_user.username,
+                  role: config.admin_user.role,
+                  company: config.admin_user.company,
+                  user_shimei: 'Admin User',
+                },
+                (err2) => {
+                  if (err2 === null) {
+                    console.log('Default user ', config.admin_user.username, ' was created with default password. Please change the password.');
+                  } else {
+                    console.log('Can not create the ADMIN user.');
+                  }
+                  TableValidatorExecutedFixes += 1;
+                  cb(err2);
+                });
+              } else {
+                console.log('Admin user validated.');
+                self.next();
+              }
+            });
+          });
+        } else {
+          return self.next();
+        }
+      },
+      (_self) => {
+        cb();
+      },
+    ]);
   },
   validate_tables: (current_db_info, cb) => {
     console.log('Running tables structure validation.');

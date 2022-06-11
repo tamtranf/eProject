@@ -1,0 +1,26 @@
+server {
+  listen 80;
+  access_log /var/log/nginx/reverse-access.log;
+  error_log /var/log/nginx/reverse-error.log;
+
+  set_real_ip_from  10.0.0.0/8;
+  set_real_ip_from  172.16.0.0/12;
+  set_real_ip_from  192.168.0.0/16;
+  real_ip_header    X-Forwarded-For;
+
+  proxy_intercept_errors on;
+  location ~ ^/error_pages/(.*?).html {
+    add_header X-e-project c;
+      root /var/www/html;
+  }
+  location / {
+    proxy_send_timeout         3600;
+    proxy_read_timeout         3600;
+    add_header X-e-project c;
+    # error_page 403 = /error_pages/403.html;
+    # error_page 404 = /error_pages/404.html;
+    # error_page 500 503 504 = /error_pages/5xx.html;
+    # error_page 502 = /error_pages/502.html;
+    proxy_pass http://{app-a IP}:80;
+  }
+}
