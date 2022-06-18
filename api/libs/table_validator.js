@@ -544,6 +544,8 @@ const TableValidator = {
                   });
                 });
               });
+            } else {
+              self.next();
             }
           });
         } else {
