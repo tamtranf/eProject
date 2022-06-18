@@ -18,8 +18,6 @@ mv e-project old_$move_date
 unzip e-project_*.zip
 cp  --preserve=timestamps temp_logs/* e-project/app/logs/.
 
-cp -r node_modules e-project/app/.
-
 cd e-project/app/
 
 export http_proxy=http://10.10.0.10:3128
