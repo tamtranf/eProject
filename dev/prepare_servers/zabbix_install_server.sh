@@ -161,7 +161,7 @@ http://{squid-a public IP}/zabbix/
 # User=zabbixadmin
 # Password=P@SSw0RD
 # Click [Next step] again
-# At Zabbix server name, set Squid
+# At Zabbix server name, set Zabbix
 # At Default time zone, search Asia/Tokyo
 # Click [Next step] again
 # Click [Next step] again
