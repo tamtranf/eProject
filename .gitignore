@@ -24,7 +24,7 @@ api/logs/sma_app_*
 local_files/*
 api/temp/*
 api/temp/test_file.txt
-api/logs/*
+api/logs/*log*
 api/local_uploads/*
 AWS_KEY.pem
 api/logs/e_app_*.log*
