@@ -1,5 +1,5 @@
 -- Run this when running on the local computer.
-CREATE USER 'e_user' @'localhost' IDENTIFIED WITH mysql_native_password BY 'e_Str0n6-p4s5w0Rd';
+CREATE USER 'e_user' @'localhost' IDENTIFIED WITH caching_sha2_password BY 'e_Str0n6-p4s5w0Rd';
 
 GRANT ALL ON *.* TO 'e_user' @'localhost';
 

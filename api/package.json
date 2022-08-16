@@ -33,7 +33,7 @@
     "mime": "^3.0.0",
     "moment": "^2.29.1",
     "morgan": "~1.9.1",
-    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "mysqldump": "^3.2.0",
     "nseq": "^0.1.0",
     "serve-favicon": "^2.5.0",

@@ -1,6 +1,6 @@
 const fs = require('fs');
 // const path = require('path');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const async = require('async');
 const _ = require('lodash');
 // const bunyan = require('bunyan');

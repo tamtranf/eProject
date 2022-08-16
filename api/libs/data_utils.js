@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const _ = require('lodash');
 const uuid = require('uuid');
 const config = require('../config/default');
