@@ -32,12 +32,18 @@ class TestModel extends BaseModel {
         method: 'post', func: 'get_options', path: '/get_options', no_login: true,
       },
     };
-    // this.populate_master_template(() => {});
-    // this.populate_master_template(() => {});
-    // this.populate_master_template(() => {});
-    // this.populate_master_template(() => {});
-    // this.populate_master_template(() => {});
-    // this.populate_master_template(() => {});
+
+    const sql = 'SELECT COUNT(*) as qty from  master_template';
+    DataUtils.query(sql, [], {}, (err, data) => {
+      if (Array.isArray(data) === false || data.length < 1 || data[0].qty === 0) {
+        this.populate_master_template(() => {});
+        this.populate_master_template(() => {});
+        this.populate_master_template(() => {});
+        this.populate_master_template(() => {});
+        this.populate_master_template(() => {});
+        this.populate_master_template(() => {});
+      }
+    });
   }
 
   get_fields() {

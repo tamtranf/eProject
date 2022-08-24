@@ -4,10 +4,18 @@
     <h1>This is the {{ name }} page {{ seqId }}</h1>
     <div class="row">
       <div class="col-6" style="">
-        <form-field v-for="f in formFieldsSideA" :key="f.id" :field_info="f"></form-field>
+        <!--
+        Update 2022/08/25, the parameter :read="false" was not part of the code when the lesson was created.
+        In the lesson #3014, it will be replaced to use the checkACL.
+        You can remove these comment lines after reading it. -->
+        <form-field v-for="f in formFieldsSideA" :read="false"  :key="f.id" :field_info="f"></form-field>
       </div>
       <div class="col-6" style="">
-        <form-field v-for="f in formFieldsSideB" :key="f.id" :field_info="f"></form-field>
+        <!--
+        Update 2022/08/25, the parameter :read="false" was not part of the code when the lesson was created.
+        In the lesson #3014, it will be replaced to use the checkACL.
+        You can remove these comment lines after reading it. -->
+        <form-field v-for="f in formFieldsSideB" :read="false"  :key="f.id" :field_info="f"></form-field>
         <br>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
       </div>
