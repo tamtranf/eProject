@@ -176,10 +176,17 @@ export default {
           }
         } else if (f.type === constants.TYPES.SELECT_BOX) {
           fi.cellRenderer = (params) => {
-            if (f.table_field_style && _.size(f.table_field_style) > 0) {
-              return `<span style='${f.table_field_style[params.value]}'>${params.value}</span>`;
+            let label = params.value;
+            if (f.options_mode === constants.SELECT_FIELD_MODE.LIST) {
+              const found = _.find(f.list, (d) => `${params.value}` === `${d.value}`);
+              if (found) {
+                label = found.label;
+              }
             }
-            return params.value;
+            if (f.table_field_style && _.size(f.table_field_style) > 0) {
+              return `<span style='${f.table_field_style[params.value]}'>${label}</span>`;
+            }
+            return label;
           };
         } else if (f.type === 'select2') {
           fi.cellRenderer = (params) => {
