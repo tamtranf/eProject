@@ -16,6 +16,12 @@ class ResponseUtils {
     }
     return res.json({ success: error == null, data, error });
   }
+
+  error(res, options = {}) {
+    return res.json({
+      success: false, error: options.message || options.error || 'Error', debug: 'from ResponseUtils error',
+    });
+  }
 }
 
 module.exports = new ResponseUtils();
