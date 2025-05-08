@@ -237,11 +237,54 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "master_products": {
+            "id": {
+                "Field": "id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "prod_name": {
+                "Field": "prod_name",
+                "Type": "varchar(256)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "prod_code": {
+                "Field": "prod_code",
+                "Type": "varchar(256)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "prod_color": {
+                "Field": "prod_color",
+                "Type": "varchar(32)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "notes": {
+                "Field": "notes",
+                "Type": "varchar(1024)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
         "master_dev": {},
         "master_test": {},
-        "master_template": {}
+        "master_template": {},
+        "master_products": {}
     }
 }

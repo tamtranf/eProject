@@ -22,7 +22,7 @@ const config = {
     host: '127.0.0.1',
     user: 'e_user',
     password: 'e_Str0n6-p4s5w0Rd',
-    database: 'e_db_1',
+    database: 'db3005',
     dateStrings: true,
   },
   auto_create_database: true,
@@ -32,6 +32,8 @@ const config = {
     'master_dev',
     'master_test',
     'master_template',
+    'master_products',
+
   ],
   admin_user: {
     username: 'admin',

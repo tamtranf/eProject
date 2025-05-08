@@ -10,6 +10,8 @@ const routes = [];
   require('../views/template-list'),
   require('../views/test'),
   require('../views/dev'),
+  require('../views/test_3004'),
+
 ].forEach((file) => {
   file.default.routes.forEach((r) => {
     r.component = file.default;
