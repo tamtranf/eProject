@@ -279,12 +279,71 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "master_user": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "username": {
+                "Field": "username",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
+            "password": {
+                "Field": "password",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "full_name": {
+                "Field": "full_name",
+                "Type": "varchar(256)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "last_login": {
+                "Field": "last_login",
+                "Type": "datetime",
+                "Null": "NO",
+                "Key": "",
+                "Default": "CURRENT_TIMESTAMP",
+                "Extra": "DEFAULT_GENERATED"
+            },
+            "status": {
+                "Field": "status",
+                "Type": "tinyint",
+                "Null": "NO",
+                "Key": "",
+                "Default": "1",
+                "Extra": ""
+            },
+            "is_super_admin": {
+                "Field": "is_super_admin",
+                "Type": "tinyint",
+                "Null": "NO",
+                "Key": "",
+                "Default": "0",
+                "Extra": ""
+            }
         }
     },
     "indexes": {
         "master_dev": {},
         "master_test": {},
         "master_template": {},
-        "master_products": {}
+        "master_products": {},
+        "master_user": {}
     }
 }

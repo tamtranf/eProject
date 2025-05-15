@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [];
 // Define here the name of each file that should be part to the router
 [
+  require('../views/login'),
   require('../views/home'),
   require('../views/about'),
   require('../views/templates'),

@@ -22,7 +22,7 @@ const config = {
     host: '127.0.0.1',
     user: 'e_user',
     password: 'e_Str0n6-p4s5w0Rd',
-    database: 'db3005',
+    database: 'tranvantamver2',
     dateStrings: true,
   },
   auto_create_database: true,
@@ -33,7 +33,7 @@ const config = {
     'master_test',
     'master_template',
     'master_products',
-
+    'master_user',
   ],
   admin_user: {
     username: 'admin',
