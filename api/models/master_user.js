@@ -73,7 +73,7 @@ class MasterUser extends base_model {
       const row = result[0];
       const data = {
         username: row.username,
-        fullname: row.full_name,
+        full_name: row.full_name,
         status: row.status,
 
       };
@@ -89,7 +89,26 @@ class MasterUser extends base_model {
 
   logout() {}
 
-  validate() {}
+  validate(req, res, cb) {
+    const {
+      session_user, session_full_name, session_expires, session_key, session_hash,
+    } = req.body;
+    const session_read = moment(new Date(this.now())).format('YYYYMMDDHHmmss');
+    if (typeof session_expires === 'undefined' || parseInt(session_read) > parseInt(session_expires)) {
+      this.destroy_cookie();
+      return cb(false);
+    }
+    const test_hash = this.create_hash(session_user, session_key, session_full_name, session_expires);
+    if (test_hash === session_hash) {
+      if (typeof req.local === 'undefined') {
+        req.local = {};
+      }
+      req.local.session_user = session_user;
+      req.local.session_full_name = session_full_name;
+      return cb(true);
+    }
+    return cb(false);
+  }
 
   now() {
     return (new Date()).getTime();
@@ -100,7 +119,8 @@ class MasterUser extends base_model {
   }
 
   create_cookie(req, res, user) {
-    const expires = this.now() + this.session_ttl;
+    console.log(user.full_name);
+    const expires = new Date(this.now() + this.session_ttl);
     const expires_read = moment(expires).format('YYYYMMDDHHmmss');
     const session_key = `${Math.floor(Math.random() * 100000000 + 10000000)}_${uuid.v4()}_${md5(user.username)}`;
     const session_hash = this.create_hash(user.username, session_key, user.full_name, expires_read);
@@ -108,7 +128,7 @@ class MasterUser extends base_model {
     res.cookie('session_full_name', user.full_name, { expires });
     res.cookie('session_expires', expires_read, { expires });
     res.cookie('session_key', session_key, { expires });
-    res.session_hash('session_hash', session_hash, { expires });
+    res.cookie('session_hash', session_hash, { expires });
   }
 
   destroy_cookie() {}

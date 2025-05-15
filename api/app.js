@@ -10,6 +10,7 @@ const fileUpload = require('express-fileupload');
 const RouteUtil = require('./libs/route_utils');
 const config = require('./config/default');
 const table_validator = require('./libs/table_validator');
+const master_user = require('./models/master_user');
 
 const log = bunyan.createLogger(config.bunyan_logger);
 
@@ -38,7 +39,24 @@ const models = fs.readdirSync(path.join(__dirname, 'models')).filter((f) => f.in
 RouteUtil.set(app, models, false);
 
 // FIXME: Do the login here.
-
+app.use((req, res, next) => {
+  if (req.originalUrl && req.originalUrl.indexOf('/api/') === 0) {
+    master_user.validate(req, res, (logged) => {
+      if (logged === true) {
+        next();
+      } else {
+        return res.json({
+          success: false,
+          is_logged_out: true,
+          error: 'not logged',
+          url: req.originalUrl,
+        });
+      }
+    });
+  } else {
+    next();
+  }
+});
 // Register the models routes (with login)
 RouteUtil.set(app, models, true);
 new Nseq().do([
