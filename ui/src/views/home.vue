@@ -26,7 +26,9 @@ export default {
       return new Date();
     },
   },
-  routes: [{ path: '/', name: 'Home', component: this }],
+  routes: [{
+    path: '/', name: 'Home', component: this, meta: { requiresAuth: true },
+  }],
 };
 </script>
 <style scoped>

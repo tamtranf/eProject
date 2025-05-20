@@ -1,7 +1,9 @@
 <template>
+
 <div class="row">
 <div class="col-4"></div>
 <div class="col-4">
+
  <form>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
@@ -28,13 +30,16 @@ export default {
   name: 'login',
   data() {
     return {
-      name: 'Login',
+      username: '',
+      password: '',
     };
   },
   routes: [
     {
       path: '/login',
       name: 'Login',
+      component: this,
+      meta: { requiresAuth: false },
     },
   ],
   mixins: [mixinLayoutComponents],
@@ -47,13 +52,24 @@ export default {
         password: this.password,
       };
       this.$ajax.post('/master_user/login/', body, (err, data) => {
+        if (err) {
+          this.$notify({
+            title: 'Unexpected error',
+            text: err,
+            type: 'error',
+          });
+        }
         if (data.logged === true) {
           this.$notify({
             title: 'Login',
             text: 'Login success',
             type: 'success',
           });
-          this.$router.push('/');
+          this.$router.push('/entity');
+          const entities = JSON.stringify(data.entities);
+          localStorage.setItem('entities', entities);
+          localStorage.setItem('full_name', data.full_name);
+          localStorage.setItem('username', data.username);
         } else {
           this.$notify({
             title: 'Login',
@@ -61,23 +77,11 @@ export default {
             type: 'error',
           });
         }
-        if (err) {
-          this.$notify({
-            title: 'error',
-            text: err,
-            type: 'error',
-          });
-        }
       });
     },
 
   },
-  //   data() {
-  //     return {
-  //       username: '',
-  //       password: '',
-  //     };
-  //   },
+
   props: [],
   beforeCreate() {
     console.log(`${this.name} beforeCreate`);

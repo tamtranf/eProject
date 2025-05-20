@@ -40,6 +40,7 @@ export default {
     {
       path: '/template-list',
       name: 'template-list',
+      meta: { requiresAuth: true },
     },
   ],
   mixins: [mixinLayoutComponents, agListController, datasource],

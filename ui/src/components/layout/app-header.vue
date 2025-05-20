@@ -3,6 +3,14 @@
     <div id="nav">
       <router-link to="/">Home</router-link>  |  <router-link to="/test">Test</router-link> | <router-link to="/about">About</router-link> |
        <router-link to="/templates">Templates</router-link> | <router-link to="/dev">Dev</router-link>| <router-link to="/test_3004">Test</router-link>
+       <span  style="float: right;">
+       <button class="btn btn-warning" @click.prevent="logout">Log out</button>
+       <br>
+{{logged_user}}
+<br>
+{{selected_entity}}
+       </span>
+
     </div>
   </div>
 </template>
@@ -15,8 +23,39 @@ export default {
       name: 'app-header',
     };
   },
-  computed: {},
-  methods: {},
+  computed: {
+    logged_user() {
+      return localStorage.getItem('full_name');
+    },
+    selected_entity() {
+      return localStorage.getItem('entity_name');
+    },
+  },
+  methods: {
+    logout() {
+      this.$ajax.post('/master_user/logout/', {}, (err) => {
+        if (err) {
+          this.$notify({
+            title: 'logout',
+            text: err,
+            type: 'err',
+          });
+        } else {
+          this.$notify(
+            {
+              title: 'logout',
+              text: 'Log out success',
+            },
+          );
+          return this.$router.push({
+            name: 'Login',
+            params: {},
+
+          });
+        }
+      });
+    },
+  },
   beforeCreate() {},
   created() {},
   beforeMount() {},
@@ -35,6 +74,7 @@ export default {
 <style scoped>
 .app-header{
   background-color:rgb(112, 189, 197);
+  height: 115px;
 }
 
 </style>
