@@ -56,7 +56,7 @@ class Template extends base_model {
     const options = extend;
     const entity = req.local.session_entity;
 
-    if (entity !== 'Super admin') {
+    if (entity !== 'Super_admin') {
       options.conditions = 'entity_code=?';
       options.params = [entity];
     }

@@ -25,7 +25,7 @@ class MasterUser extends base_model {
 
     this.id = 'master_user';
     this.table = 'master_user';
-    this.form_fields = 'seq_id,username,password,full_name,last_login,status';
+    this.form_fields = 'seq_id,user_name,pass_word,full_name,last_login,status';
     this.session_ttl = 72 * 60 * 60 * 1000;
 
     this.routes = {
@@ -66,10 +66,10 @@ class MasterUser extends base_model {
     n.do([
       (self) => {
         const params = [
-          req.body.username,
-          md5(req.body.password),
+          req.body.user_name,
+          md5(req.body.pass_word),
         ];
-        const sql = `SELECT * FROM ${this.table} WHERE username=? AND password=?`;
+        const sql = `SELECT * FROM ${this.table} WHERE user_name=? AND pass_word=?`;
         DataUtil.query(sql, params, {}, (err, result) => {
           if (err) {
             return response_utils.response(req, res, {}, err);
@@ -80,7 +80,7 @@ class MasterUser extends base_model {
 
           const row = result[0];
           user = {
-            username: row.username,
+            user_name: row.user_name,
             full_name: row.full_name,
             last_login: row.last_login,
             status: row.status,
@@ -99,7 +99,7 @@ class MasterUser extends base_model {
         });
       },
       () => {
-        const params = [user.username];
+        const params = [user.user_name];
         const sql = 'SELECT p.entity_code, e.entity_name FROM master_user_permission p JOIN master_entity e ON e.entity_code = p.entity_code WHERE p.user_name = ?';
         DataUtil.query(sql, params, {}, (err, result) => {
           if (err) {
@@ -161,13 +161,13 @@ class MasterUser extends base_model {
   create_cookie(req, res, user) {
     const expires = new Date(this.now() + this.session_ttl);
     const expires_read = moment(expires).format('YYYYMMDDHHmmss');
-    const session_key = `${Math.floor(Math.random() * 100000000 + 10000000)}_${uuid.v4()}_${md5(user.username)}`;
+    const session_key = `${Math.floor(Math.random() * 100000000 + 10000000)}_${uuid.v4()}_${md5(user.user_name)}`;
     const session_entity = user.selectedEntity || '';
     console.log('sessionentiy------------');
     console.log(session_entity);
-    const session_hash = this.create_hash(user.username, session_key, user.full_name, expires_read, session_entity);
+    const session_hash = this.create_hash(user.user_name, session_key, user.full_name, expires_read, session_entity);
 
-    res.cookie('session_user', user.username, { expires });
+    res.cookie('session_user', user.user_name, { expires });
     res.cookie('session_full_name', user.full_name, { expires });
     res.cookie('session_expires', expires_read, { expires });
     res.cookie('session_key', session_key, { expires });
@@ -188,7 +188,7 @@ class MasterUser extends base_model {
   select_user_entity(req, res) {
     if (req.body.selectedEntity === 'Super_admin') {
       const params = [req.local.session_user];
-      const sql = `SELECT * FROM ${this.table} WHERE username=? AND is_super_admin=1`;
+      const sql = `SELECT * FROM ${this.table} WHERE user_name=? AND is_super_admin=1`;
       DataUtil.query(sql, params, {}, (err, result) => {
         if (err) {
           return response_utils.response(req, res, {}, err);
@@ -197,7 +197,7 @@ class MasterUser extends base_model {
           return response_utils.response(req, res, { success: true, logged: false, err }, err);
         }
         const data = {
-          username: req.local.session_user,
+          user_name: req.local.session_user,
           full_name: req.local.session_full_name,
           selectedEntity: 'Super_admin',
         };
@@ -219,7 +219,7 @@ class MasterUser extends base_model {
           return response_utils.response(req, res, { success: true, logged: false, err }, err);
         }
         const data = {
-          username: req.local.session_user,
+          user_name: req.local.session_user,
           full_name: req.local.session_full_name,
           selectedEntity: result[0].entity_code,
         };

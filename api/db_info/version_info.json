@@ -297,16 +297,16 @@
                 "Default": null,
                 "Extra": "auto_increment"
             },
-            "username": {
-                "Field": "username",
+            "user_name": {
+                "Field": "user_name",
                 "Type": "varchar(64)",
                 "Null": "NO",
                 "Key": "UNI",
                 "Default": null,
                 "Extra": ""
             },
-            "password": {
-                "Field": "password",
+            "pass_word": {
+                "Field": "pass_word",
                 "Type": "varchar(64)",
                 "Null": "NO",
                 "Key": "",

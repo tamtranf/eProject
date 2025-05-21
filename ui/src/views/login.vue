@@ -7,12 +7,12 @@
  <form>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" v-model="username"  placeholder="Enter email">
+    <input type="email" class="form-control" id="exampleInputEmail1" v-model="user_name"  placeholder="Enter email">
     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" placeholder="Password">
+    <input type="password" class="form-control" id="exampleInputPassword1" v-model="pass_word" placeholder="Password">
   </div>
 
   <button type="submit" class="btn btn-primary" @click.prevent="click">Submit</button>
@@ -30,8 +30,8 @@ export default {
   name: 'login',
   data() {
     return {
-      username: '',
-      password: '',
+      user_name: '',
+      pass_word: '',
     };
   },
   routes: [
@@ -48,8 +48,8 @@ export default {
   methods: {
     click() {
       const body = {
-        username: this.username,
-        password: this.password,
+        user_name: this.user_name,
+        pass_word: this.pass_word,
       };
       this.$ajax.post('/master_user/login/', body, (err, data) => {
         if (err) {
@@ -69,7 +69,7 @@ export default {
           const entities = JSON.stringify(data.entities);
           localStorage.setItem('entities', entities);
           localStorage.setItem('full_name', data.full_name);
-          localStorage.setItem('username', data.username);
+          localStorage.setItem('user_name', data.user_name);
         } else {
           this.$notify({
             title: 'Login',
