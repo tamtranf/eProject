@@ -15,7 +15,7 @@ const base_model = require('../libs/base_model');
 // const system_setting = require('./system_setting');
 // const { lt } = require('lodash');
 
-// const approval_history = {};
+// const approval_histo ry = {};
 
 class Template extends base_model {
   constructor() {
