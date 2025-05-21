@@ -34,6 +34,9 @@ const config = {
     'master_template',
     'master_products',
     'master_user',
+    'master_entity',
+    'master_user_permission',
+
   ],
   admin_user: {
     username: 'admin',

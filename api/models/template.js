@@ -23,7 +23,7 @@ class Template extends base_model {
 
     this.id = 'template';
     this.table = 'master_template';
-    this.form_fields = 'seq_id,user_name,maker,car,user_password,retrieve_date_time,return_date';
+    this.form_fields = 'seq_id,user_name,maker,car,user_password,retrieve_date_time,return_date,entity_code';
 
     this.routes = {
       datasource_load: {
@@ -52,16 +52,27 @@ class Template extends base_model {
     return local_fields;
   }
 
+  get_options_conditions(req, extend = {}) {
+    const options = extend;
+    const entity = req.local.session_entity;
+
+    if (entity !== 'Super admin') {
+      options.conditions = 'entity_code=?';
+      options.params = [entity];
+    }
+    return options;
+  }
+
   check_pk(mode, changes, req, res, cb) {
     return this.base_check_pk(mode, changes, req, res, {}, cb);
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res);
+    this.base_datasource_load(req, res, this.get_options_conditions(req));
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res);
+    this.base_datasource_count(req, res, this.get_options_conditions(req));
   }
 
   get(req, res) {

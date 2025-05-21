@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS `master_template` (
   `user_password` varchar(64) DEFAULT NULL,
   `retrieve_date_time` datetime DEFAULT NULL,
   `return_date` date DEFAULT NULL,
+  `entity_code` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`seq_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;

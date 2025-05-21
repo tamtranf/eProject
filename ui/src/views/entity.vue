@@ -2,7 +2,7 @@
   <app-header></app-header>
   <div :class="[name,'page']">
     <form style="margin-top: 50px;">
-  <select elected v-model="selectedEntity" id="entity" class="form-select" aria-label="Disabled select example">
+  <select v-model="selectedEntity" id="selected_entity_code" class="form-select" aria-label="Disabled select example">
   <option>Select an entiy</option> ]
   <option v-for="entity in entities" :key="entity.entity_code" :value="entity.entity_code">
         {{entity.entity_name }}
@@ -30,6 +30,9 @@ export default {
     {
       path: '/entity',
       name: 'entity',
+      component: this,
+      meta: { requireAuth: false },
+
     },
   ],
   mixins: [mixinLayoutComponents],
@@ -63,10 +66,10 @@ export default {
         }
         if (data.logged === true) {
           this.$router.push('/');
-          const entity = JSON.stringify(data.selectedEntity);
-          localStorage.setItem('entity', entity);
+          const entity_code = body.selectedEntity;
+          localStorage.setItem('entity_code', entity_code);
 
-          const entity_name = _.find(this.entities, { entity_code });
+          const { entity_name } = _.find(this.entities, { entity_code });
           localStorage.setItem('entity_name', entity_name);
 
           this.$notify({

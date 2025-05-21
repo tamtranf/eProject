@@ -236,6 +236,14 @@
                 "Key": "",
                 "Default": null,
                 "Extra": ""
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(32)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
             }
         },
         "master_products": {
@@ -337,6 +345,58 @@
                 "Default": "0",
                 "Extra": ""
             }
+        },
+        "master_entity": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(32)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
+            "entity_name": {
+                "Field": "entity_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
+        },
+        "master_user_permission": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "user_name": {
+                "Field": "user_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(32)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -344,6 +404,8 @@
         "master_test": {},
         "master_template": {},
         "master_products": {},
-        "master_user": {}
+        "master_user": {},
+        "master_entity": {},
+        "master_user_permission": {}
     }
 }
