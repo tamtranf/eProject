@@ -56,25 +56,25 @@ class Template extends base_model {
     return this.base_check_pk(mode, changes, req, res, {}, cb);
   }
 
-//   datasource_load(req, res) {
-//     this.base_datasource_load(req, res);
-//   }
+  //   datasource_load(req, res) {
+  //     this.base_datasource_load(req, res);
+  //   }
 
-//   datasource_count(req, res) {
-//     this.base_datasource_count(req, res);
-//   }
+  //   datasource_count(req, res) {
+  //     this.base_datasource_count(req, res);
+  //   }
 
   get(req, res) {
     return this.base_get(req, res);
   }
 
-//   set(req, res) {
-//     return this.base_set(req, res, {});
-//   }
+  //   set(req, res) {
+  //     return this.base_set(req, res, {});
+  //   }
 
-//   delete(req, res) {
-//     return this.base_delete(req, res);
-//   }
+  //   delete(req, res) {
+  //     return this.base_delete(req, res);
+  //   }
 
 //   delete_arr(req, res) {
 //     return this.base_delete_arr(req, res);
