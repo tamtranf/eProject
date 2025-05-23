@@ -36,6 +36,7 @@ const config = {
     'master_user',
     'master_entity',
     'master_user_permission',
+    'car',
 
   ],
   admin_user: {

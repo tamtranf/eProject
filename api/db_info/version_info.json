@@ -397,6 +397,104 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "car": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "maker": {
+                "Field": "maker",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "model": {
+                "Field": "model",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "license_plate": {
+                "Field": "license_plate",
+                "Type": "varchar(8)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
+            "car_year": {
+                "Field": "car_year",
+                "Type": "smallint",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "color": {
+                "Field": "color",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "passenger": {
+                "Field": "passenger",
+                "Type": "tinyint",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "category": {
+                "Field": "category",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "weight": {
+                "Field": "weight",
+                "Type": "smallint",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "price_per_day": {
+                "Field": "price_per_day",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "status": {
+                "Field": "status",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "notes": {
+                "Field": "notes",
+                "Type": "varchar(4048)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -406,6 +504,7 @@
         "master_products": {},
         "master_user": {},
         "master_entity": {},
-        "master_user_permission": {}
+        "master_user_permission": {},
+        "car": {}
     }
 }

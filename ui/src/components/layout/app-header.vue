@@ -3,6 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link>  |  <router-link to="/test">Test</router-link> | <router-link to="/about">About</router-link> |
        <router-link to="/templates">Templates</router-link> | <router-link to="/dev">Dev</router-link>| <router-link to="/test_3004">Test</router-link>
+       | <router-link to="/car-list">Car</router-link> | <router-link to="/master_entity-list">Master Entity</router-link>
+       | <router-link to="/master_user-list">Master User</router-link>
        <span  style="float: right;">
        <button class="btn btn-warning" @click.prevent="logout">Log out</button>
        <br>

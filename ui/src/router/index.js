@@ -3,6 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [];
 // Define here the name of each file that should be part to the router
 [
+  require('../views/master_user-form'),
+  require('../views/master_user-list'),
+  require('../views/master_entity-form'),
+  require('../views/master_entity-list'),
+  require('../views/car-form'),
+  require('../views/car-list'),
   require('../views/entity'),
   require('../views/login'),
   require('../views/home'),

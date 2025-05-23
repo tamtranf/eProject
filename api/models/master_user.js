@@ -5,7 +5,7 @@ const Nseq = require('nseq');
 // const _ = require('lodash');
 const moment = require('moment');
 const debug = require('debug')('MasterUser');
-const local_fields = require('../rules/fields_template');
+const local_fields = require('../rules/fields_master_user');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
 // const constants = require('../rules/constants');
@@ -25,7 +25,8 @@ class MasterUser extends base_model {
 
     this.id = 'master_user';
     this.table = 'master_user';
-    this.form_fields = 'seq_id,user_name,pass_word,full_name,last_login,status';
+    this.form_fields = 'seq_id,user_name,pass_word,full_name,last_login,status,is_super_admin';
+    this.form_fields_read_only = 'seq_id,user_name,pass_word,full_name,last_login,status';
     this.session_ttl = 72 * 60 * 60 * 1000;
 
     this.routes = {
@@ -238,6 +239,10 @@ class MasterUser extends base_model {
     return this.base_check_pk(mode, changes, req, res, {}, cb);
   }
 
+  options_conditions() {
+
+  }
+
   datasource_load(req, res) {
     this.base_datasource_load(req, res);
   }
@@ -251,6 +256,11 @@ class MasterUser extends base_model {
   }
 
   set(req, res) {
+    if (req.body.changes && req.body.changes === '') {
+      delete req.body.changes.pass_word;
+    } else {
+      req.body.changes.pass_word = md5(req.body.changes.pass_word);
+    }
     return this.base_set(req, res, {});
   }
 
