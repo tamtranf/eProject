@@ -25,8 +25,8 @@ class MasterUser extends base_model {
 
     this.id = 'master_user';
     this.table = 'master_user';
-    this.form_fields = 'seq_id,user_name,pass_word,full_name,last_login,status,is_super_admin';
-    this.form_fields_read_only = 'seq_id,user_name,pass_word,full_name,last_login,status';
+    this.form_fields = 'seq_id,user_name,password,full_name,last_login,status,is_super_admin';
+    this.form_fields_read_only = 'seq_id,user_name,full_name,last_login,status';
     this.session_ttl = 72 * 60 * 60 * 1000;
 
     this.routes = {
@@ -68,9 +68,9 @@ class MasterUser extends base_model {
       (self) => {
         const params = [
           req.body.user_name,
-          md5(req.body.pass_word),
+          md5(req.body.password),
         ];
-        const sql = `SELECT * FROM ${this.table} WHERE user_name=? AND pass_word=?`;
+        const sql = `SELECT * FROM ${this.table} WHERE user_name=? AND password=?`;
         DataUtil.query(sql, params, {}, (err, result) => {
           if (err) {
             return response_utils.response(req, res, {}, err);
@@ -244,7 +244,7 @@ class MasterUser extends base_model {
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res);
+    this.base_datasource_load(req, res, { force_fields: this.form_fields_read_only });
   }
 
   datasource_count(req, res) {
@@ -252,14 +252,14 @@ class MasterUser extends base_model {
   }
 
   get(req, res) {
-    return this.base_get(req, res);
+    return this.base_get(req, res, { force_fields: this.form_fields_read_only });
   }
 
   set(req, res) {
-    if (req.body.changes && req.body.changes === '') {
-      delete req.body.changes.pass_word;
+    if (req.body.changes && req.body.changes.password === '') {
+      delete req.body.changes.password;
     } else {
-      req.body.changes.pass_word = md5(req.body.changes.pass_word);
+      req.body.changes.password = md5(req.body.changes.password);
     }
     return this.base_set(req, res, {});
   }

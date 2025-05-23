@@ -12,7 +12,7 @@
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" v-model="pass_word" placeholder="Password">
+    <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" placeholder="Password">
   </div>
 
   <button type="submit" class="btn btn-primary" @click.prevent="click">Submit</button>
@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       user_name: '',
-      pass_word: '',
+      password: '',
     };
   },
   routes: [
@@ -49,7 +49,7 @@ export default {
     click() {
       const body = {
         user_name: this.user_name,
-        pass_word: this.pass_word,
+        password: this.password,
       };
       this.$ajax.post('/master_user/login/', body, (err, data) => {
         if (err) {
@@ -60,6 +60,7 @@ export default {
           });
         }
         if (data.logged === true) {
+          console.log(data);
           this.$notify({
             title: 'Login',
             text: 'Login success',

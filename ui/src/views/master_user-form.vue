@@ -64,7 +64,7 @@ export default {
       // This show the mode 2 to load the fields
       const r = [
         _.extend(fields.status, {}),
-        _.extend(fields.pass_word, {}),
+        _.extend(fields.password, {}),
         _.extend(fields.is_super_admin, {}),
       ];
       return r;

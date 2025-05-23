@@ -9,7 +9,7 @@ const arr = [
     type: TYPES.INPUT,
   },
   {
-    id: 'pass_word',
+    id: 'password',
     label: 'Password',
     type: TYPES.INPUT,
     field_type: 'password',

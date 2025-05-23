@@ -305,8 +305,8 @@
                 "Default": null,
                 "Extra": ""
             },
-            "pass_word": {
-                "Field": "pass_word",
+            "password": {
+                "Field": "password",
                 "Type": "varchar(64)",
                 "Null": "NO",
                 "Key": "",
