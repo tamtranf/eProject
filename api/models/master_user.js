@@ -58,6 +58,9 @@ class MasterUser extends base_model {
       select_user_entity: {
         method: 'post', func: 'select_user_entity', path: '/select_user_entity', no_login: false,
       },
+      get_user_list: {
+        method: 'post', func: 'get_user_list', path: '/get_user_list', no_login: false,
+      },
     };
     debug('started');
   }
@@ -286,6 +289,15 @@ class MasterUser extends base_model {
 
   delete_arr(req, res) {
     return this.base_delete_arr(req, res);
+  }
+
+  get_user_list(req, res) {
+    DataUtil.query(`SELECT user_name, full_name from ${this.table}`, [], {}, (err, result) => {
+      if (err) {
+        return response_utils.response(req, res, {}, err);
+      }
+      return response_utils.response(req, res, { list: result }, err);
+    });
   }
 }
 

@@ -4,11 +4,12 @@
 // const async = require('async');
 // const _ = require('lodash');
 // const moment = require('moment');
-const debug = require('debug')('MasterEntity');
-const local_fields = require('../rules/fields_master_entity');
+const debug = require('debug')('MasterUserPermission');
+const { result } = require('lodash');
+const local_fields = require('../rules/fields_master_use_permission');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
-// const constants = require('../rules/constants');
+const constants = require('../rules/constants');
 const DataUtil = require('../libs/data_utils');
 const ResponseUtil = require('../libs/response_utils');
 // const PrintUtil = require('../libs/print_util');
@@ -17,13 +18,13 @@ const ResponseUtil = require('../libs/response_utils');
 
 // const approval_history = {};
 
-class MasterEntity extends base_model {
+class MasterUserPermission extends base_model {
   constructor() {
     super();
 
-    this.id = 'master_entity';
-    this.table = 'master_entity';
-    this.form_fields = 'seq_id,entity_code,entity_name';
+    this.id = 'master_user_permission';
+    this.table = 'master_user_permission';
+    this.form_fields = 'seq_id,user_name,entity_code';
 
     this.routes = {
       datasource_load: {
@@ -42,9 +43,8 @@ class MasterEntity extends base_model {
         method: 'post', func: 'delete', path: '/delete', no_login: false,
       },
       delete_arr: {
-        method: 'post', func: 'get_entity_list', path: '/get_entity_list', no_login: false,
+        method: 'post', func: 'delete_arr', path: '/delete_arr', no_login: false,
       },
-
     };
     debug('started');
   }
@@ -81,7 +81,21 @@ class MasterEntity extends base_model {
   }
 
   set(req, res) {
-    return this.base_set(req, res, {});
+    const params = [req.body.changes.user_name, req.body.changes.entity_code];
+    let sql = `SELECT * FROM ${this.table} WHERE user_name = ? AND entity_code = ?`;
+    if (req.params.id !== constants.IDS.ADD_NEW_RECORD_ID) {
+      params.push(req.params.id);
+      sql += ' AND seq_id != ?';
+    }
+    DataUtil.query(sql, params, {}, (err, rows) => {
+      if (err) {
+        return ResponseUtil.response(req, res, {}, err);
+      }
+      if (Array.isArray(rows) && rows.length > 0) {
+        return ResponseUtil.response(req, res, {}, 'Data already exists');
+      }
+      return this.base_set(req, res, {});
+    });
   }
 
   delete(req, res) {
@@ -91,15 +105,6 @@ class MasterEntity extends base_model {
   delete_arr(req, res) {
     return this.base_delete_arr(req, res);
   }
-
-  get_entity_list(req, res) {
-    DataUtil.query(`SELECT entity_code, entity_name FROM ${this.table} `, [], {}, (err, result) => {
-      if (err) {
-        return ResponseUtil.response(req, res, {}, err);
-      }
-      return ResponseUtil.response(req, res, { list: result }, err);
-    });
-  }
 }
 
-module.exports = new MasterEntity();
+module.exports = new MasterUserPermission();
