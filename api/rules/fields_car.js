@@ -97,6 +97,17 @@ const arr = [
     label: 'notes',
     type: TYPES.TEXT_AREA,
   },
+  {
+    id: 'entity_code',
+    label: 'Entity Code',
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_entity/get_entity_list',
+      label: 'entity_code',
+      value: 'entity_code',
+    },
+    type: TYPES.SELECT_BOX,
+  },
 
 ];
 const ret = {};

@@ -14,6 +14,9 @@ export default {
     // it don't works well at render time
   },
   methods: {
+    goToPage(page_path) {
+      return this.$router.push({ path: page_path });
+    },
     commonLoadRecord(options, cb = () => {}) {
       if (this.seqId === 'new' || options.force_seq_id === 'new') {
         this.local_seq_id = Number.MAX_SAFE_INTEGER;

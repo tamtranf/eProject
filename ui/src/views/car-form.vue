@@ -17,6 +17,7 @@
         You can remove these comment lines after reading it. -->
         <form-field v-for="f in formFieldsSideB" :read="false"  :key="f.id" :field_info="f"></form-field>
         <br>
+        <button style="float:left;" class="btn btn-info" @click="goToPage('/car-list')">Back</button>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
       </div>
     </div>
@@ -69,6 +70,9 @@ export default {
         _.extend(fields.status, {}),
         _.extend(fields.notes, {}),
       ];
+      if (localStorage.entity_code === 'Super admin') {
+        r.push(fields.entity_code);
+      }
       return r;
     },
     seqId() {
@@ -79,6 +83,7 @@ export default {
     },
   },
   methods: {
+
     loadFormData() {
       this.commonLoadRecord({}, (err, result) => {
         this.setFormFields(result.data);

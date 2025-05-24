@@ -55,6 +55,7 @@ export default {
         _.extend(fields.car_year, {}),
         _.extend(fields.color, {}),
         _.extend(fields.price_per_day, {}),
+        _.extend(fields.entity_code, {}),
       ];
       return r;
     },

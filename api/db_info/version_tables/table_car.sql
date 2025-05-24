@@ -11,9 +11,11 @@ CREATE TABLE IF NOT EXISTS `car` (
   `price_per_day` int NOT NULL,
   `status` varchar(64) NOT NULL,
   `notes` varchar(4048) NOT NULL,
+  `entity_code` varchar(64) NOT NULL DEFAULT 'standard',
   PRIMARY KEY (`seq_id`),
   UNIQUE KEY `license_plate` (`license_plate`),
   KEY `model` (`model`),
   KEY `maker` (`maker`),
-  KEY `status` (`status`)
+  KEY `status` (`status`),
+  KEY `entity_code` (`entity_code`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;

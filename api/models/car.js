@@ -8,7 +8,7 @@ const debug = require('debug')('Car');
 const local_fields = require('../rules/fields_car');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
-// const constants = require('../rules/constants');
+const constants = require('../rules/constants');
 // const DataUtil = require('../libs/data_utils');
 // const ResponseUtil = require('../libs/response_utils');
 // const PrintUtil = require('../libs/print_util');
@@ -23,7 +23,7 @@ class Car extends base_model {
 
     this.id = 'car';
     this.table = 'car';
-    this.form_fields = 'seq_id,maker,model,license_plate,car_year,color,passenger,category,weight,price_per_day,status,notes';
+    this.form_fields = 'seq_id,maker,model,license_plate,car_year,color,passenger,category,weight,price_per_day,status,notes,entity_code';
 
     this.routes = {
       datasource_load: {
@@ -52,27 +52,27 @@ class Car extends base_model {
     return local_fields;
   }
 
-  //   get_options_conditions(req, extend = {}) {
-  //     const options = extend;
-  //     const entity = req.local.session_entity;
+  get_options_conditions(req, extend = {}) {
+    const options = extend;
+    const entity = req.local.session_entity;
 
-  //     if (entity !== 'Super_admin') {
-  //       options.conditions = 'entity_code=?';
-  //       options.params = [entity];
-  //     }
-  //     return options;
-  //   }
+    if (entity !== 'Super_admin') {
+      options.conditions = 'entity_code=?';
+      options.params = [entity];
+    }
+    return options;
+  }
 
   check_pk(mode, changes, req, res, cb) {
     return this.base_check_pk(mode, changes, req, res, {}, cb);
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res);
+    this.base_datasource_load(req, res, this.get_options_conditions(req));
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res);
+    this.base_datasource_count(req, res, this.get_options_conditions(req));
   }
 
   get(req, res) {
@@ -80,6 +80,11 @@ class Car extends base_model {
   }
 
   set(req, res) {
+    const entity = req.local.session_entity;
+    if (entity !== 'Super admin' && req.params.id === constants.IDS.ADD_NEW_RECORD_ID) {
+      req.body.changes.entity_code = entity;
+    }
+
     return this.base_set(req, res, {});
   }
 

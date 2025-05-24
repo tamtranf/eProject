@@ -1,3 +1,4 @@
+ALTER TABLE `car` ADD INDEX `entity_code` USING BTREE(`entity_code`);
 ALTER TABLE `car` ADD UNIQUE INDEX `license_plate` USING BTREE(`license_plate`);
 ALTER TABLE `car` ADD INDEX `maker` USING BTREE(`maker`);
 ALTER TABLE `car` ADD INDEX `model` USING BTREE(`model`);

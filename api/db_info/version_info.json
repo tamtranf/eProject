@@ -494,6 +494,14 @@
                 "Key": "",
                 "Default": null,
                 "Extra": ""
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": "standard",
+                "Extra": ""
             }
         }
     },

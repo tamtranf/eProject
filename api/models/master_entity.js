@@ -42,9 +42,11 @@ class MasterEntity extends base_model {
         method: 'post', func: 'delete', path: '/delete', no_login: false,
       },
       delete_arr: {
+        method: 'post', func: 'delete_arr', path: '/delete_arr', no_login: false,
+      },
+      get_entity_list: {
         method: 'post', func: 'get_entity_list', path: '/get_entity_list', no_login: false,
       },
-
     };
     debug('started');
   }
