@@ -5,6 +5,7 @@ const Nseq = require('nseq');
 // const _ = require('lodash');
 const moment = require('moment');
 const debug = require('debug')('MasterUser');
+const { result } = require('lodash');
 const local_fields = require('../rules/fields_master_user');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
@@ -26,7 +27,7 @@ class MasterUser extends base_model {
     this.id = 'master_user';
     this.table = 'master_user';
     this.form_fields = 'seq_id,user_name,password,full_name,last_login,status,is_super_admin';
-    this.form_fields_read_only = 'seq_id,user_name,full_name,last_login,status';
+    this.form_fields_read_only = 'seq_id,user_name,full_name,last_login,status,is_super_admin';
     this.session_ttl = 72 * 60 * 60 * 1000;
 
     this.routes = {
@@ -117,7 +118,12 @@ class MasterUser extends base_model {
             });
           }
 
-          return response_utils.response(req, res, user, err);
+          this.update_last_login(req, req.body.user_name, (err2) => {
+            if (err2) {
+              req.log.err('error at update last login', { err2, affectedRows: result.affectedRows });
+            }
+            return response_utils.response(req, res, user, err2);
+          });
         });
       },
     ]);
@@ -229,6 +235,16 @@ class MasterUser extends base_model {
         return response_utils.response(req, res, { success: true, logged: true }, err);
       });
     }
+  }
+
+  update_last_login(req, user_name, cb) {
+    const now = moment(this.now()).format('YYYY-MM-DD HH:mm:ss');
+    const params = [now, user_name];
+    const sql = `UPDATE ${this.table} SET last_login=? WHERE user_name=?`;
+    DataUtil.query(sql, params, {}, (err, result) => {
+      req.log.info(`update last login for user ${user_name} at ${now}`, { err, affectedRows: result.affectedRows });
+      cb(err, result);
+    });
   }
 
   get_fields() {

@@ -27,7 +27,7 @@ import datasource from '@/mixins/datasource';
 import { fields } from '../../../api/rules/fields_master_user';
 
 export default {
-  name: 'car-list',
+  name: 'master_user-list',
   data() {
     return {
       name: 'MasterUserList',

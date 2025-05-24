@@ -39,7 +39,7 @@ const arr = [
   },
   {
     id: 'is_super_admin',
-    label: 'Status',
+    label: 'Is super Admin',
     options_mode: SELECT_FIELD_MODE.LIST,
     list: [
       { label: 'Yes', value: '1' },
