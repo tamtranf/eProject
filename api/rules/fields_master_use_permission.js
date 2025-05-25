@@ -1,4 +1,4 @@
-const { TYPES, SELECT_FIELD_MODE } = require('./constants');
+const { TYPES, SELECT_FIELD_MODE, ACL_ROLE } = require('./constants');
 //
 
 const arr = [
@@ -23,6 +23,18 @@ const arr = [
       label: 'entity_code',
       value: 'entity_code',
     },
+    type: TYPES.SELECT_BOX,
+  },
+  {
+    id: 'acl_role',
+    label: 'Acl role',
+    options_mode: SELECT_FIELD_MODE.LIST,
+    list: [
+      { label: 'Admin', value: ACL_ROLE.ADMIN },
+      { label: 'Writer', value: ACL_ROLE.WRITER },
+      { label: 'Reader', value: ACL_ROLE.READER },
+      { label: 'Operator', value: ACL_ROLE.OPERATOR },
+    ],
     type: TYPES.SELECT_BOX,
   },
 

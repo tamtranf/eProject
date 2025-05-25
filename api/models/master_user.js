@@ -9,7 +9,7 @@ const { result } = require('lodash');
 const local_fields = require('../rules/fields_master_user');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
-// const constants = require('../rules/constants');
+const constants = require('../rules/constants');
 const DataUtil = require('../libs/data_utils');
 const response_utils = require('../libs/response_utils');
 // const ResponseUtil = require('../libs/response_utils');
@@ -139,14 +139,14 @@ class MasterUser extends base_model {
 
   validate(req, res, cb) {
     const {
-      session_key, session_user, session_full_name, session_expires, session_hash, session_entity,
+      session_key, session_user, session_full_name, session_expires, session_hash, session_entity, session_acl_role,
     } = req.cookies;
     const session_read = moment(this.now()).format('YYYYMMDDHHmmss');
     if (typeof session_expires === 'undefined' || parseInt(session_read) > parseInt(session_expires)) {
       this.destroy_cookie(req, res);
       return cb(false);
     }
-    const test_hash = this.create_hash(session_user, session_key, session_full_name, session_expires, session_entity);
+    const test_hash = this.create_hash(session_user, session_key, session_full_name, session_expires, session_entity, session_acl_role);
     if (test_hash === session_hash) {
       if (typeof req.local === 'undefined') {
         req.local = {};
@@ -154,6 +154,7 @@ class MasterUser extends base_model {
       req.local.session_user = session_user;
       req.local.session_full_name = session_full_name;
       req.local.session_entity = session_entity;
+      req.local.session_acl_role = session_acl_role;
       return cb(true);
     }
     this.destroy_cookie(req, res);
@@ -164,8 +165,8 @@ class MasterUser extends base_model {
     return (new Date()).getTime();
   }
 
-  create_hash(user_name, session_key, full_name, expires_read, session_entity) {
-    return md5(`${HASH_PRIVATE_KEY}_${user_name}_${session_key}_${full_name}_${expires_read}_${session_entity}`);
+  create_hash(user_name, session_key, full_name, expires_read, session_entity, acl_role) {
+    return md5(`${HASH_PRIVATE_KEY}_${user_name}_${session_key}_${full_name}_${expires_read}_${session_entity}_${acl_role}`);
   }
 
   create_cookie(req, res, user) {
@@ -175,7 +176,8 @@ class MasterUser extends base_model {
     const session_entity = user.selectedEntity || '';
     console.log('sessionentiy------------');
     console.log(session_entity);
-    const session_hash = this.create_hash(user.user_name, session_key, user.full_name, expires_read, session_entity);
+    const acl_role = user.acl_role || '';
+    const session_hash = this.create_hash(user.user_name, session_key, user.full_name, expires_read, session_entity, acl_role);
 
     res.cookie('session_user', user.user_name, { expires });
     res.cookie('session_full_name', user.full_name, { expires });
@@ -183,16 +185,18 @@ class MasterUser extends base_model {
     res.cookie('session_key', session_key, { expires });
     res.cookie('session_hash', session_hash, { expires });
     res.cookie('session_entity', session_entity, { expires });
+    res.cookie('session_acl_role', acl_role, { expires });
   }
 
   destroy_cookie(req, res) {
-    const session_expires = new Date(this.now() + this.session_ttl);
+    const session_expires = new Date(this.now() - this.session_ttl);
     res.cookie('session_user', '', { session_expires });
     res.cookie('session_full_name', '', { session_expires });
     res.cookie('session_expires', '', { session_expires });
     res.cookie('session_key', '', { session_expires });
     res.cookie('session_hash', '', { session_expires });
     res.cookie('session_entity', '', { session_expires });
+    res.cookie('session_acl_role', '', { session_expires });
   }
 
   select_user_entity(req, res) {
@@ -210,17 +214,18 @@ class MasterUser extends base_model {
           user_name: req.local.session_user,
           full_name: req.local.session_full_name,
           selectedEntity: 'Super_admin',
+          acl_role: constants.ACL_ROLE.ADMIN,
         };
         console.log(data);
         this.create_cookie(req, res, data);
 
-        return response_utils.response(req, res, { success: true, logged: true }, err);
+        return response_utils.response(req, res, { success: true, logged: true, acl_role: data.acl_role }, err);
       });
     } else {
       const params = [req.local.session_user, req.body.selectedEntity];
       console.log('^^^^^^^^^^^^^');
       console.log(params);
-      const sql = 'SELECT p.entity_code FROM master_user_permission p JOIN master_entity e ON e.entity_code = p.entity_code WHERE p.user_name = ? and p.entity_code = ?';
+      const sql = 'SELECT entity_code, acl_role FROM master_user_permission WHERE user_name = ? and entity_code = ?';
       DataUtil.query(sql, params, {}, (err, result) => {
         if (err) {
           return response_utils.response(req, res, {}, err);
@@ -232,10 +237,11 @@ class MasterUser extends base_model {
           user_name: req.local.session_user,
           full_name: req.local.session_full_name,
           selectedEntity: result[0].entity_code,
+          acl_role: result[0].acl_role,
         };
         this.create_cookie(req, res, data);
 
-        return response_utils.response(req, res, { success: true, logged: true }, err);
+        return response_utils.response(req, res, { success: true, logged: true, acl_role: data.acl_role }, err);
       });
     }
   }

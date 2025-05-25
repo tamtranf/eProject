@@ -14,6 +14,7 @@ const ResponseUtil = require('../libs/response_utils');
 // const PrintUtil = require('../libs/print_util');
 // const system_setting = require('./system_setting');
 // const { lt } = require('lodash');
+const acl_rules = require('../rules/acl_rules');
 
 // const approval_history = {};
 
@@ -24,6 +25,7 @@ class MasterEntity extends base_model {
     this.id = 'master_entity';
     this.table = 'master_entity';
     this.form_fields = 'seq_id,entity_code,entity_name';
+    this.model_acl = acl_rules.SETTING_PAGES;
 
     this.routes = {
       datasource_load: {
@@ -71,27 +73,39 @@ class MasterEntity extends base_model {
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res);
+    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
+      this.base_datasource_load(req, res);
+    }
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res);
+    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
+      this.base_datasource_count(req, res);
+    }
   }
 
   get(req, res) {
-    return this.base_get(req, res);
+    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
+      return this.base_get(req, res);
+    }
   }
 
   set(req, res) {
-    return this.base_set(req, res, {});
+    if (this.checkSeverAcl(req, res, true, (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)) {
+      return this.base_set(req, res, {});
+    }
   }
 
   delete(req, res) {
-    return this.base_delete(req, res);
+    if (this.checkServerAcl(req, res, true, this.aclAction.DELETE)) {
+      return this.base_delete(req, res);
+    }
   }
 
   delete_arr(req, res) {
-    return this.base_delete_arr(req, res);
+    if (this.checkServerAcl(req, res, true, this.aclAction.DELETE)) {
+      return this.base_delete_arr(req, res);
+    }
   }
 
   get_entity_list(req, res) {

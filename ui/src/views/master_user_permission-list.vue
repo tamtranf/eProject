@@ -52,6 +52,7 @@ export default {
       const r = [
         _.extend(fields.user_name, {}),
         _.extend(fields.entity_code, {}),
+        _.extend(fields.acl_role, {}),
 
       ];
       return r;

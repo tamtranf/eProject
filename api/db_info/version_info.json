@@ -396,6 +396,14 @@
                 "Key": "",
                 "Default": null,
                 "Extra": ""
+            },
+            "acl_role": {
+                "Field": "acl_role",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": "READER",
+                "Extra": ""
             }
         },
         "car": {

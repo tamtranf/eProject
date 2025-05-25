@@ -8,17 +8,23 @@
         Update 2022/08/25, the parameter :read="false" was not part of the code when the lesson was created.
         In the lesson #3014, it will be replaced to use the checkACL.
         You can remove these comment lines after reading it. -->
-        <form-field v-for="f in formFieldsSideA" :read="false"  :key="f.id" :field_info="f"></form-field>
+        <form-field v-for="f in formFieldsSideA" :key="f.id" :field_info="f"
+        :read="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
+        ></form-field>
       </div>
       <div class="col-6" style="">
         <!--
         Update 2022/08/25, the parameter :read="false" was not part of the code when the lesson was created.
         In the lesson #3014, it will be replaced to use the checkACL.
         You can remove these comment lines after reading it. -->
-        <form-field v-for="f in formFieldsSideB" :read="false"  :key="f.id" :field_info="f"></form-field>
+        <form-field v-for="f in formFieldsSideB"  :key="f.id" :field_info="f"
+        :read="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
+        ></form-field>
         <br>
         <button style="float:left;" class="btn btn-info" @click="goToPage('/car-list')">Back</button>
-        <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
+        <button style="float:right;" class="btn btn-primary" @click="onSave"
+        :disabled="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
+        >Save</button>
       </div>
     </div>
   </div>
@@ -27,6 +33,7 @@
 import mixinFormController from '@/mixins/form_controller';
 import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
+import acl from '@/mixins/acl';
 import { fields } from '../../../api/rules/fields_car';
 
 export default {
@@ -49,7 +56,7 @@ export default {
       name: 'car-form-undefined',
     },
   ],
-  mixins: [mixinLayoutComponents, mixinFormController],
+  mixins: [mixinLayoutComponents, mixinFormController, acl],
   components: {},
   computed: {
 

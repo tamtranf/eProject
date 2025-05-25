@@ -34,6 +34,9 @@ export default {
     },
   },
   methods: {
+    goToPage(path) {
+      this.$router.push({ path });
+    },
     logout() {
       this.$ajax.post('/master_user/logout/', {}, (err) => {
         if (err) {

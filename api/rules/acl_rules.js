@@ -1,0 +1,18 @@
+const { ACL_ROLE } = require('./constants');
+
+const access_rules = {
+  DATA_PAGES: {
+    READ: [ACL_ROLE.ADMIN, ACL_ROLE.WRITER, ACL_ROLE.READER],
+    ADD: [ACL_ROLE.ADMIN, ACL_ROLE.WRITER],
+    EDIT: [ACL_ROLE.ADMIN, ACL_ROLE.WRITER],
+    DELETE: [ACL_ROLE.ADMIN, ACL_ROLE.WRITER],
+  },
+  SETTING_PAGES: {
+    READ: [ACL_ROLE.ADMIN, ACL_ROLE.OPERATOR],
+    ADD: [ACL_ROLE.ADMIN, ACL_ROLE.OPERATOR],
+    EDIT: [ACL_ROLE.ADMIN, ACL_ROLE.OPERATOR],
+    DELETE: [ACL_ROLE.ADMIN],
+  },
+};
+
+module.exports = access_rules;

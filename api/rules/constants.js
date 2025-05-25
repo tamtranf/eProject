@@ -39,4 +39,11 @@ module.exports = {
   IDS: {
     ADD_NEW_RECORD_ID: `${Number.MAX_SAFE_INTEGER}`,
   },
+  ACL_ROLE: {
+    ADMIN: 'ADMIN',
+    WRITER: 'WRITER',
+    READER: 'READER',
+    OPERATOR: 'OPERATOR',
+    NONE: 'NONE',
+  },
 };

@@ -64,6 +64,7 @@ export default {
       // This show the mode 2 to load the fields
       const r = [
         _.extend(fields.entity_code, {}),
+        _.extend(fields.acl_role, {}),
       ];
       return r;
     },

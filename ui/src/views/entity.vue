@@ -72,6 +72,9 @@ export default {
           const { entity_name } = _.find(this.entities, { entity_code });
           localStorage.setItem('entity_name', entity_name);
 
+          const { acl_role } = data;
+          localStorage.setItem('acl_role', acl_role);
+
           this.$notify({
             title: 'Select Entity',
             type: 'success',

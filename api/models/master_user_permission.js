@@ -24,7 +24,7 @@ class MasterUserPermission extends base_model {
 
     this.id = 'master_user_permission';
     this.table = 'master_user_permission';
-    this.form_fields = 'seq_id,user_name,entity_code';
+    this.form_fields = 'seq_id,user_name,entity_code,acl_role';
 
     this.routes = {
       datasource_load: {

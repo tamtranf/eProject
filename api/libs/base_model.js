@@ -45,7 +45,7 @@ class BaseModel {
   constructor() {
     // FIXME: All methods should support connection.
     // this.acl = acl_rules;
-    // this.aclAction = constants.ACL_ACTION;
+    this.aclAction = constants.ACL_ACTION;
 
     this.allow_save_change_history = config.tables.indexOf('change_history') > -1;
     setTimeout(() => {
@@ -79,22 +79,35 @@ class BaseModel {
     return val;
   }
 
-  checkServerUserPermission(req, res, model_acl, permission, _requester = '', _custom_error_message = false) {
-    // FIXME: To be implemented
-    // if (model_acl === null || model_acl === true) {
-    //   model_acl = this.model_acl;
-    // }
-    // var user_role = req.user_token_session.user_role || 'none';
-    // if (Array.isArray(model_acl.full) && model_acl.full.indexOf(user_role) > -1) {
-    //   return true;
-    // }
-    // if (Array.isArray(model_acl[permission]) && model_acl[permission].indexOf(user_role) > -1) {
-    //   return true;
-    // }
-    // console.log('checkServerUserPermission Access not allowed', { model_acl, permission, requester });
-    // ResponseUtil.response(req, res, null, custom_error_message || 'アクセスが許可されていません。');
-    return true;
+  checkSeverAcl(req, res, model_acl, acl_action, requester = '', custom_error_message = false) {
+    if (model_acl === null || model_acl === true) {
+      model_acl = this.model_acl;
+    }
+    const user_role = req.local.session_acl_role || 'NONE';
+    if (Array.isArray(model_acl[acl_action]) && model_acl[acl_action].indexOf(user_role) > -1) {
+      return true;
+    }
+    console.log('checkServerAcl Access not allowed', { model_acl, acl_action, requester });
+    ResponseUtil.response(req, res, null, custom_error_message || 'アクセスが許可されていません。');
+    return false;
   }
+
+  // checkServerUserPermission(req, res, model_acl, permission, _requester = '', _custom_error_message = false) {
+  //   // FIXME: To be implemented
+  //   // if (model_acl === null || model_acl === true) {
+  //   //   model_acl = this.model_acl;
+  //   // }
+  //   // var user_role = req.user_token_session.user_role || 'none';
+  //   // if (Array.isArray(model_acl.full) && model_acl.full.indexOf(user_role) > -1) {
+  //   //   return true;
+  //   // }
+  //   // if (Array.isArray(model_acl[permission]) && model_acl[permission].indexOf(user_role) > -1) {
+  //   //   return true;
+  //   // }
+  //   // console.log('checkServerUserPermission Access not allowed', { model_acl, permission, requester });
+  //   // ResponseUtil.response(req, res, null, custom_error_message || 'アクセスが許可されていません。');
+  //   return true;
+  // }
 
   form_fields_formatted(options) {
     let temp = _.clone(this.form_fields);

@@ -14,6 +14,7 @@ const constants = require('../rules/constants');
 // const PrintUtil = require('../libs/print_util');
 // const system_setting = require('./system_setting');
 // const { lt } = require('lodash');
+const acl_rules = require('../rules/acl_rules');
 
 // const approval_history = {};
 
@@ -24,7 +25,7 @@ class Car extends base_model {
     this.id = 'car';
     this.table = 'car';
     this.form_fields = 'seq_id,maker,model,license_plate,car_year,color,passenger,category,weight,price_per_day,status,notes,entity_code';
-
+    this.model_acl = acl_rules.DATA_PAGES;
     this.routes = {
       datasource_load: {
         method: 'post', func: 'datasource_load', path: '/datasource_load/:start/:end', no_login: false,
@@ -68,33 +69,44 @@ class Car extends base_model {
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res, this.get_options_conditions(req));
+    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
+      this.base_datasource_load(req, res, this.get_options_conditions(req));
+    }
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res, this.get_options_conditions(req));
+    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
+      this.base_datasource_count(req, res, this.get_options_conditions(req));
+    }
   }
 
   get(req, res) {
-    return this.base_get(req, res);
+    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
+      return this.base_get(req, res);
+    }
   }
 
   set(req, res) {
-    const entity = req.local.session_entity;
-    if (entity !== 'Super admin' && req.params.id === constants.IDS.ADD_NEW_RECORD_ID) {
-      req.body.changes.entity_code = entity;
-    }
+    if (this.checkSeverAcl(req, res, true, (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)) {
+      const entity = req.local.session_entity;
+      if (entity !== 'Super admin' && req.params.id === constants.IDS.ADD_NEW_RECORD_ID) {
+        req.body.changes.entity_code = entity;
+      }
 
-    return this.base_set(req, res, {});
+      return this.base_set(req, res, {});
+    }
   }
 
   delete(req, res) {
-    return this.base_delete(req, res);
+    if (this.checkServerAcl(req, res, true, this.aclAction.DELETE)) {
+      return this.base_delete(req, res);
+    }
   }
 
   delete_arr(req, res) {
-    return this.base_delete_arr(req, res);
+    if (this.checkServerAcl(req, res, true, this.aclAction.DELETE)) {
+      return this.base_delete_arr(req, res);
+    }
   }
 }
-
 module.exports = new Car();

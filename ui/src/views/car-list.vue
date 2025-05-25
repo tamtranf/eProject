@@ -13,7 +13,9 @@
         >
       </ag-grid-vue>
       <br>
-      <button style="float:right;" class="btn btn-primary" @click="onAddNew">New</button>
+      <button style="float:right;" class="btn btn-primary" @click="onAddNew"
+      :disabled="checkACL(userAclAction.ADD,aclRules.DATA_PAGES) === false"
+      >New</button>
       <button style="float:right;margin-right:10px" class="btn btn-danger"
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
     </div>
@@ -24,6 +26,7 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import agListController from '@/mixins/ag-list-controller';
 import _ from 'lodash';
 import datasource from '@/mixins/datasource';
+import acl from '@/mixins/acl';
 import { fields } from '../../../api/rules/fields_car';
 
 export default {
@@ -43,7 +46,7 @@ export default {
       meta: { requiresAuth: true },
     },
   ],
-  mixins: [mixinLayoutComponents, agListController, datasource],
+  mixins: [mixinLayoutComponents, agListController, datasource, acl],
   computed: {
     fieldList() {
       return fields;
@@ -61,7 +64,7 @@ export default {
     },
     deleteDisabled: {
       get() {
-        return this.delete_disabled;
+        return this.delete_disabled || this.checkACL(this.userAclAction.DELETE, this.aclRules.DATA_PAGES) === false;
       },
       set(v) {
         this.delete_disabled = v;
