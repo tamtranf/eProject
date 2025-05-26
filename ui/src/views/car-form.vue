@@ -77,7 +77,7 @@ export default {
         _.extend(fields.status, {}),
         _.extend(fields.notes, {}),
       ];
-      if (localStorage.entity_code === 'Super admin') {
+      if (localStorage.entity_code === 'Super_admin') {
         r.push(fields.entity_code);
       }
       return r;

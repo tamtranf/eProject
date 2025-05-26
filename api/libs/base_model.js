@@ -79,7 +79,7 @@ class BaseModel {
     return val;
   }
 
-  checkSeverAcl(req, res, model_acl, acl_action, requester = '', custom_error_message = false) {
+  checkServerAcl(req, res, model_acl, acl_action, requester = '', custom_error_message = false) {
     if (model_acl === null || model_acl === true) {
       model_acl = this.model_acl;
     }
