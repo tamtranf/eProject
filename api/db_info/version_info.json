@@ -511,6 +511,80 @@
                 "Default": "standard",
                 "Extra": ""
             }
+        },
+        "rent_history": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "car_id": {
+                "Field": "car_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "customer_name": {
+                "Field": "customer_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "from_date": {
+                "Field": "from_date",
+                "Type": "datetime",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "to_date": {
+                "Field": "to_date",
+                "Type": "datetime",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "total_rent_hours": {
+                "Field": "total_rent_hours",
+                "Type": "int",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "rent_value": {
+                "Field": "rent_value",
+                "Type": "int",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "notes": {
+                "Field": "notes",
+                "Type": "varchar(4096)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -521,6 +595,7 @@
         "master_user": {},
         "master_entity": {},
         "master_user_permission": {},
-        "car": {}
+        "car": {},
+        "rent_history": {}
     }
 }

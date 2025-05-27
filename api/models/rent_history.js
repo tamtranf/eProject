@@ -9,8 +9,8 @@ const local_fields = require('../rules/fields_car');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
 const constants = require('../rules/constants');
-// const DataUtil = require('../libs/data_utils');
-// const ResponseUtil = require('../libs/response_utils');
+const DataUtil = require('../libs/data_utils');
+const ResponseUtil = require('../libs/response_utils');
 // const PrintUtil = require('../libs/print_util');
 // const system_setting = require('./system_setting');
 // const { lt } = require('lodash');
@@ -22,9 +22,9 @@ class Car extends base_model {
   constructor() {
     super();
 
-    this.id = 'car';
-    this.table = 'car';
-    this.form_fields = 'seq_id,maker,model,license_plate,car_year,color,passenger,category,weight,price_per_day,status,notes,entity_code';
+    this.id = 'rent_history';
+    this.table = 'rent_history';
+    this.form_fields = 'seq_id,car_id,entity_code,customer_name,from_date,to_date,total_rent_hours,rent_value,notes';
     this.model_acl = acl_rules.DATA_PAGES;
     this.routes = {
       datasource_load: {
@@ -86,6 +86,17 @@ class Car extends base_model {
     }
   }
 
+  //    Change the “set”, to copy the entity_code from the “car” table.
+  //    DataUtil.query('Select entity_code from car where seq_id = ?', [req.body.changes.car_id], {}, (err, result) => {
+  //    if (err) {
+  //     return ResponseUtil.error(res, { message:err.message });
+  //   }
+  //   if (result.length === 0) {
+  //     return ResponseUtil.error(res, { message: 'Car not found' });
+  // }
+  //     req.body.changes.entity_code = result[0].entity_code;
+  //   return this.base_set(req, res, {});
+  // });
   set(req, res) {
     if (this.checkSeverAcl(req, res, true, (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)) {
       const entity = req.local.session_entity;

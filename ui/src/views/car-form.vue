@@ -26,6 +26,8 @@
         :disabled="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
         >Save</button>
       </div>
+      <rent_history style="margin: 0px;"  :car_id="seqId"></rent_history>
+
     </div>
   </div>
 </template>
@@ -34,6 +36,7 @@ import mixinFormController from '@/mixins/form_controller';
 import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
 import acl from '@/mixins/acl';
+import rent_history from '@/components/sub_views/rent_history-list';
 import { fields } from '../../../api/rules/fields_car';
 
 export default {
@@ -57,7 +60,7 @@ export default {
     },
   ],
   mixins: [mixinLayoutComponents, mixinFormController, acl],
-  components: {},
+  components: { rent_history },
   computed: {
 
     formFieldsSideA() {
@@ -77,7 +80,7 @@ export default {
         _.extend(fields.status, {}),
         _.extend(fields.notes, {}),
       ];
-      if (localStorage.entity_code === 'Super admin') {
+      if (localStorage.entity_code === 'Super_admin') {
         r.push(fields.entity_code);
       }
       return r;

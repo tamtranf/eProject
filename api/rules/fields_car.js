@@ -33,7 +33,7 @@ const arr = [
     label: 'Car Year',
     type: TYPES.SELECT_BOX,
     options_mode: SELECT_FIELD_MODE.ARRAY,
-    array: [2000, 2001, 2002, 2003, 3004],
+    array: [2000, 2001, 2002, 2003, 200, 2010, 2015, 2020, 2018],
   },
   {
     id: 'color',

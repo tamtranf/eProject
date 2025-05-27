@@ -37,6 +37,7 @@ const config = {
     'master_entity',
     'master_user_permission',
     'car',
+    'rent_history',
 
   ],
   admin_user: {
