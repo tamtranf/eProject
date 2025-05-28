@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 
   <div :class="[name,'page']">
     <h1>{{ name }} </h1>
@@ -15,6 +16,12 @@
       >New</button>
       <button style="float:right;margin-right:10px" class="btn btn-danger"
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button> -->
+=======
+  <div :class="[name,'page']">
+    <h1>{{ name }} </h1>
+    <div class="col-12" style="">
+      <ag-grid-vue style="width: 100%; height: 325px;" class="ag-theme-blue" :gridOptions="gridOptions" > </ag-grid-vue>
+>>>>>>> e8bf277 (renthistory)
     </div>
   </div>
 </template>
@@ -45,6 +52,12 @@ export default {
   ],
   mixins: [mixinLayoutComponents, agListController, datasource, acl],
   computed: {
+<<<<<<< HEAD
+=======
+    carID() {
+      return this.car_id;
+    },
+>>>>>>> e8bf277 (renthistory)
     fieldList() {
       return fields;
     },
@@ -55,6 +68,10 @@ export default {
         _.extend(fields.customer_name, {}),
         _.extend(fields.from_date, {}),
         _.extend(fields.to_date, {}),
+<<<<<<< HEAD
+=======
+        _.extend(fields.total_rent_hours, {}),
+>>>>>>> e8bf277 (renthistory)
         _.extend(fields.rent_value, {}),
         _.extend(fields.notes, {}),
       ];
@@ -110,13 +127,17 @@ export default {
       });
     },
   },
-  props: [],
+  props: ['car_id'],
   beforeCreate() {
   },
   created() {
   },
   beforeMount() {
     this.gridOptions = _.extend(this.commonGridOptions, {});
+<<<<<<< HEAD
+=======
+    this.api_request_options = { car_id: this.carID };
+>>>>>>> e8bf277 (renthistory)
     this.initDatasource({});
   },
   mounted() {
