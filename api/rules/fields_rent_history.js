@@ -4,8 +4,7 @@ const { TYPES, SELECT_FIELD_MODE } = require('./constants');
 const arr = [
   { id: 'seq_id', label: 'Unique Key', type: TYPES.SYSTEM },
   {
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     id: 'car_id',
     label: 'Car ID',
     type: TYPES.INPUT,
@@ -20,44 +19,16 @@ const arr = [
     label: 'Customer Name',
     type: TYPES.INPUT,
   },
+
   {
     id: 'from_date',
     label: 'From Date',
-=======
-    id: 'user_name',
-    label: 'User Name',
-=======
-    id: 'car_id',
-    label: 'Car ID',
->>>>>>> e8bf277 (renthistory)
-    type: TYPES.INPUT,
-  },
-  {
-    id: 'entity_code',
-    label: 'Entity Code',
-    type: TYPES.INPUT,
-  },
-  {
-<<<<<<< HEAD
-    id: 'last_login',
-    label: 'Last Login',
->>>>>>> 74a4c8fa2efd1dd290b8365abd8fdf6c891064d8
-=======
-    id: 'customer_name',
-    label: 'Customer Name',
-    type: TYPES.INPUT,
-  },
-  {
-    id: 'from_date',
-    label: 'From Date',
->>>>>>> e8bf277 (renthistory)
     type: TYPES.DATE_PICKER,
     show_time: false,
     format: 'YYYY/MM/DD',
   },
   {
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     id: 'to_date',
     label: 'To Date',
     type: TYPES.DATE_PICKER,
@@ -81,53 +52,6 @@ const arr = [
     label: 'Note',
     type: TYPES.INPUT,
     field_type: 'textarea',
-=======
-    id: 'status',
-    label: 'Status',
-    options_mode: SELECT_FIELD_MODE.LIST,
-    list: [
-      { label: 'Enable', value: '1' },
-      { label: 'Disable', value: '9' },
-
-    ],
-    type: TYPES.SELECT_BOX,
-  },
-  {
-    id: 'is_super_admin',
-    label: 'Is super Admin',
-    options_mode: SELECT_FIELD_MODE.LIST,
-    list: [
-      { label: 'Yes', value: '1' },
-      { label: 'No', value: '0' },
-
-    ],
-    type: TYPES.SELECT_BOX,
->>>>>>> 74a4c8fa2efd1dd290b8365abd8fdf6c891064d8
-=======
-    id: 'to_date',
-    label: 'To Date ',
-    type: TYPES.DATE_PICKER,
-    show_time: false,
-    format: 'YYYY/MM/DD',
-  },
-  {
-    id: 'total_rent_hours',
-    label: 'Total Rent Hours',
-    type: TYPES.INPUT,
-    field_type: 'number',
-  },
-  {
-    id: 'rent_value',
-    label: 'Rent Value',
-    type: TYPES.INPUT,
-    field_type: 'number',
-  },
-  {
-    id: 'notes',
-    label: 'Notes',
-    type: TYPES.INPUT,
-    field_type: 'textarea',
->>>>>>> e8bf277 (renthistory)
   },
 
 ];
