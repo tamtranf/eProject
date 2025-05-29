@@ -134,10 +134,7 @@ export default {
   },
   beforeMount() {
     this.gridOptions = _.extend(this.commonGridOptions, {});
-<<<<<<< HEAD
-=======
     this.api_request_options = { car_id: this.carID };
->>>>>>> e8bf277 (renthistory)
     this.initDatasource({});
   },
   mounted() {
