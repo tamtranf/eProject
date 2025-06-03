@@ -5,11 +5,7 @@
 // const _ = require('lodash');
 // const moment = require('moment');
 const debug = require('debug')('Car');
-<<<<<<< HEAD
-const local_fields = require('../rules/fields_car');
-=======
 const local_fields = require('../rules/fields_rent_history');
->>>>>>> e8bf277 (renthistory)
 const base_model = require('../libs/base_model');
 // const login = require('./login');
 const constants = require('../rules/constants');
@@ -22,11 +18,7 @@ const acl_rules = require('../rules/acl_rules');
 
 // const approval_history = {};
 
-<<<<<<< HEAD
-class Car extends base_model {
-=======
 class RentHistory extends base_model {
->>>>>>> e8bf277 (renthistory)
   constructor() {
     super();
 
@@ -77,56 +69,23 @@ class RentHistory extends base_model {
   }
 
   datasource_load(req, res) {
-<<<<<<< HEAD
-    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
-=======
     if (this.checkServerAcl(req, res, true, this.aclAction.READ)) {
->>>>>>> e8bf277 (renthistory)
       this.base_datasource_load(req, res, this.get_options_conditions(req));
     }
   }
 
   datasource_count(req, res) {
-<<<<<<< HEAD
-    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
-=======
     if (this.checkServerAcl(req, res, true, this.aclAction.READ)) {
->>>>>>> e8bf277 (renthistory)
       this.base_datasource_count(req, res, this.get_options_conditions(req));
     }
   }
 
   get(req, res) {
-<<<<<<< HEAD
-    if (this.checkSeverAcl(req, res, true, this.aclAction.READ)) {
-=======
     if (this.checkServerAcl(req, res, true, this.aclAction.READ)) {
->>>>>>> e8bf277 (renthistory)
       return this.base_get(req, res);
     }
   }
 
-<<<<<<< HEAD
-  //    Change the “set”, to copy the entity_code from the “car” table.
-  //    DataUtil.query('Select entity_code from car where seq_id = ?', [req.body.changes.car_id], {}, (err, result) => {
-  //    if (err) {
-  //     return ResponseUtil.error(res, { message:err.message });
-  //   }
-  //   if (result.length === 0) {
-  //     return ResponseUtil.error(res, { message: 'Car not found' });
-  // }
-  //     req.body.changes.entity_code = result[0].entity_code;
-  //   return this.base_set(req, res, {});
-  // });
-  set(req, res) {
-    if (this.checkSeverAcl(req, res, true, (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)) {
-      const entity = req.local.session_entity;
-      if (entity !== 'Super_admin' && req.params.id === constants.IDS.ADD_NEW_RECORD_ID) {
-        req.body.changes.entity_code = entity;
-      }
-
-      return this.base_set(req, res, {});
-=======
   set(req, res) {
     if (this.checkServerAcl(req, res, true, (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)) {
     //   const entity = req.local.session_entity;
@@ -144,7 +103,6 @@ class RentHistory extends base_model {
         req.body.changes.entity_code = result[0].entity_code;
         return this.base_set(req, res, {});
       });
->>>>>>> e8bf277 (renthistory)
     }
   }
 
@@ -160,8 +118,4 @@ class RentHistory extends base_model {
     }
   }
 }
-<<<<<<< HEAD
-module.exports = new Car();
-=======
 module.exports = new RentHistory();
->>>>>>> e8bf277 (renthistory)
