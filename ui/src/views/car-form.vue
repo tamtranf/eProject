@@ -26,7 +26,7 @@
         :disabled="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
         >Save</button>
       </div>
-      <rent_history style="margin: 0px;"  :car_id="seqId"></rent_history>
+      <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" ></rent_history>
 
     </div>
   </div>
@@ -38,6 +38,7 @@ import _ from 'lodash';
 import acl from '@/mixins/acl';
 import rent_history from '@/components/sub_views/rent_history-list';
 import { fields } from '../../../api/rules/fields_car';
+import constants from '../../../api/rules/constants';
 
 export default {
   name: 'car-form',
@@ -62,6 +63,9 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController, acl],
   components: { rent_history },
   computed: {
+    carStatus() {
+      return this.retrieved_value.status;
+    },
 
     formFieldsSideA() {
       // This show the mode 1 to load the fields
@@ -96,6 +100,7 @@ export default {
 
     loadFormData() {
       this.commonLoadRecord({}, (err, result) => {
+        _.find(this.formFieldsSideB, (f) => f.id === 'status').ref_field.isDisabled = this.seqId !== constants.IDS.ADD_NEW_RECORD_ID;
         this.setFormFields(result.data);
         console.log('Load loadFormData ', this.seqId, { err, result });
       });

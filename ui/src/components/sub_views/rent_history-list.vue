@@ -3,6 +3,10 @@
     <h1>{{ name }} </h1>
     <div class="col-12" style="">
       <ag-grid-vue style="width: 100%; height: 325px;" class="ag-theme-blue" :gridOptions="gridOptions" > </ag-grid-vue>
+      <button class="btn btn-secondary" style="float:right;" @click="$refs.rentHistoryModalNew.showModal()">New rent</button>
+       <button class="btn btn-warning" style="float:right;" @click="$refs.rentHistoryTerminateModalNew.showModal()">Terminate rent</button>
+      <rent_history_modal_new ref="rentHistoryModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_modal_new>
+      <rent_history_terminate_modal_new ref="rentHistoryTerminateModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_terminate_modal_new>
     </div>
   </div>
 </template>
@@ -12,6 +16,8 @@ import agListController from '@/mixins/ag-list-controller';
 import _ from 'lodash';
 import datasource from '@/mixins/datasource';
 import acl from '@/mixins/acl';
+import rent_history_modal_new from '@/components/modals/rent_history-new-modal';
+import rent_history_terminate_modal_new from '@/components/modals/rent_history-terminate-modal';
 import { fields } from '../../../../api/rules/fields_rent_history';
 
 export default {
@@ -62,7 +68,11 @@ export default {
     },
 
   },
+  components: { rent_history_modal_new, rent_history_terminate_modal_new },
   methods: {
+    onModalUpdated(_data) {
+      this.gridOptions.api.purgeInfiniteCache();
+    },
     onAddNew() {
       return this.$router.push({
         name: this.detail_page,

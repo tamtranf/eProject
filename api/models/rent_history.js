@@ -45,6 +45,9 @@ class RentHistory extends base_model {
       delete_arr: {
         method: 'post', func: 'delete_arr', path: '/delete_arr', no_login: false,
       },
+      load_last_open_rent_record: {
+        method: 'post', func: 'load_last_open_rent_record', path: '/load_last_open_rent_record', no_login: false,
+      },
     };
     debug('started');
   }
@@ -53,13 +56,34 @@ class RentHistory extends base_model {
     return local_fields;
   }
 
+  load_last_open_rent_record(req, res) {
+    DataUtil.query(`SELECT *  FROM ${this.table} WHERE car_id = ? AND to_date IS NULL ORDER BY from_date LIMIT 0,1`, [req.body.car_id], {}, (err, result) => {
+      if (err) {
+        return ResponseUtil.response(req, res, {}, err);
+      }
+      if (Array.isArray(result) && result.length !== 1) {
+        return ResponseUtil.response(req, res, {}, 'Data not found');
+      }
+      return ResponseUtil.response(req, res, { data: result[0] }, err);
+    });
+  }
+
   get_options_conditions(req, extend = {}) {
     const options = extend;
+    options.conditions = (options.conditions) ? options.conditions : '';
+    options.params = (Array.isArray(options.params)) ? options.params : [];
     const entity = req.local.session_entity;
 
     if (entity !== 'Super_admin') {
       options.conditions = 'entity_code=?';
       options.params = [entity];
+    }
+    if (req.body.api_request_options) {
+      if (options.conditions && options.conditions.length > 0) {
+        options.conditions += 'AND';
+      }
+      options.conditions += 'car_id=?';
+      options.params.push(req.body.api_request_options.car_id);
     }
     return options;
   }
@@ -101,7 +125,15 @@ class RentHistory extends base_model {
           return ResponseUtil.error(res, { message: 'Car not found' });
         }
         req.body.changes.entity_code = result[0].entity_code;
-        return this.base_set(req, res, {});
+        const new_status = (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? 'Rented' : 'Idle';
+        const sql = 'UPDATE car SET status =? WHERE seq_id=?';
+        const params = [new_status, req.body.changes.car_id];
+        DataUtil.query(sql, params, {}, (err2, _result) => {
+          if (err2) {
+            return ResponseUtil.error(res, { message: err2.message });
+          }
+          this.base_set(req, res, {});
+        });
       });
     }
   }
