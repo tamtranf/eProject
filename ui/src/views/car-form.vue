@@ -26,7 +26,7 @@
         :disabled="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
         >Save</button>
       </div>
-      <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" ></rent_history>
+      <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" @status_updated="statusUpdated" ></rent_history>
 
     </div>
   </div>
@@ -97,6 +97,9 @@ export default {
     },
   },
   methods: {
+    statusUpdated(data) {
+      _.find(this.formFieldsSideB, (f) => f.id === 'status').ref_field.setValue(data.status);
+    },
 
     loadFormData() {
       this.commonLoadRecord({}, (err, result) => {

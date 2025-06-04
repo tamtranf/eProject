@@ -7,12 +7,12 @@ const arr = [
 
     id: 'car_id',
     label: 'Car ID',
-    type: TYPES.INPUT,
+    type: TYPES.SYSTEM,
   },
   {
     id: 'entity_code',
     label: 'Entity Code',
-    type: TYPES.INPUT,
+    type: TYPES.SYSTEM,
   },
   {
     id: 'customer_name',
@@ -25,7 +25,7 @@ const arr = [
     label: 'From Date',
     type: TYPES.DATE_PICKER,
     show_time: false,
-    format: 'YYYY/MM/DD',
+    format: 'YYYY/MM/DD HH:mm',
   },
   {
 
@@ -33,7 +33,7 @@ const arr = [
     label: 'To Date',
     type: TYPES.DATE_PICKER,
     show_time: false,
-    format: 'YYYY/MM/DD',
+    format: 'YYYY/MM/DD HH:mm',
   },
   {
     id: 'total_rent_hours',
@@ -50,8 +50,7 @@ const arr = [
   {
     id: 'notes',
     label: 'Note',
-    type: TYPES.INPUT,
-    field_type: 'textarea',
+    type: TYPES.TEXT_AREA,
   },
 
 ];

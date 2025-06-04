@@ -98,6 +98,10 @@ export default {
     },
   },
   methods: {
+    diffDates(date1, date2) {
+      const diff = Math.ceil(((new Date(date1).getTime() - (new Date(date2).getTime())) / (1000 * 3600)));
+      return diff > 0 ? diff : 0;
+    },
     showModal() {
       this.modalElem.show();
       _.find(this.formFieldsSideA, (f) => f.id === 'to_date').ref_field.setValue(new Date());
@@ -125,6 +129,7 @@ export default {
     onSave() {
       const changes = this.getFormFieldsValues(false);
       changes.car_id = this.carID;
+      changes.total_rent_hours = this.diffDates(changes.to_date, this.retrieved_value.from_date);
 
       this.commonSaveRecord(changes, { force_seq_id: this.rent_id }, (err, result) => {
         if (err) {

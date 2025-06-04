@@ -4,7 +4,7 @@
 // const async = require('async');
 // const _ = require('lodash');
 // const moment = require('moment');
-const debug = require('debug')('Car');
+const debug = require('debug')('RentHistory');
 const local_fields = require('../rules/fields_rent_history');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
@@ -126,6 +126,10 @@ class RentHistory extends base_model {
         }
         req.body.changes.entity_code = result[0].entity_code;
         const new_status = (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? 'Rented' : 'Idle';
+        if (req.params.id !== constants.IDS.ADD_NEW_RECORD_ID) {
+          const price_per_hour = result[0].price_per_day / 24;
+          req.body.changes.rent_value = price_per_hour * req.body.changes.total_rent_hours;
+        }
         const sql = 'UPDATE car SET status =? WHERE seq_id=?';
         const params = [new_status, req.body.changes.car_id];
         DataUtil.query(sql, params, {}, (err2, _result) => {

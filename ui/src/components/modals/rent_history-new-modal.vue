@@ -66,7 +66,7 @@ import { Modal } from 'bootstrap';
 import { fields } from '../../../../api/rules/fields_rent_history';
 
 export default {
-  name: 'car-form',
+  name: 'ren_history_form',
   data() {
     return {
       local_fields_ref_a: false,
@@ -122,14 +122,15 @@ export default {
             text: err,
           });
         } else {
-          this.modalElem.hide();
-          this.$emit('updated', { status: 'Rented', id: result.data.seq_id });
-          //   this.$notify({
-          //     type: 'success',
-          //     title: 'Saved',
-          //     text: 'Success',
-          //   });
-          //   if (this.is_new && result.data.seq_id !== this.seqId) {
+          this.$notify({
+            type: 'success',
+            title: 'Saved',
+            text: 'Success',
+          });
+          if (this.is_new && result.data.seq_id !== this.seqId) {
+            this.modalElem.hide();
+            this.$emit('updated', { status: 'Rented', id: result.data.seq_id });
+          }
           //     this.$route.params.seq_id = result.data.seq_id;
           //     this.is_new = false;
 

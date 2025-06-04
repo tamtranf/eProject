@@ -3,10 +3,12 @@
     <h1>{{ name }} </h1>
     <div class="col-12" style="">
       <ag-grid-vue style="width: 100%; height: 325px;" class="ag-theme-blue" :gridOptions="gridOptions" > </ag-grid-vue>
-      <button class="btn btn-secondary" style="float:right;" @click="$refs.rentHistoryModalNew.showModal()">New rent</button>
-       <button class="btn btn-warning" style="float:right;" @click="$refs.rentHistoryTerminateModalNew.showModal()">Terminate rent</button>
+      <button class="btn btn-secondary" style="float:right;" @click="$refs.rentHistoryModalNew.showModal()" v-if="showNew===true" >New rent</button>
+       <button class="btn btn-warning" style="float:right;"
+       @click="$refs.rentHistoryTerminateModalNew.showModal()"
+        v-if="showNew===false" >Terminate rent </button>
       <rent_history_modal_new ref="rentHistoryModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_modal_new>
-      <rent_history_terminate_modal_new ref="rentHistoryTerminateModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_terminate_modal_new>
+      <rent_history_terminate_modal_new  ref="rentHistoryTerminateModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_terminate_modal_new>
     </div>
   </div>
 </template>
@@ -28,6 +30,7 @@ export default {
       api_name: 'rent_history',
       detail_page: 'rent_history-form',
       delete_disabled: true,
+      car_local_status: false,
     };
   },
   routes: [
@@ -39,6 +42,12 @@ export default {
   ],
   mixins: [mixinLayoutComponents, agListController, datasource, acl],
   computed: {
+    showNew() {
+      if (this.car_local_status === false) {
+        return this.car_status === 'Idle';
+      }
+      return this.car_local_status === 'Idle';
+    },
     carID() {
       return this.car_id;
     },
@@ -70,49 +79,17 @@ export default {
   },
   components: { rent_history_modal_new, rent_history_terminate_modal_new },
   methods: {
-    onModalUpdated(_data) {
+    onModalUpdated(data) {
       this.gridOptions.api.purgeInfiniteCache();
-    },
-    onAddNew() {
-      return this.$router.push({
-        name: this.detail_page,
-        params: { seq_id: 'new' },
-      });
+      this.car_local_status = data.status;
+      this.$emit('status_updated', data);
     },
     createColumnDefs() {
       return this.commonCreateColumnDefs({ show_details: false, show_checkbox: false });
     },
-    onDetailsClick(_ev, data) {
-      console.log('onDetailsClick', { data });
-      return this.$router.push({
-        name: this.detail_page,
-        params: { seq_id: data.seq_id },
-      });
-    },
-    onArraySelected(_ev, data) {
-      console.log('onArraySelected', { _ev, data });
-      this.deleteDisabled = Array.isArray(this.selectedRowArr) ? this.selectedRowArr.length < 1 : true;
-    },
-    onDeleteSelected() {
-      console.log('onDeleteSelected');
-      this.commonDeleteSelected((err) => {
-        if (err) {
-          this.$notify({
-            type: 'error',
-            title: 'Error',
-            text: err,
-          });
-        } else {
-          this.$notify({
-            type: 'success',
-            title: 'Deleted',
-            text: 'Success',
-          });
-        }
-      });
-    },
+
   },
-  props: ['car_id'],
+  props: ['car_id', 'car_status'],
   beforeCreate() {
   },
   created() {
