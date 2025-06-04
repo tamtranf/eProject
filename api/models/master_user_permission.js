@@ -25,6 +25,7 @@ class MasterUserPermission extends base_model {
     this.id = 'master_user_permission';
     this.table = 'master_user_permission';
     this.form_fields = 'seq_id,user_name,entity_code,acl_role';
+    this.view_fields = `${this.form_fields},entity_name,full_name`;
 
     this.routes = {
       datasource_load: {
@@ -69,15 +70,15 @@ class MasterUserPermission extends base_model {
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res);
+    this.base_datasource_load(req, res, { force_fields: this.view_fields, table: 'v_master_user_permission' });
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res);
+    this.base_datasource_count(req, res, { force_fields: this.view_fields, table: 'v_master_user_permission' });
   }
 
   get(req, res) {
-    return this.base_get(req, res);
+    return this.base_get(req, res, { force_fields: this.view_fields, table: 'v_master_user_permission' });
   }
 
   set(req, res) {

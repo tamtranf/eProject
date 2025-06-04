@@ -3,10 +3,11 @@
     <h1>{{ name }} </h1>
     <div class="col-12" style="">
       <ag-grid-vue style="width: 100%; height: 325px;" class="ag-theme-blue" :gridOptions="gridOptions" > </ag-grid-vue>
-      <button class="btn btn-secondary" style="float:right;" @click="$refs.rentHistoryModalNew.showModal()" v-if="showNew===true" >New rent</button>
+      <button class="btn btn-secondary" style="float:right;" @click="$refs.rentHistoryModalNew.showModal()" v-if="showNew===true
+      && isMaintenance===false" >New rent</button>
        <button class="btn btn-warning" style="float:right;"
        @click="$refs.rentHistoryTerminateModalNew.showModal()"
-        v-if="showNew===false" >Terminate rent </button>
+        v-if="showNew===false && isMaintenance===false" >Terminate rent </button>
       <rent_history_modal_new ref="rentHistoryModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_modal_new>
       <rent_history_terminate_modal_new  ref="rentHistoryTerminateModalNew" :car_id="carID" @updated="onModalUpdated"></rent_history_terminate_modal_new>
     </div>
@@ -48,6 +49,9 @@ export default {
       }
       return this.car_local_status === 'Idle';
     },
+    isMaintenance() {
+      return this.car_status === 'Maintenance';
+    },
     carID() {
       return this.car_id;
     },
@@ -56,8 +60,8 @@ export default {
     },
     tabFieldList() {
       const r = [
-        _.extend(fields.car_id, {}),
-        _.extend(fields.entity_code, {}),
+        // _.extend(fields.car_id, {}),
+        // _.extend(fields.entity_code, {}),
         _.extend(fields.customer_name, {}),
         _.extend(fields.from_date, {}),
         _.extend(fields.to_date, {}),

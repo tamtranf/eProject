@@ -117,7 +117,7 @@ class RentHistory extends base_model {
     //     req.body.changes.entity_code = entity;
     //   }
 
-      DataUtil.query('Select entity_code from car where seq_id = ?', [req.body.changes.car_id], {}, (err, result) => {
+      DataUtil.query('Select entity_code,price_per_day from car where seq_id = ?', [req.body.changes.car_id], {}, (err, result) => {
         if (err) {
           return ResponseUtil.error(res, { message: err.message });
         }
@@ -125,6 +125,10 @@ class RentHistory extends base_model {
           return ResponseUtil.error(res, { message: 'Car not found' });
         }
         req.body.changes.entity_code = result[0].entity_code;
+        if (req.params.id !== constants.IDS.ADD_NEW_RECORD_ID) {
+          const price_per_hour = result[0].price_per_day / 24;
+          req.body.changes.rent_value = price_per_hour * req.body.changes.total_rent_hours;
+        }
         const new_status = (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? 'Rented' : 'Idle';
         if (req.params.id !== constants.IDS.ADD_NEW_RECORD_ID) {
           const price_per_hour = result[0].price_per_day / 24;
@@ -136,6 +140,7 @@ class RentHistory extends base_model {
           if (err2) {
             return ResponseUtil.error(res, { message: err2.message });
           }
+
           this.base_set(req, res, {});
         });
       });

@@ -74,6 +74,16 @@ new Nseq().do([
     }, 2, 'app.pre_open');
   },
   (self) => {
+    table_validator.create_views((err2) => {
+      if (err2) {
+        console.log('Error to create the views', err2);
+      } else {
+        console.log('Views recreated done!');
+      }
+      self.next();
+    });
+  },
+  (self) => {
     table_validator.run_setup_scripts((err) => {
       if (err) {
         console.log('Error to create the setup_scripts', err);

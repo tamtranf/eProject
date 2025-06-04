@@ -103,9 +103,9 @@ export default {
 
     loadFormData() {
       this.commonLoadRecord({}, (err, result) => {
-        _.find(this.formFieldsSideB, (f) => f.id === 'status').ref_field.isDisabled = this.seqId !== constants.IDS.ADD_NEW_RECORD_ID;
         this.setFormFields(result.data);
         console.log('Load loadFormData ', this.seqId, { err, result });
+        _.find(this.formFieldsSideB, (f) => f.id === 'status').ref_field.isDisabled = this.seqId !== constants.IDS.ADD_NEW_RECORD_ID;
       });
     },
     onSave() {
