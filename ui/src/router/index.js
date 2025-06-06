@@ -15,13 +15,8 @@ const routes = [];
   require('../views/entity'),
   require('../views/login'),
   require('../views/home'),
-  require('../views/about'),
-  require('../views/templates'),
   require('../views/template-form'),
   require('../views/template-list'),
-  require('../views/test'),
-  require('../views/dev'),
-  require('../views/test_3004'),
 
 ].forEach((file) => {
   file.default.routes.forEach((r) => {

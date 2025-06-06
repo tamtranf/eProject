@@ -9,7 +9,7 @@ const arr = [
     options_mode: SELECT_FIELD_MODE.API,
     api: {
       url: '/master_user/get_user_list',
-      label: 'user_name',
+      label: 'full_name',
       value: 'user_name',
     },
     type: TYPES.SELECT_BOX,
@@ -20,7 +20,7 @@ const arr = [
     options_mode: SELECT_FIELD_MODE.API,
     api: {
       url: '/master_entity/get_entity_list',
-      label: 'entity_code',
+      label: 'entity_name',
       value: 'entity_code',
     },
     type: TYPES.SELECT_BOX,
@@ -37,6 +37,8 @@ const arr = [
     ],
     type: TYPES.SELECT_BOX,
   },
+  { id: 'full_name', label: 'Full name', type: TYPES.INPUT },
+  { id: 'entity_name', label: 'Entity name', type: TYPES.INPUT },
 
 ];
 const ret = {};

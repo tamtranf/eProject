@@ -59,6 +59,7 @@ export default {
         _.extend(fields.color, {}),
         _.extend(fields.price_per_day, {}),
         _.extend(fields.entity_code, {}),
+        _.extend(fields.entity_name, {}),
       ];
       return r;
     },

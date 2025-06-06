@@ -103,11 +103,12 @@ const arr = [
     options_mode: SELECT_FIELD_MODE.API,
     api: {
       url: '/master_entity/get_entity_list',
-      label: 'entity_code',
+      label: 'entity_name',
       value: 'entity_code',
     },
     type: TYPES.SELECT_BOX,
   },
+  { id: 'entity_name', label: 'Entity Name', type: TYPES.INPUT },
 
 ];
 const ret = {};

@@ -29,8 +29,6 @@ const config = {
   auto_create_tables: true,
   auto_create_and_change_fields: true,
   tables: [
-    'master_dev',
-    'master_test',
     'master_template',
     'master_products',
     'master_user',

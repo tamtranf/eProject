@@ -50,8 +50,8 @@ export default {
     },
     tabFieldList() {
       const r = [
-        _.extend(fields.user_name, {}),
-        _.extend(fields.entity_code, {}),
+        _.extend(fields.full_name, {}),
+        _.extend(fields.entity_name, {}),
         _.extend(fields.acl_role, {}),
 
       ];
