@@ -19,13 +19,16 @@
         <br>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
       </div>
+      <master_user_permission style="margin: 0px;" v-if="userName" :user_name="userName"></master_user_permission>
     </div>
+
   </div>
 </template>
 <script>
 import mixinFormController from '@/mixins/form_controller';
 import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
+import master_user_permission from '@/components/sub_views/master_user_permission-list';
 import { fields } from '../../../api/rules/fields_master_user';
 
 export default {
@@ -49,8 +52,11 @@ export default {
     },
   ],
   mixins: [mixinLayoutComponents, mixinFormController],
-  components: {},
+  components: { master_user_permission },
   computed: {
+    userName() {
+      return this.retrieved_value.user_name;
+    },
 
     formFieldsSideA() {
       // This show the mode 1 to load the fields

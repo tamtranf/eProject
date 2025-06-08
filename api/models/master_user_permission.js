@@ -54,31 +54,35 @@ class MasterUserPermission extends base_model {
     return local_fields;
   }
 
-  //   get_options_conditions(req, extend = {}) {
-  //     const options = extend;
-  //     const entity = req.local.session_entity;
+  get_options_conditions(req, extend = {}) {
+    const options = extend;
 
-  //     if (entity !== 'Super_admin') {
-  //       options.conditions = 'entity_code=?';
-  //       options.params = [entity];
-  //     }
-  //     return options;
-  //   }
+    options.conditions = (options.conditions) ? options.conditions : '';
+    options.params = (Array.isArray(options.params)) ? options.params : [];
+    if (req.body.api_request_options) {
+      if (options.conditions && options.params.length > 0) {
+        options.conditions += 'AND';
+      }
+      options.conditions += 'user_name=?';
+      options.params.push(req.body.api_request_options.user_name);
+    }
+    return options;
+  }
 
   check_pk(mode, changes, req, res, cb) {
     return this.base_check_pk(mode, changes, req, res, {}, cb);
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res, { force_fields: this.view_fields, table: 'v_master_user_permission' });
+    this.base_datasource_load(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_master_user_permission' }));
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res, { force_fields: this.view_fields, table: 'v_master_user_permission' });
+    this.base_datasource_count(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_master_user_permission' }));
   }
 
   get(req, res) {
-    return this.base_get(req, res, { force_fields: this.view_fields, table: 'v_master_user_permission' });
+    return this.base_get(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_master_user_permission' }));
   }
 
   set(req, res) {
