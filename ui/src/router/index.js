@@ -4,6 +4,14 @@ const routes = [];
 // Define here the name of each file that should be part to the router
 [
 
+  require('../views/master_category-form'),
+  require('../views/master_category-list'),
+  require('../views/master_color-form'),
+  require('../views/master_color-list'),
+  require('../views/master_year-form'),
+  require('../views/master_year-list'),
+  require('../views/master_maker-form'),
+  require('../views/master_maker-list'),
   require('../views/master_user_permission-form'),
   require('../views/master_user_permission-list'),
   require('../views/master_user-form'),

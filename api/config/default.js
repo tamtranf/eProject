@@ -36,6 +36,10 @@ const config = {
     'master_user_permission',
     'car',
     'rent_history',
+    'master_maker',
+    'master_year',
+    'master_color',
+    'master_category',
 
   ],
   admin_user: {

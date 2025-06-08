@@ -1,0 +1,3 @@
+ALTER TABLE `master_maker` ADD UNIQUE INDEX `maker_code` USING BTREE(`maker_code`);
+ALTER TABLE `master_maker` ADD PRIMARY KEY USING BTREE(`seq_id`);
+ALTER TABLE `master_maker` MODIFY COLUMN `seq_id` INTEGER) UNSIGNED NOT NULL AUTO_INCREMENT;

@@ -1,0 +1,3 @@
+ALTER TABLE `master_year` ADD PRIMARY KEY USING BTREE(`seq_id`);
+ALTER TABLE `master_year` ADD UNIQUE INDEX `year_code` USING BTREE(`year_code`);
+ALTER TABLE `master_year` MODIFY COLUMN `seq_id` INTEGER) UNSIGNED NOT NULL AUTO_INCREMENT;

@@ -585,6 +585,110 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "master_maker": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "maker_name": {
+                "Field": "maker_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "maker_code": {
+                "Field": "maker_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            }
+        },
+        "master_year": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "year_name": {
+                "Field": "year_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "year_code": {
+                "Field": "year_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            }
+        },
+        "master_color": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "color_name": {
+                "Field": "color_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "color_code": {
+                "Field": "color_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            }
+        },
+        "master_category": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "category_name": {
+                "Field": "category_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "category_code": {
+                "Field": "category_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -596,6 +700,10 @@
         "master_entity": {},
         "master_user_permission": {},
         "car": {},
-        "rent_history": {}
+        "rent_history": {},
+        "master_maker": {},
+        "master_year": {},
+        "master_color": {},
+        "master_category": {}
     }
 }

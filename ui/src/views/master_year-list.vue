@@ -13,9 +13,7 @@
         >
       </ag-grid-vue>
       <br>
-      <button style="float:right;" class="btn btn-primary" @click="onAddNew"
-      :disabled="checkACL(userAclAction.ADD,aclRules.DATA_PAGES) === false"
-      >New</button>
+      <button style="float:right;" class="btn btn-primary" @click="onAddNew">New</button>
       <button style="float:right;margin-right:10px" class="btn btn-danger"
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
     </div>
@@ -26,46 +24,41 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import agListController from '@/mixins/ag-list-controller';
 import _ from 'lodash';
 import datasource from '@/mixins/datasource';
-import acl from '@/mixins/acl';
-import { fields } from '../../../api/rules/fields_car';
+import { fields } from '../../../api/rules/fields_master_year';
 
 export default {
-  name: 'car-list',
+  name: 'master_year-list',
   data() {
     return {
-      name: 'CarList',
-      api_name: 'car',
-      detail_page: 'car-form',
+      name: 'MasterMakerList',
+      api_name: 'master_year',
+      detail_page: 'master_year-form',
       delete_disabled: true,
     };
   },
   routes: [
     {
-      path: '/car-list',
-      name: 'car-list',
+      path: '/master_year-list',
+      name: 'master_year-list',
       meta: { requiresAuth: true },
     },
   ],
-  mixins: [mixinLayoutComponents, agListController, datasource, acl],
+  mixins: [mixinLayoutComponents, agListController, datasource],
   computed: {
     fieldList() {
       return fields;
     },
     tabFieldList() {
       const r = [
-        _.extend(fields.maker_name, {}),
-        _.extend(fields.model, {}),
         _.extend(fields.year_name, {}),
-        _.extend(fields.color_name, {}),
-        _.extend(fields.price_per_day, {}),
-        _.extend(fields.entity_code, {}),
-        _.extend(fields.entity_name, {}),
+        _.extend(fields.year_code, {}),
+
       ];
       return r;
     },
     deleteDisabled: {
       get() {
-        return this.delete_disabled || this.checkACL(this.userAclAction.DELETE, this.aclRules.DATA_PAGES) === false;
+        return this.delete_disabled;
       },
       set(v) {
         this.delete_disabled = v;

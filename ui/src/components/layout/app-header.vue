@@ -5,6 +5,8 @@
        <router-link to="/templates">Templates</router-link> |  <router-link to="/test_3004">Test</router-link>
        | <router-link to="/car-list">Car</router-link> | <router-link to="/master_entity-list">Master Entity</router-link>
        | <router-link to="/master_user-list">Master User</router-link>| <router-link to="/master_user_permission-list">Master User Permission</router-link>
+        |<router-link to="/master_maker-list">Master Maker</router-link>|<router-link to="/master_year-list">Master Year</router-link>
+        |<router-link to="/master_color-list">Master Color</router-link>|<router-link to="/master_category-list">Master Category</router-link>
        <span  style="float: right;">
        <button class="btn btn-warning" @click.prevent="logout">Log out</button>
        <br>

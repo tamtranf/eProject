@@ -1,0 +1,3 @@
+ALTER TABLE `master_color` ADD UNIQUE INDEX `color_code` USING BTREE(`color_code`);
+ALTER TABLE `master_color` ADD PRIMARY KEY USING BTREE(`seq_id`);
+ALTER TABLE `master_color` MODIFY COLUMN `seq_id` INTEGER) UNSIGNED NOT NULL AUTO_INCREMENT;

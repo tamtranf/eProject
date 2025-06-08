@@ -6,15 +6,12 @@ const arr = [
   {
     id: 'maker',
     label: 'Maker',
-    options_mode: SELECT_FIELD_MODE.LIST,
-    list: [
-      { label: 'Toyota', value: 'Toyota' },
-      { label: 'Honda', value: 'Honda' },
-      { label: 'Nissan', value: 'Nissan' },
-      { label: 'Mazda', value: 'Mazda' },
-      { label: 'Mitsubishi', value: 'Mitsubishi' },
-
-    ],
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_maker/get_maker_list',
+      label: 'maker_name',
+      value: 'maker_code',
+    },
     type: TYPES.SELECT_BOX,
   },
   {
@@ -31,22 +28,23 @@ const arr = [
   {
     id: 'car_year',
     label: 'Car Year',
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_year/get_year_list',
+      label: 'year_name',
+      value: 'year_code',
+    },
     type: TYPES.SELECT_BOX,
-    options_mode: SELECT_FIELD_MODE.ARRAY,
-    array: [2000, 2001, 2002, 2003, 200, 2010, 2015, 2020, 2018],
   },
   {
     id: 'color',
     label: 'Color',
-    options_mode: SELECT_FIELD_MODE.LIST,
-    list: [
-      { label: 'Black', value: 'Black' },
-      { label: 'White', value: 'White' },
-      { label: 'Grey', value: 'Grey' },
-      { label: 'Red', value: 'Red' },
-      { label: 'Blue', value: 'Blue' },
-
-    ],
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_color/get_color_list',
+      label: 'color_name',
+      value: 'color_code',
+    },
     type: TYPES.SELECT_BOX,
   },
   {
@@ -58,15 +56,12 @@ const arr = [
   {
     id: 'category',
     label: 'category',
-    options_mode: SELECT_FIELD_MODE.LIST,
-    list: [
-      { label: 'Wagon', value: 'Wagon' },
-      { label: 'Sport', value: 'Sport' },
-      { label: 'Compact', value: 'Compact' },
-      { label: 'SUV', value: 'SUV' },
-      { label: 'Normal', value: 'Normal' },
-
-    ],
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_category/get_category_list',
+      label: 'category_name',
+      value: 'category_code',
+    },
     type: TYPES.SELECT_BOX,
   },
   {
@@ -109,7 +104,10 @@ const arr = [
     type: TYPES.SELECT_BOX,
   },
   { id: 'entity_name', label: 'Entity Name', type: TYPES.INPUT },
-
+  { id: 'maker_name', label: 'Maker', type: TYPES.INPUT },
+  { id: 'color_name', label: 'Color', type: TYPES.INPUT },
+  { id: 'year_name', label: 'Year', type: TYPES.INPUT },
+  { id: 'category_name', label: 'Category', type: TYPES.INPUT },
 ];
 const ret = {};
 let s = 1;
