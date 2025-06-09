@@ -9,12 +9,11 @@
         >
       </ag-grid-vue>
       <br>
-      <button style="float:right;" class="btn btn-primary" @click="onAddNew"
-
+      <button style="float:right;" class="btn btn-primary" @click="$refs.userPermissionNewModal.showModal()"
       >New</button>
       <button style="float:right;margin-right:10px" class="btn btn-danger"
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
-
+      <user_permission_new_modal ref="userPermissionNewModal" :user_name="userName" @updated="onModalUpdated"></user_permission_new_modal>
     </div>
   </div>
 </template>
@@ -23,6 +22,7 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import agListController from '@/mixins/ag-list-controller';
 import _ from 'lodash';
 import datasource from '@/mixins/datasource';
+import user_permission_new_modal from '@/components/modals/user_permission-new-modal';
 import { fields } from '../../../../api/rules/fields_master_use_permission';
 
 export default {
@@ -44,7 +44,7 @@ export default {
   ],
   mixins: [mixinLayoutComponents, agListController, datasource],
   computed: {
-    UserName() {
+    userName() {
       return this.user_name;
     },
     fieldList() {
@@ -69,12 +69,17 @@ export default {
 
   },
   methods: {
-    onAddNew() {
-      return this.$router.push({
-        name: this.detail_page,
-        params: { seq_id: 'new' },
-      });
+    onModalUpdated(_data) {
+      this.gridOptions.api.purgeInfiniteCache();
+      this.countRows('master_user_permission-list');
+      // this.$emit('permission_updated', data);
     },
+    // onAddNew() {
+    //   return this.$router.push({
+    //     name: this.detail_page,
+    //     params: { seq_id: 'new' },
+    //   });
+    // },
     createColumnDefs() {
       return this.commonCreateColumnDefs({ show_details: true, show_checkbox: true });
     },
@@ -109,14 +114,14 @@ export default {
     },
   },
   props: ['user_name'],
-  components: {},
+  components: { user_permission_new_modal },
   beforeCreate() {
   },
   created() {
   },
   beforeMount() {
     this.gridOptions = _.extend(this.commonGridOptions, {});
-    this.api_request_options = { user_name: this.UserName };
+    this.api_request_options = { user_name: this.userName };
     this.initDatasource({});
   },
   mounted() {

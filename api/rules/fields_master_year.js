@@ -13,6 +13,7 @@ const arr = [
     id: 'year_code',
     label: 'Year Code',
     type: TYPES.INPUT,
+    filed_types: 'number',
   },
 
 ];

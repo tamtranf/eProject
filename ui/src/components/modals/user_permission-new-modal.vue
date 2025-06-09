@@ -1,7 +1,7 @@
 <template>
 <div
   class="modal fade"
-  ref="modalIDNew"
+  ref="modalUserPermission"
   id="staticBackdrop"
   data-bs-backdrop="static"
   data-bs-keyboard="false"
@@ -63,16 +63,16 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
 import acl from '@/mixins/acl';
 import { Modal } from 'bootstrap';
-import { fields } from '../../../../api/rules/fields_rent_history';
+import { fields } from '../../../../api/rules/fields_master_use_permission';
 
 export default {
-  name: 'ren_history_form',
+  name: 'master_user_permission_form',
   data() {
     return {
       local_fields_ref_a: false,
       local_fields_ref_b: false,
-      api_name: 'rent_history',
-      name: 'ren_history_form',
+      api_name: 'master_user_permission',
+      name: 'master_user_permission_form',
       modalElem: null,
     };
   },
@@ -86,7 +86,7 @@ export default {
     formFieldsSideA() {
       // This show the mode 1 to load the fields
       if (this.local_fields_ref_a === false) {
-        this.local_fields_ref_a = this.setFormDefaultFields(['customer_name', 'from_date', 'notes'], fields);
+        this.local_fields_ref_a = this.setFormDefaultFields(['entity_code', 'acl_role'], fields);
       }
       return this.local_fields_ref_a;
     },
@@ -98,11 +98,13 @@ export default {
     },
   },
   methods: {
+    userName() {
+      return this.user_name;
+    },
     showModal() {
+      _.find(this.formFieldsSideA, (f) => f.id === 'entity_code').ref_field.setValue('');
+      _.find(this.formFieldsSideA, (f) => f.id === 'acl_role').ref_field.setValue('');
       this.modalElem.show();
-      _.find(this.formFieldsSideA, (f) => f.id === 'from_date').ref_field.setValue(new Date());
-      _.find(this.formFieldsSideA, (f) => f.id === 'customer_name').ref_field.setValue('');
-      _.find(this.formFieldsSideA, (f) => f.id === 'notes').ref_field.setValue('');
     },
 
     loadFormData() {
@@ -113,7 +115,8 @@ export default {
     },
     onSave() {
       const changes = this.getFormFieldsValues(false);
-      changes.car_id = this.carID;
+      changes.user_name = this.userName;
+
       this.commonSaveRecord(changes, {}, (err, result) => {
         if (err) {
           this.$notify({
@@ -129,7 +132,7 @@ export default {
           });
           if (this.is_new && result.data.seq_id !== this.seqId) {
             this.modalElem.hide();
-            this.$emit('updated', { status: 'Rented', id: result.data.seq_id });
+            this.$emit('updated', result.data);
           }
           //     this.$route.params.seq_id = result.data.seq_id;
           //     this.is_new = false;
@@ -143,7 +146,7 @@ export default {
       });
     },
   },
-  props: ['car_id'],
+  props: ['user_name'],
   beforeCreate() {
     console.log(`${this.name} beforeCreate`);
   },
@@ -154,7 +157,7 @@ export default {
     console.log(`${this.name} beforeMount`);
   },
   mounted() {
-    this.modalElem = new Modal(this.$refs.modalIDNew);
+    this.modalElem = new Modal(this.$refs.modalUserPermission);
     console.log(`${this.name} mounted`);
     // if (this.seqId === 'new') {
     this.is_new = true;
