@@ -80,8 +80,8 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController, acl],
   components: {},
   computed: {
-    carID() {
-      return this.car_id;
+    userName() {
+      return this.user_name;
     },
     formFieldsSideA() {
       // This show the mode 1 to load the fields
@@ -98,9 +98,7 @@ export default {
     },
   },
   methods: {
-    userName() {
-      return this.user_name;
-    },
+
     showModal() {
       _.find(this.formFieldsSideA, (f) => f.id === 'entity_code').ref_field.setValue('');
       _.find(this.formFieldsSideA, (f) => f.id === 'acl_role').ref_field.setValue('');
@@ -115,6 +113,7 @@ export default {
     },
     onSave() {
       const changes = this.getFormFieldsValues(false);
+      console.log(changes);
       changes.user_name = this.userName;
 
       this.commonSaveRecord(changes, {}, (err, result) => {
