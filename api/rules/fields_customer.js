@@ -5,8 +5,14 @@ const arr = [
   { id: 'seq_id', label: 'Unique Key', type: TYPES.SYSTEM },
   {
     id: 'customer_id',
-    label: 'CustomerId',
-    type: TYPES.INPUT,
+    label: 'Customer ID',
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/customer/get_customer_list',
+      label: 'customer_name',
+      value: 'customer_id',
+    },
+    type: TYPES.SELECT_BOX,
   },
   {
     id: 'customer_name',

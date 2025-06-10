@@ -40,6 +40,7 @@ const config = {
     'master_year',
     'master_color',
     'master_category',
+    'customer',
 
   ],
   admin_user: {

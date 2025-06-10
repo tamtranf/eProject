@@ -537,10 +537,10 @@
                 "Default": null,
                 "Extra": ""
             },
-            "customer_name": {
-                "Field": "customer_name",
-                "Type": "varchar(64)",
-                "Null": "NO",
+            "customer_id": {
+                "Field": "customer_id",
+                "Type": "varchar(16)",
+                "Null": "YES",
                 "Key": "",
                 "Default": null,
                 "Extra": ""
@@ -689,6 +689,72 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "customer": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "customer_id": {
+                "Field": "customer_id",
+                "Type": "varchar(16)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
+            "customer_name": {
+                "Field": "customer_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "phone_number": {
+                "Field": "phone_number",
+                "Type": "varchar(32)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "postal_code": {
+                "Field": "postal_code",
+                "Type": "varchar(10)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "address": {
+                "Field": "address",
+                "Type": "varchar(128)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "created_date": {
+                "Field": "created_date",
+                "Type": "date",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "notes": {
+                "Field": "notes",
+                "Type": "varchar(4096)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -704,6 +770,7 @@
         "master_maker": {},
         "master_year": {},
         "master_color": {},
-        "master_category": {}
+        "master_category": {},
+        "customer": {}
     }
 }
