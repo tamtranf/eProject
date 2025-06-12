@@ -85,6 +85,7 @@ export default {
   methods: {
     onModalUpdated(data) {
       this.gridOptions.api.purgeInfiniteCache();
+      this.countRows('rent_history_list');
       this.car_local_status = data.status;
       this.$emit('status_updated', data);
     },

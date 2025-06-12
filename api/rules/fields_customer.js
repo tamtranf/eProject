@@ -6,13 +6,14 @@ const arr = [
   {
     id: 'customer_id',
     label: 'Customer ID',
-    options_mode: SELECT_FIELD_MODE.API,
-    api: {
-      url: '/customer/get_customer_list',
-      label: 'customer_name',
-      value: 'customer_id',
-    },
-    type: TYPES.SELECT_BOX,
+    type: TYPES.INPUT,
+    // options_mode: SELECT_FIELD_MODE.API,
+    // api: {
+    //   url: '/customer/get_customer_list',
+    //   label: 'customer_name',
+    //   value: 'customer_id',
+    // },
+    // type: TYPES.SELECT_BOX,
   },
   {
     id: 'customer_name',
@@ -33,14 +34,14 @@ const arr = [
   {
     id: 'address',
     label: 'Address',
-    type: TYPES.INPUT,
+    type: TYPES.TEXT_AREA,
   },
   {
     id: 'created_date',
     label: 'Created Date',
     type: TYPES.DATE_PICKER,
     show_time: false,
-    format: 'YYYY/MM/DD',
+    format: 'YYYY/MM/DD HH:mm',
   },
   {
     id: 'notes',

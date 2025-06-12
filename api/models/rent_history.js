@@ -24,7 +24,8 @@ class RentHistory extends base_model {
 
     this.id = 'rent_history';
     this.table = 'rent_history';
-    this.form_fields = 'seq_id,car_id,entity_code,customer_name,from_date,to_date,total_rent_hours,rent_value,notes';
+    this.form_fields = 'seq_id,car_id,entity_code,customer_id,from_date,to_date,total_rent_hours,rent_value,notes';
+    this.view_fields = `${this.form_fields},customer_name`;
     this.model_acl = acl_rules.DATA_PAGES;
     this.routes = {
       datasource_load: {
@@ -94,19 +95,19 @@ class RentHistory extends base_model {
 
   datasource_load(req, res) {
     if (this.checkServerAcl(req, res, true, this.aclAction.READ)) {
-      this.base_datasource_load(req, res, this.get_options_conditions(req));
+      this.base_datasource_load(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_rent_history' }));
     }
   }
 
   datasource_count(req, res) {
     if (this.checkServerAcl(req, res, true, this.aclAction.READ)) {
-      this.base_datasource_count(req, res, this.get_options_conditions(req));
+      this.base_datasource_count(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_rent_history' }));
     }
   }
 
   get(req, res) {
     if (this.checkServerAcl(req, res, true, this.aclAction.READ)) {
-      return this.base_get(req, res);
+      return this.base_get(req, res, { force_fields: this.view_fields, table: 'v_rent_history' });
     }
   }
 

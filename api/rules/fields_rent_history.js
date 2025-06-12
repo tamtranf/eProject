@@ -52,6 +52,17 @@ const arr = [
     label: 'Note',
     type: TYPES.TEXT_AREA,
   },
+  {
+    id: 'customer_id',
+    label: 'Customer',
+    type: TYPES.SELECT_BOX,
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/customer/get_customer_list',
+      label: 'customer_name',
+      value: 'customer_id',
+    },
+  },
 
 ];
 const ret = {};

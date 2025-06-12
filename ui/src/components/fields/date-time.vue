@@ -13,7 +13,7 @@
 
       :id="fieldID"
       :name="fieldID"
-      :disabled="isDisabled"
+       :disabled="isDisabled || isReadOnly"
       :style="fieldStyle"
       class="form-control bg-white text-gray-700 w-full py-1 px-2 appearance-none border rounded-r focus:outline-none focus:border-blue-500"
       :value="inputValue"
@@ -21,6 +21,7 @@
       autocomplete="off"
       :readonly="isReadOnly"
       :placeholder="fieldID"
+
     />
   </template>
 </v-date-picker>

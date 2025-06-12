@@ -86,7 +86,7 @@ export default {
     formFieldsSideA() {
       // This show the mode 1 to load the fields
       if (this.local_fields_ref_a === false) {
-        this.local_fields_ref_a = this.setFormDefaultFields(['customer_name', 'from_date', 'notes'], fields);
+        this.local_fields_ref_a = this.setFormDefaultFields(['customer_id', 'from_date', 'notes'], fields);
       }
       return this.local_fields_ref_a;
     },
@@ -101,7 +101,7 @@ export default {
     showModal() {
       this.modalElem.show();
       _.find(this.formFieldsSideA, (f) => f.id === 'from_date').ref_field.setValue(new Date());
-      _.find(this.formFieldsSideA, (f) => f.id === 'customer_name').ref_field.setValue('');
+      _.find(this.formFieldsSideA, (f) => f.id === 'customer_id').ref_field.setValue('');
       _.find(this.formFieldsSideA, (f) => f.id === 'notes').ref_field.setValue('');
     },
 

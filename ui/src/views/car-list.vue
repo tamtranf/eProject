@@ -19,6 +19,7 @@
       <button style="float:right;margin-right:10px" class="btn btn-danger"
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
     </div>
+    <confirmation_modal ref="confirmationModal"></confirmation_modal>
   </div>
 </template>
 <script>
@@ -27,6 +28,7 @@ import agListController from '@/mixins/ag-list-controller';
 import _ from 'lodash';
 import datasource from '@/mixins/datasource';
 import acl from '@/mixins/acl';
+import confirmation_modal from '@/components/modals/confirmation-modal';
 import { fields } from '../../../api/rules/fields_car';
 
 export default {
@@ -73,6 +75,7 @@ export default {
     },
 
   },
+  components: { confirmation_modal },
   methods: {
     onAddNew() {
       return this.$router.push({
@@ -95,22 +98,33 @@ export default {
       this.deleteDisabled = Array.isArray(this.selectedRowArr) ? this.selectedRowArr.length < 1 : true;
     },
     onDeleteSelected() {
-      console.log('onDeleteSelected');
-      this.commonDeleteSelected((err) => {
-        if (err) {
-          this.$notify({
-            type: 'error',
-            title: 'Error',
-            text: err,
-          });
-        } else {
-          this.$notify({
-            type: 'success',
-            title: 'Deleted',
-            text: 'Success',
-          });
-        }
+      this.$refs.confirmationModal.showModal({
+        title: 'Delete',
+        text: 'Are you sure you want to delete it?',
+        ok_text: 'Delete',
+        cancel_text: 'Cancel',
+        ok_class: 'btn-danger',
+        cancel_class: 'btn-primary',
+        on_confirm: (answer) => {
+          console.log('on_confirm', { answer });
+        },
       });
+      // console.log('onDeleteSelected');
+      // this.commonDeleteSelected((err) => {
+      //   if (err) {
+      //     this.$notify({
+      //       type: 'error',
+      //       title: 'Error',
+      //       text: err,
+      //     });
+      //   } else {
+      //     this.$notify({
+      //       type: 'success',
+      //       title: 'Deleted',
+      //       text: 'Success',
+      //     });
+      //   }
+      // });
     },
   },
   props: [],

@@ -103,7 +103,7 @@ export default {
           if (this.is_new && result.data.seq_id !== this.seqId) {
             this.$route.params.seq_id = result.data.seq_id;
             this.is_new = false;
-            _.find(this.formFieldsSideA, (f) => f.id === 'customer_id').ref_field.setValue(result.data.customer_id);
+            _.find(this.formFieldsSideB, (f) => f.id === 'customer_id').ref_field.setValue(result.data.customer_id);
             _.find(this.formFieldsSideB, (f) => f.id === 'created_date').ref_field.setValue(result.data.created_date);
 
             return this.$router.push({
