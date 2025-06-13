@@ -667,6 +667,72 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "change_history": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "change_time": {
+                "Field": "change_time",
+                "Type": "datetime",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "user_name": {
+                "Field": "user_name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "ref_table": {
+                "Field": "ref_table",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "ref_id": {
+                "Field": "ref_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "mode": {
+                "Field": "mode",
+                "Type": "tinyint",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "old_data": {
+                "Field": "old_data",
+                "Type": "text",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "new_data": {
+                "Field": "new_data",
+                "Type": "text",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -685,6 +751,7 @@
         "master_category": {},
         "customer": {},
         "link_accessory_car": {},
-        "accessory": {}
+        "accessory": {},
+        "change_history": {}
     }
 }

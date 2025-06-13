@@ -43,6 +43,7 @@ const config = {
     'customer',
     'link_accessory_car',
     'accessory',
+    'change_history',
 
   ],
   admin_user: {

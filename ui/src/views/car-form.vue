@@ -27,7 +27,8 @@
         >Save</button>
       </div>
       <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" @status_updated="statusUpdated" ></rent_history>
-
+      <change_history_modal ></change_history_modal>
+      <!-- v-if="is_new === false && seqId > 0" ref_table="car" :ref_id="seqId" :tab_fields="fieldList" -->
     </div>
   </div>
 </template>
@@ -37,6 +38,7 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
 import acl from '@/mixins/acl';
 import rent_history from '@/components/sub_views/rent_history-list';
+import change_history_modal from '@/components/modals/change-history-modal';
 import { fields } from '../../../api/rules/fields_car';
 import constants from '../../../api/rules/constants';
 
@@ -61,8 +63,11 @@ export default {
     },
   ],
   mixins: [mixinLayoutComponents, mixinFormController, acl],
-  components: { rent_history },
+  components: { rent_history, change_history_modal },
   computed: {
+    // fieldList() {
+    //   return fields;
+    // },
     carStatus() {
       return this.retrieved_value.status;
     },
