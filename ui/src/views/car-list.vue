@@ -107,24 +107,26 @@ export default {
         cancel_class: 'btn-primary',
         on_confirm: (answer) => {
           console.log('on_confirm', { answer });
+          if (answer === 'yes') {
+            console.log('onDeleteSelected');
+            this.commonDeleteSelected((err) => {
+              if (err) {
+                this.$notify({
+                  type: 'error',
+                  title: 'Error',
+                  text: err,
+                });
+              } else {
+                this.$notify({
+                  type: 'success',
+                  title: 'Deleted',
+                  text: 'Success',
+                });
+              }
+            });
+          }
         },
       });
-      // console.log('onDeleteSelected');
-      // this.commonDeleteSelected((err) => {
-      //   if (err) {
-      //     this.$notify({
-      //       type: 'error',
-      //       title: 'Error',
-      //       text: err,
-      //     });
-      //   } else {
-      //     this.$notify({
-      //       type: 'success',
-      //       title: 'Deleted',
-      //       text: 'Success',
-      //     });
-      //   }
-      // });
     },
   },
   props: [],

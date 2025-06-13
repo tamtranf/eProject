@@ -19,6 +19,7 @@
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
+          @click="onClose('no')"
         ></button>
       </div>
 
@@ -31,19 +32,8 @@
       </div>
 
       <div class="modal-footer">
-        <button
-          type="button"
-          :class="['btn', cancel_class]"
-        >
-          {{cancel_text}}
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click="onSave"
-        >
-          {{ok_text}}
-        </button>
+        <button type="button" :class="['btn', cancel_class]" @click="onClose('no')"> {{cancel_text}} </button>
+        <button type="button" class="btn btn-primary" @click="onClose('yes')"> {{ok_text}} </button>
       </div>
 
     </div>
@@ -57,7 +47,6 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
 import acl from '@/mixins/acl';
 import { Modal } from 'bootstrap';
-import { text } from 'express';
 
 export default {
   name: '',
@@ -84,8 +73,19 @@ export default {
 
   },
   methods: {
-    showModal() {
+    onClose(data) {
+      this.modalElem.hide();
+      this.on_confirm(data);
+    },
+    showModal(data) {
       this.modalElem.show();
+      this.title = data.title;
+      this.text = data.text;
+      this.ok_text = data.ok_text;
+      this.cancel_text = data.cancel_text;
+      this.ok_class = data.ok_class;
+      this.cancel_class = data.cancel_class;
+      this.on_confirm = data.on_confirm;
     },
 
   },
