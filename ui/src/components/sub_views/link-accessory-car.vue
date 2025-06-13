@@ -45,6 +45,7 @@ export default {
   ],
   mixins: [mixinLayoutComponents, agListController, datasource, acl],
   computed: {
+    accessoryCodeId() { return this.accessory_code_id; },
     fieldList() {
       return fields;
     },
@@ -125,13 +126,14 @@ export default {
       });
     },
   },
-  props: [],
+  props: ['accessory_code_id'],
   beforeCreate() {
   },
   created() {
   },
   beforeMount() {
     this.gridOptions = _.extend(this.commonGridOptions, {});
+    this.api_request_options = { accessory_code_id: this.accessoryCodeId };
     this.initDatasource({});
   },
   mounted() {

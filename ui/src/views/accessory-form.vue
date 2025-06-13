@@ -19,7 +19,8 @@
         <br>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
       </div>
-      <link_accessory_car style="margin: 0;"></link_accessory_car>
+      <link_accessory_car style="margin: 0;"   :accessory_code_id="codeID"></link_accessory_car>
+       <!-- v-if="is_new === false && seqId > 0 && codeID && codeID.length > 0" -->
     </div>
   </div>
 </template>
@@ -53,6 +54,7 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController],
   components: { link_accessory_car },
   computed: {
+    codeID() { return this.retrieved_value.code_id; },
 
     formFieldsSideA() {
       // This show the mode 1 to load the fields

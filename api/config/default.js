@@ -41,6 +41,8 @@ const config = {
     'master_color',
     'master_category',
     'customer',
+    'link_accessory_car',
+    'accessory',
 
   ],
   admin_user: {

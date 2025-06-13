@@ -139,7 +139,7 @@ class Car extends base_model {
           });
         });
       } else {
-        return this.base_set(req, res, { save_change_history: true });
+        return this.base_set(req, res, {});
       }
     }
   }

@@ -583,6 +583,90 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "link_accessory_car": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "car_code_id": {
+                "Field": "car_code_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "accessory_code_id": {
+                "Field": "accessory_code_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            }
+        },
+        "accessory": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "category": {
+                "Field": "category",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "code_id": {
+                "Field": "code_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
+            "name": {
+                "Field": "name",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "color": {
+                "Field": "color",
+                "Type": "varchar(64)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "notes": {
+                "Field": "notes",
+                "Type": "varchar(4096)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -599,6 +683,8 @@
         "master_year": {},
         "master_color": {},
         "master_category": {},
-        "customer": {}
+        "customer": {},
+        "link_accessory_car": {},
+        "accessory": {}
     }
 }

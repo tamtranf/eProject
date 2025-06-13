@@ -56,11 +56,17 @@ class LinkAccessoryCar extends base_model {
 
   get_options_conditions(req, extend = {}) {
     const options = extend;
+    options.conditions = (options.conditions) ? options.conditions : '';
+    options.params = (Array.isArray(options.params)) ? options.params : [];
     const entity = req.local.session_entity;
 
     if (entity !== 'Super_admin') {
       options.conditions = 'entity_code=?';
       options.params = [entity];
+    }
+    if (req.body.api_request_options) {
+      options.conditions += ' accessory_code_id = ?  ';
+      options.params.push(req.body.api_request_options.accessory_code_id);
     }
     return options;
   }
@@ -70,15 +76,15 @@ class LinkAccessoryCar extends base_model {
   }
 
   datasource_load(req, res) {
-    this.base_datasource_load(req, res, this.get_options_conditions(req));
+    this.base_datasource_load(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_link_accessory_car' }));
   }
 
   datasource_count(req, res) {
-    this.base_datasource_count(req, res, this.get_options_conditions(req));
+    this.base_datasource_count(req, res, this.get_options_conditions(req, { force_fields: this.view_fields, table: 'v_link_accessory_car' }));
   }
 
   get(req, res) {
-    return this.base_get(req, res);
+    return this.base_get(req, res, { force_fields: this.view_fields, table: 'v_link_accessory_car' });
   }
 
   set(req, res) {
