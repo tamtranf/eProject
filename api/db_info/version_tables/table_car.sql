@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `car` (
   `seq_id` int NOT NULL AUTO_INCREMENT,
   `maker` varchar(64) NOT NULL,
   `model` varchar(64) NOT NULL,
+  `code_id` varchar(64) NOT NULL,
   `license_plate` varchar(8) NOT NULL,
   `car_year` smallint NOT NULL,
   `color` varchar(64) NOT NULL,
@@ -14,8 +15,9 @@ CREATE TABLE IF NOT EXISTS `car` (
   `entity_code` varchar(64) NOT NULL DEFAULT 'standard',
   PRIMARY KEY (`seq_id`),
   UNIQUE KEY `license_plate` (`license_plate`),
+  UNIQUE KEY `code_id` (`code_id`),
   KEY `model` (`model`),
   KEY `maker` (`maker`),
   KEY `status` (`status`),
-  KEY `entity_code` (`entity_code`)
+  KEY `entity_code` (`entity_code`) USING BTREE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;

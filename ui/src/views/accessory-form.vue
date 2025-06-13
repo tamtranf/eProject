@@ -8,26 +8,18 @@
         Update 2022/08/25, the parameter :read="false" was not part of the code when the lesson was created.
         In the lesson #3014, it will be replaced to use the checkACL.
         You can remove these comment lines after reading it. -->
-        <form-field v-for="f in formFieldsSideA" :key="f.id" :field_info="f"
-        :read="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
-        ></form-field>
+        <form-field v-for="f in formFieldsSideA" :read="false"  :key="f.id" :field_info="f"></form-field>
       </div>
       <div class="col-6" style="">
         <!--
         Update 2022/08/25, the parameter :read="false" was not part of the code when the lesson was created.
         In the lesson #3014, it will be replaced to use the checkACL.
         You can remove these comment lines after reading it. -->
-        <form-field v-for="f in formFieldsSideB"  :key="f.id" :field_info="f"
-        :read="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
-        ></form-field>
+        <form-field v-for="f in formFieldsSideB" :read="false"  :key="f.id" :field_info="f"></form-field>
         <br>
-        <button style="float:left;" class="btn btn-info" @click="goToPage('/car-list')">Back</button>
-        <button style="float:right;" class="btn btn-primary" @click="onSave"
-        :disabled="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
-        >Save</button>
+        <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
       </div>
-      <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" @status_updated="statusUpdated" ></rent_history>
-
+      <link_accessory_car style="margin: 0;"></link_accessory_car>
     </div>
   </div>
 </template>
@@ -35,42 +27,37 @@
 import mixinFormController from '@/mixins/form_controller';
 import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
-import acl from '@/mixins/acl';
-import rent_history from '@/components/sub_views/rent_history-list';
-import { fields } from '../../../api/rules/fields_car';
-import constants from '../../../api/rules/constants';
+import link_accessory_car from '@/components/sub_views/link-accessory-car';
+import { fields } from '../../../api/rules/fields_accessory';
 
 export default {
-  name: 'car-form',
+  name: 'accessory-form',
   data() {
     return {
       local_fields_ref_a: false,
       local_fields_ref_b: false,
-      api_name: 'car',
-      name: 'CarForm',
+      api_name: 'accessory',
+      name: 'AccessoryForm',
     };
   },
   routes: [
     {
-      path: '/car-form/:seq_id',
-      name: 'car-form',
+      path: '/accessory-form/:seq_id',
+      name: 'accessory-form',
     },
     {
-      path: '/car-form',
-      name: 'car-form-undefined',
+      path: '/accessory-form',
+      name: 'accessory-form-undefined',
     },
   ],
-  mixins: [mixinLayoutComponents, mixinFormController, acl],
-  components: { rent_history },
+  mixins: [mixinLayoutComponents, mixinFormController],
+  components: { link_accessory_car },
   computed: {
-    carStatus() {
-      return this.retrieved_value.status;
-    },
 
     formFieldsSideA() {
       // This show the mode 1 to load the fields
       if (this.local_fields_ref_a === false) {
-        this.local_fields_ref_a = this.setFormDefaultFields(['maker', 'model', 'license_plate', 'car_year', 'color', 'passenger'], fields);
+        this.local_fields_ref_a = this.setFormDefaultFields(['category', 'code_id', 'name'], fields);
       }
       return this.local_fields_ref_a;
     },
@@ -78,16 +65,10 @@ export default {
     formFieldsSideB() {
       // This show the mode 2 to load the fields
       const r = [
-        _.extend(fields.category, {}),
-        _.extend(fields.price_per_day, {}),
-        _.extend(fields.weight, {}),
-        _.extend(fields.status, {}),
+        _.extend(fields.color, {}),
         _.extend(fields.notes, {}),
-        _.extend(fields.code_id, {}),
+        _.extend(fields.entity_code, {}),
       ];
-      if (localStorage.entity_code === 'Super_admin') {
-        r.push(fields.entity_code);
-      }
       return r;
     },
     seqId() {
@@ -98,15 +79,10 @@ export default {
     },
   },
   methods: {
-    statusUpdated(data) {
-      _.find(this.formFieldsSideB, (f) => f.id === 'status').ref_field.setValue(data.status);
-    },
-
     loadFormData() {
       this.commonLoadRecord({}, (err, result) => {
         this.setFormFields(result.data);
         console.log('Load loadFormData ', this.seqId, { err, result });
-        _.find(this.formFieldsSideB, (f) => f.id === 'status').ref_field.isDisabled = this.seqId !== constants.IDS.ADD_NEW_RECORD_ID;
       });
     },
     onSave() {
@@ -124,8 +100,6 @@ export default {
             title: 'Saved',
             text: 'Success',
           });
-          _.find(this.formFieldsSideB, (f) => f.id === 'code_id').ref_field.setValue(result.data.code_id);
-
           if (this.is_new && result.data.seq_id !== this.seqId) {
             this.$route.params.seq_id = result.data.seq_id;
             this.is_new = false;

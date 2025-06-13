@@ -108,6 +108,11 @@ const arr = [
   { id: 'color_name', label: 'Color', type: TYPES.INPUT },
   { id: 'year_name', label: 'Year', type: TYPES.INPUT },
   { id: 'category_name', label: 'Category', type: TYPES.INPUT },
+  {
+    id: 'code_id',
+    label: 'CodeId',
+    type: TYPES.INPUT,
+  },
 ];
 const ret = {};
 let s = 1;

@@ -251,6 +251,14 @@
                 "Default": null,
                 "Extra": ""
             },
+            "code_id": {
+                "Field": "code_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
             "license_plate": {
                 "Field": "license_plate",
                 "Type": "varchar(8)",

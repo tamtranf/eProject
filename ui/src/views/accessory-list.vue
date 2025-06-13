@@ -13,13 +13,10 @@
         >
       </ag-grid-vue>
       <br>
-      <button style="float:right;" class="btn btn-primary" @click="onAddNew"
-      :disabled="checkACL(userAclAction.ADD,aclRules.DATA_PAGES) === false"
-      >New</button>
+      <button style="float:right;" class="btn btn-primary" @click="onAddNew">New</button>
       <button style="float:right;margin-right:10px" class="btn btn-danger"
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
     </div>
-    <confirmation_modal ref="confirmationModal"></confirmation_modal>
   </div>
 </template>
 <script>
@@ -27,48 +24,44 @@ import mixinLayoutComponents from '@/mixins/layout_components';
 import agListController from '@/mixins/ag-list-controller';
 import _ from 'lodash';
 import datasource from '@/mixins/datasource';
-import acl from '@/mixins/acl';
-import confirmation_modal from '@/components/modals/confirmation-modal';
-import { fields } from '../../../api/rules/fields_car';
+import { fields } from '../../../api/rules/fields_accessory';
 
 export default {
-  name: 'car-list',
+  name: 'accessory-list',
   data() {
     return {
-      name: 'CarList',
-      api_name: 'car',
-      detail_page: 'car-form',
+      name: 'AccessoryList',
+      api_name: 'accessory',
+      detail_page: 'accessory-form',
       delete_disabled: true,
     };
   },
   routes: [
     {
-      path: '/car-list',
-      name: 'car-list',
+      path: '/accessory-list',
+      name: 'accessory-list',
       meta: { requiresAuth: true },
     },
   ],
-  mixins: [mixinLayoutComponents, agListController, datasource, acl],
+  mixins: [mixinLayoutComponents, agListController, datasource],
   computed: {
     fieldList() {
       return fields;
     },
     tabFieldList() {
       const r = [
-        _.extend(fields.maker_name, {}),
-        _.extend(fields.model, {}),
-        _.extend(fields.year_name, {}),
-        _.extend(fields.color_name, {}),
-        _.extend(fields.price_per_day, {}),
-        _.extend(fields.entity_code, {}),
-        _.extend(fields.entity_name, {}),
+        _.extend(fields.category, {}),
         _.extend(fields.code_id, {}),
+        _.extend(fields.name, {}),
+        _.extend(fields.color, {}),
+        _.extend(fields.notes, {}),
+        _.extend(fields.entity_code, {}),
       ];
       return r;
     },
     deleteDisabled: {
       get() {
-        return this.delete_disabled || this.checkACL(this.userAclAction.DELETE, this.aclRules.DATA_PAGES) === false;
+        return this.delete_disabled;
       },
       set(v) {
         this.delete_disabled = v;
@@ -76,7 +69,6 @@ export default {
     },
 
   },
-  components: { confirmation_modal },
   methods: {
     onAddNew() {
       return this.$router.push({
@@ -99,34 +91,21 @@ export default {
       this.deleteDisabled = Array.isArray(this.selectedRowArr) ? this.selectedRowArr.length < 1 : true;
     },
     onDeleteSelected() {
-      this.$refs.confirmationModal.showModal({
-        title: 'Delete',
-        text: 'Are you sure you want to delete it?',
-        ok_text: 'Delete',
-        cancel_text: 'Cancel',
-        ok_class: 'btn-danger',
-        cancel_class: 'btn-primary',
-        on_confirm: (answer) => {
-          console.log('on_confirm', { answer });
-          if (answer === 'yes') {
-            console.log('onDeleteSelected');
-            this.commonDeleteSelected((err) => {
-              if (err) {
-                this.$notify({
-                  type: 'error',
-                  title: 'Error',
-                  text: err,
-                });
-              } else {
-                this.$notify({
-                  type: 'success',
-                  title: 'Deleted',
-                  text: 'Success',
-                });
-              }
-            });
-          }
-        },
+      console.log('onDeleteSelected');
+      this.commonDeleteSelected((err) => {
+        if (err) {
+          this.$notify({
+            type: 'error',
+            title: 'Error',
+            text: err,
+          });
+        } else {
+          this.$notify({
+            type: 'success',
+            title: 'Deleted',
+            text: 'Success',
+          });
+        }
       });
     },
   },

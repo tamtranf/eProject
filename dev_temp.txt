@@ -1,0 +1,15 @@
+ssh -i AWS_KEY.pem ubuntu@57.181.37.40
+
+ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@57.181.37.40" 
+ubuntu@10.0.128.10
+
+ scp -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i  AWS_KEY.pem ubuntu@57.181.37.40" test.txt ubuntu@10.0.128.10:/home/ubuntu/.
+
+  aws s3 ls s3://eprojecttamtest/
+
+  aws s3 cp test.txt s3://eprojecttamtest/test.txt
+ aws s3 cp test.txt s3://eprojecttamtest/test2.txt
+ aws s3 cp test.txt s3://eprojecttamtest/test3.txt
+ aws s3 cp test.txt s3://eprojecttamtest/test4.txt
+ aws s3 cp test.txt s3://eprojecttamtest/test5.txt
+ aws s3 ls s3://eprojecttamtest/

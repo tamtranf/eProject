@@ -1,12 +1,7 @@
 <template>
-  <app-header></app-header>
   <div :class="[name,'page']">
-    <h1>{{ name }} </h1>
+    <h5>Compatible cars</h5>
     <div class="col-12" style="">
-      <search-control
-        style="padding-bottom: 10px;"
-        @change="searchControlChangedDatasource"
-        :field_names="tabFieldList"></search-control>
       <ag-grid-vue style="width: 100%; height: 325px;"
         class="ag-theme-blue"
         :gridOptions="gridOptions"
@@ -29,22 +24,22 @@ import _ from 'lodash';
 import datasource from '@/mixins/datasource';
 import acl from '@/mixins/acl';
 import confirmation_modal from '@/components/modals/confirmation-modal';
-import { fields } from '../../../api/rules/fields_car';
+import { fields } from '../../../../api/rules/fields_link_accessory_car';
 
 export default {
-  name: 'car-list',
+  name: 'link_accessory_car-list',
   data() {
     return {
-      name: 'CarList',
-      api_name: 'car',
-      detail_page: 'car-form',
+      name: 'LinkAccessoryCarList',
+      api_name: 'link_accessory_car',
+      detail_page: 'link_accessory_car-form',
       delete_disabled: true,
     };
   },
   routes: [
     {
-      path: '/car-list',
-      name: 'car-list',
+      path: '/link_accessory_car-list',
+      name: 'link_accessory_car-list',
       meta: { requiresAuth: true },
     },
   ],
@@ -85,7 +80,7 @@ export default {
       });
     },
     createColumnDefs() {
-      return this.commonCreateColumnDefs({ show_details: true, show_checkbox: true });
+      return this.commonCreateColumnDefs({ show_details: false, show_checkbox: true });
     },
     onDetailsClick(_ev, data) {
       console.log('onDetailsClick', { data });
