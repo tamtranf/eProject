@@ -15,6 +15,7 @@
       :disabled="deleteDisabled" @click="onDeleteSelected">Delete</button>
     </div>
     <confirmation_modal ref="confirmationModal"></confirmation_modal>
+    <link_accessory_car_search_modal @selected="onSelected"></link_accessory_car_search_modal>
   </div>
 </template>
 <script>
@@ -24,7 +25,10 @@ import _ from 'lodash';
 import datasource from '@/mixins/datasource';
 import acl from '@/mixins/acl';
 import confirmation_modal from '@/components/modals/confirmation-modal';
+import link_accessory_car_search_modal from '@/components/modals/link-accessory-car-search-modal';
+import mixinFormController from '@/mixins/form_controller';
 import { fields } from '../../../../api/rules/fields_link_accessory_car';
+import constants from '../../../../api/rules/constants';
 
 export default {
   name: 'link_accessory_car-list',
@@ -43,7 +47,7 @@ export default {
       meta: { requiresAuth: true },
     },
   ],
-  mixins: [mixinLayoutComponents, agListController, datasource, acl],
+  mixins: [mixinLayoutComponents, agListController, datasource, acl, mixinFormController],
   computed: {
     accessoryCodeId() { return this.accessory_code_id; },
     fieldList() {
@@ -72,8 +76,29 @@ export default {
     },
 
   },
-  components: { confirmation_modal },
+  components: { confirmation_modal, link_accessory_car_search_modal },
   methods: {
+    onSelected(e) {
+      const changes = {
+        car_code_id: e.code_id,
+        accessory_code_id: this.accessoryCodeId,
+      };
+      this.commonSaveRecord(changes, { force_seq_id: constants.IDS.ADD_NEW_RECORD_ID }, (err, _result) => {
+        this.gridOptions.api.purgeInfiniteCache();
+        this.countRows('subPageLinkAccessoryCar');
+        this.$notify({ clean: true });
+        if (err) {
+          if (err.code === 'ER_DUP_ENTRY') {
+            this.$notify({ type: 'Info', title: 'Already exist', text: 'The record already exist' });
+          } else {
+            this.$notify({ type: 'error', title: 'Error', text: err });
+          }
+        } else {
+          this.$notify({ type: 'success', title: 'Added', text: 'Success' });
+        }
+      });
+    },
+
     onAddNew() {
       return this.$router.push({
         name: this.detail_page,
@@ -81,7 +106,7 @@ export default {
       });
     },
     createColumnDefs() {
-      return this.commonCreateColumnDefs({ show_details: false, show_checkbox: true });
+      return this.commonCreateColumnDefs({ show_details: false, show_checkbox: false });
     },
     onDetailsClick(_ev, data) {
       console.log('onDetailsClick', { data });

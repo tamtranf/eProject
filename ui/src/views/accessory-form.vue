@@ -19,8 +19,8 @@
         <br>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
       </div>
-      <link_accessory_car style="margin: 0;"   :accessory_code_id="codeID"></link_accessory_car>
-       <!-- v-if="is_new === false && seqId > 0 && codeID && codeID.length > 0" -->
+      <link_accessory_car style="margin: 0;"  v-if="is_new === false && seqId > 0 && codeID && codeID.length > 0"  :accessory_code_id="codeID"></link_accessory_car>
+
     </div>
   </div>
 </template>

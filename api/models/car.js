@@ -24,7 +24,7 @@ class Car extends base_model {
 
     this.id = 'car';
     this.table = 'car';
-    this.form_fields = 'seq_id,maker,model,license_plate,car_year,color,passenger,category,weight,price_per_day,status,notes,entity_code';
+    this.form_fields = 'seq_id,maker,model,code_id,license_plate,car_year,color,passenger,category,weight,price_per_day,status,notes,entity_code';
     this.view_fields = `${this.form_fields},entity_name,year_name,color_name,category_name,maker_name`;
     this.model_acl = acl_rules.DATA_PAGES;
     this.routes = {

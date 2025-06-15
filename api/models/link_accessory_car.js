@@ -8,12 +8,13 @@ const debug = require('debug')('LinkAccessoryCar');
 const local_fields = require('../rules/fields_link_accessory_car');
 const base_model = require('../libs/base_model');
 // const login = require('./login');
-// const constants = require('../rules/constants');
-// const DataUtil = require('../libs/data_utils');
-// const ResponseUtil = require('../libs/response_utils');
+const constants = require('../rules/constants');
+const DataUtil = require('../libs/data_utils');
+const ResponseUtil = require('../libs/response_utils');
 // const PrintUtil = require('../libs/print_util');
 // const system_setting = require('./system_setting');
 // const { lt } = require('lodash');
+const acl_rules = require('../rules/acl_rules');
 
 // const approval_history = {};
 
@@ -26,7 +27,7 @@ class LinkAccessoryCar extends base_model {
     this.form_fields = 'seq_id,car_code_id,accessory_code_id';
     this.view_fields = `${this.form_fields},maker,model,code_id,license_plate,car_year,color,passenger,category,weight,`;
     this.view_fields += 'price_per_day,status,notes,entity_code,entity_name,maker_name,year_name,color_name,category_name';
-
+    this.model_acl = acl_rules.DATA_PAGES;
     this.routes = {
       datasource_load: {
         method: 'post', func: 'datasource_load', path: '/datasource_load/:start/:end', no_login: false,
@@ -88,7 +89,23 @@ class LinkAccessoryCar extends base_model {
   }
 
   set(req, res) {
-    return this.base_set(req, res, {});
+    if (this.checkServerAcl(req, res, true, (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)) {
+      if (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) {
+        const sql = `SELECT count(*) as qty from ${this.table} where accessory_code_id = ? and car_code_id = ?`;
+        const params = [req.body.changes.accessory_code_id, req.body.changes.car_code_id];
+        DataUtil.query(sql, params, {}, (err, result) => {
+          if (err) {
+            return ResponseUtil.response(req, res, {}, err);
+          }
+          if (result[0].qty > 0) {
+            return ResponseUtil.response(req, res, {}, 'Record already exists'); // ,
+          }
+          return this.base_set(req, res, {});
+        });
+      } else {
+        return this.base_set(req, res, {});
+      }
+    }
   }
 
   delete(req, res) {

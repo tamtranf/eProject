@@ -25,9 +25,9 @@
         <button style="float:right;" class="btn btn-primary" @click="onSave"
         :disabled="checkACL(userAclAction.EDIT,aclRules.DATA_PAGES) === false"
         >Save</button>
+        <change_history_modal v-if="is_new === false && seqId > 0" ref_table="car" :ref_id="seqId" :tab_fields="fieldList" ></change_history_modal>
       </div>
       <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" @status_updated="statusUpdated" ></rent_history>
-      <change_history_modal v-if="is_new === false && seqId > 0" ref_table="car" :ref_id="seqId" :tab_fields="fieldList" ></change_history_modal>
 
     </div>
   </div>
