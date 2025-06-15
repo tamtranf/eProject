@@ -733,6 +733,122 @@
                 "Default": null,
                 "Extra": ""
             }
+        },
+        "order_control": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "order_id": {
+                "Field": "order_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "UNI",
+                "Default": null,
+                "Extra": ""
+            },
+            "customer_id": {
+                "Field": "customer_id",
+                "Type": "varchar(16)",
+                "Null": "YES",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "car_code_id": {
+                "Field": "car_code_id",
+                "Type": "varchar(64)",
+                "Null": "YES",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "start_date": {
+                "Field": "start_date",
+                "Type": "datetime",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "end_date": {
+                "Field": "end_date",
+                "Type": "datetime",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "status": {
+                "Field": "status",
+                "Type": "varchar(32)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": "pending",
+                "Extra": ""
+            },
+            "total_value": {
+                "Field": "total_value",
+                "Type": "int",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "notes": {
+                "Field": "notes",
+                "Type": "varchar(4096)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            },
+            "entity_code": {
+                "Field": "entity_code",
+                "Type": "varchar(64)",
+                "Null": "YES",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "incharge_user_name": {
+                "Field": "incharge_user_name",
+                "Type": "varchar(64)",
+                "Null": "YES",
+                "Key": "",
+                "Default": null,
+                "Extra": ""
+            }
+        },
+        "link_accessory_order": {
+            "seq_id": {
+                "Field": "seq_id",
+                "Type": "int",
+                "Null": "NO",
+                "Key": "PRI",
+                "Default": null,
+                "Extra": "auto_increment"
+            },
+            "order_id": {
+                "Field": "order_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            },
+            "accessory_code_id": {
+                "Field": "accessory_code_id",
+                "Type": "varchar(64)",
+                "Null": "NO",
+                "Key": "MUL",
+                "Default": null,
+                "Extra": ""
+            }
         }
     },
     "indexes": {
@@ -752,6 +868,8 @@
         "customer": {},
         "link_accessory_car": {},
         "accessory": {},
-        "change_history": {}
+        "change_history": {},
+        "order_control": {},
+        "link_accessory_order": {}
     }
 }

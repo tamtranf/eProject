@@ -8,6 +8,7 @@
         |<router-link to="/master_maker-list">Master Maker</router-link>|<router-link to="/master_year-list">Master Year</router-link>
         |<router-link to="/master_color-list">Master Color</router-link>|<router-link to="/master_category-list">Master Category</router-link>
        |<router-link to="/customer-list">Customer</router-link>|<router-link to="/accessory-list">Accessory</router-link>
+       |<router-link to="/order_control-list">Order</router-link>
        <span  style="float: right;">
        <button class="btn btn-warning" @click.prevent="logout">Log out</button>
        <br>

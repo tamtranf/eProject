@@ -1,6 +1,6 @@
 // const uuid = require('uuid');
 // const md5 = require('md5');
-// const nseq = require('nseq');
+const Nseq = require('nseq');
 // const async = require('async');
 // const _ = require('lodash');
 const moment = require('moment');
@@ -57,10 +57,17 @@ class Car extends base_model {
   get_options_conditions(req, extend = {}) {
     const options = extend;
     const entity = req.local.session_entity;
+    options.conditions = (options.conditions) ? options.conditions : '';
+    options.params = (Array.isArray(options.params)) ? options.params : [];
 
     if (entity !== 'Super_admin') {
       options.conditions = 'entity_code=?';
       options.params = [entity];
+    }
+    if (req.body.api_request_options) {
+      options.conditions += (options.conditions === '') ? 'status = ?' : ' AND status = ?';
+
+      options.params.push(req.body.api_request_options.status);
     }
     return options;
   }
@@ -139,7 +146,30 @@ class Car extends base_model {
           });
         });
       } else {
-        return this.base_set(req, res, { save_change_history: true });
+        // Update
+        (new Nseq()).do([
+          (self) => {
+            if (req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0) {
+              DataUtil.query('UPDATE car SET status = ? WHERE code_id = ?',
+                ['Rented', req.body.changes.car_code_id],
+                {},
+                (err, _result) => {
+                  if (err) {
+                    return ResponseUtil.response(req, res, {}, err);
+                  }
+                  self.next();
+                });
+            } else {
+              self.next();
+            }
+          },
+          (self) => {
+            self.next(); // Có thể để chỗ này trống nếu không cần làm gì ở bước này
+          },
+        ],
+        (_self) => {
+          this.base_set(req, res, { save_change_history: true });
+        });
       }
     }
   }

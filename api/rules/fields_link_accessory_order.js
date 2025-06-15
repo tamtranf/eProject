@@ -1,0 +1,35 @@
+const { TYPES, SELECT_FIELD_MODE } = require('./constants');
+
+//
+
+const arr = [
+  { id: 'seq_id', label: 'Unique Key', type: TYPES.SYSTEM },
+
+  {
+    id: 'order_id',
+    label: 'Order ID',
+    type: TYPES.INPUT,
+  },
+  {
+    id: 'accessory_code_id',
+    label: 'Accessory Code Id',
+    type: TYPES.INPUT,
+  },
+
+];
+
+const ret = {};
+let s = 1;
+arr.forEach((e) => {
+  /* eslint-disable no-alert, no-console */
+  const ex_pattern = '^[a-z][a-z0-9_]+$';
+  if (!RegExp(ex_pattern).test(e.id)) { alert(`Invalid field ${e.id}`); }
+  e.tab_label = e.tab_label || e.label;
+  e.seq_id = s;
+  s += 1;
+  ret[e.id] = e;
+  /* eslint-enable no-alert, no-console */
+});
+ret.array = arr;
+module.exports.fields = ret;
+module.exports.filed_types = TYPES;

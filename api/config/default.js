@@ -44,6 +44,8 @@ const config = {
     'link_accessory_car',
     'accessory',
     'change_history',
+    'order_control',
+    'link_accessory_order',
 
   ],
   admin_user: {

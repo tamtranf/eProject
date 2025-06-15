@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [];
 // Define here the name of each file that should be part to the router
 [
+  require('../views/order_control-form'),
+  require('../views/order_control-list'),
   require('../views/accessory-form'),
   require('../views/accessory-list'),
   require('../views/customer-form'),
