@@ -27,8 +27,8 @@
         >Save</button>
       </div>
       <rent_history style="margin: 0px;"  :car_id="seqId" :car_status="carStatus" @status_updated="statusUpdated" ></rent_history>
-      <change_history_modal ></change_history_modal>
-      <!-- v-if="is_new === false && seqId > 0" ref_table="car" :ref_id="seqId" :tab_fields="fieldList" -->
+      <change_history_modal v-if="is_new === false && seqId > 0" ref_table="car" :ref_id="seqId" :tab_fields="fieldList" ></change_history_modal>
+
     </div>
   </div>
 </template>
@@ -65,9 +65,9 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController, acl],
   components: { rent_history, change_history_modal },
   computed: {
-    // fieldList() {
-    //   return fields;
-    // },
+    fieldList() {
+      return fields;
+    },
     carStatus() {
       return this.retrieved_value.status;
     },

@@ -90,7 +90,6 @@ import { Modal } from 'bootstrap';
 import agListController from '@/mixins/ag-list-controller';
 import datasource from '@/mixins/datasource';
 import { fields } from '../../../../api/rules/fields_change_history';
-import change_history from '../../../../api/models/change_history';
 
 export default {
   name: '',
@@ -159,14 +158,12 @@ export default {
 
   },
   methods: {
-    onCLose() {
-      this.modalElem.hide();
-    },
+    onClose() { this.modalElem.hide(); },
     showModal() {
       this.modalElem.show();
       this.gridOptions.api.sizeColumnsToFit();
       this.gridOptions.api.purgeInfiniteCache();
-      this.countRow('ChangeHistoryModal');
+      this.countRows('ChangeHistoryModal');
     },
     createColumnDefs() {
       return this.commonCreateColumnDefs({ show_details: false, show_checkbox: false });
@@ -175,31 +172,29 @@ export default {
       const { data } = data_obj;
       const use_fields = this.$props.tab_fields;
       console.log('onRowSelected', { data, use_fields });
-
       const old_data = JSON.parse(data.old_data);
       const new_data = JSON.parse(data.new_data);
-
       const all_keys = Object.keys(old_data);
-
       Object.keys(new_data).forEach((k) => {
-        if (!all_keys.includes(k)) {
+        if (all_keys.indexOf(k) < 0) {
           all_keys.push(k);
         }
       });
       this.dataChanges = [];
-
       all_keys.forEach((k) => {
         if (k.indexOf('seq_id') < 0 && use_fields && use_fields[k]) {
           const obj = {
             id: k,
-            label: use_fields[k]?.label || k,
+            label: (use_fields && use_fields[k]) ? use_fields[k].label : k,
+            o: (data.mode === 1) ? '' : `${old_data[k] || ''}`,
+            n: (data.mode === 3) ? '' : `${new_data[k] || ''}`,
           };
+          if (obj.o.length > 0 || obj.n.length > 0) { this.dataChanges.push(obj); }
         }
       });
     },
-
   },
-  props: [],
+  props: ['ref_table', 'ref_id', 'tab_fields'],
   beforeCreate() {
     console.log(`${this.name} beforeCreate`);
   },
@@ -208,6 +203,9 @@ export default {
   },
   beforeMount() {
     console.log(`${this.name} beforeMount`);
+    this.gridOptions = _.extend(this.commonGridOptions, {});
+    this.api_request_options = { ref_table: this.$props.ref_table, ref_id: this.$props.ref_id };
+    this.initDatasource({});
   },
   mounted() {
     this.modalElem = new Modal(this.$refs.modalChangeHistory);
@@ -227,6 +225,7 @@ export default {
   beforeUnmount() {
     console.log(`${this.name} beforeUnmount`);
   },
+
   unmounted() {
     console.log(`${this.name} unmounted`);
   },
@@ -245,4 +244,9 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.hist_td {
+border:1px solid #ccc;
+padding:2px 10px;
+}
+</style>

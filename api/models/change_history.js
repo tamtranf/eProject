@@ -76,7 +76,7 @@ class ChangeHistory extends base_model {
   }
 
   get(req, res) {
-    return this.base_get(req, res);
+    return this.base_get(req, res, this.get_options_conditions(req));
   }
 
   set(req, res) {

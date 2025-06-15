@@ -139,20 +139,20 @@ class Car extends base_model {
           });
         });
       } else {
-        return this.base_set(req, res, {});
+        return this.base_set(req, res, { save_change_history: true });
       }
     }
   }
 
   delete(req, res) {
     if (this.checkServerAcl(req, res, true, this.aclAction.DELETE)) {
-      return this.base_delete(req, res);
+      return this.base_delete(req, res, { save_change_history: true });
     }
   }
 
   delete_arr(req, res) {
     if (this.checkServerAcl(req, res, true, this.aclAction.DELETE)) {
-      return this.base_delete_arr(req, res);
+      return this.base_delete_arr(req, res, { save_change_history: true });
     }
   }
 }
