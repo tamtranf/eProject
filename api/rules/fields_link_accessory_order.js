@@ -15,6 +15,15 @@ const arr = [
     label: 'Accessory Code Id',
     type: TYPES.INPUT,
   },
+  { id: 'category', label: 'Category', type: TYPES.INPUT },
+  { id: 'name', label: 'Name', type: TYPES.INPUT },
+  { id: 'color', label: 'Color', type: TYPES.INPUT },
+  {
+    id: 'notes',
+    label: 'Notes',
+    type:
+TYPES.INPUT,
+  },
 
 ];
 

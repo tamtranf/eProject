@@ -27,6 +27,10 @@
         <br>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
         <idleCarSearchModal v-if="is_new === false && seqId > 0&& carCodeId ===''" @selected="onSelectedCar"> </idleCarSearchModal>
+        <customerSearchModal v-if="is_new === false && seqId > 0 && customerCodeId ==='' " @selected="onSelectedCustomer"></customerSearchModal>
+         <link_accessory_order v-if="is_new === false && seqId > 0  && orderId.length > 0 && carCodeId.length > 0" :order_id="orderId"  :car_code_id="carCodeId"
+></link_accessory_order>
+
       </div>
     </div>
   </div>
@@ -36,6 +40,8 @@ import mixinFormController from '@/mixins/form_controller';
 import mixinLayoutComponents from '@/mixins/layout_components';
 import _ from 'lodash';
 import idleCarSearchModal from '@/components/modals/idle-car-search-modal';
+import customerSearchModal from '@/components/modals/customer-search-modal';
+import link_accessory_order from '@/components/sub_views/link_accessory_order';
 import { fields } from '../../../api/rules/fields_order_control';
 
 export default {
@@ -59,8 +65,13 @@ export default {
     },
   ],
   mixins: [mixinLayoutComponents, mixinFormController],
-  components: { idleCarSearchModal },
+  components: { idleCarSearchModal, customerSearchModal, link_accessory_order },
   computed: {
+    orderId() {
+      return this.retrieved_value.order_id || '';
+    },
+    customerCodeId() { return this.retrieved_value.customer_id || ''; },
+
     carCodeId() { return this.retrieved_value.car_code_id || ''; },
     formFieldsSideA() {
       return [
@@ -113,6 +124,10 @@ export default {
     },
   },
   methods: {
+    onSelectedCustomer(customer_data) {
+      _.find(this.formFieldsSideC, (f) => f.id === 'customer_id').ref_field.setValue(customer_data.customer_id);
+      this.onSave(this.loadFormData);
+    },
     onSelectedCar(car_data) {
       _.find(this.formFieldsSideC, (f) => f.id === 'car_code_id').ref_field.setValue(car_data.code_id);
       this.onSave(this.loadFormData);

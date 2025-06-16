@@ -1,8 +1,8 @@
 <template>
-  <button type="button" @click="showModal()" style="float:right;margin-right:10px;" class="btn btn-info">Select Car</button>
+  <button type="button" @click="showModal()" style="float:right;margin-right:10px;" class="btn btn-info">Select customer</button>
 <div
   class="modal fade"
-  ref="modalIdleCarSelect"
+  ref="modalCustomerSelect"
   id="staticBackdrop"
   data-bs-backdrop="static"
   data-bs-keyboard="false"
@@ -56,13 +56,13 @@ import acl from '@/mixins/acl';
 import { Modal } from 'bootstrap';
 import agListController from '@/mixins/ag-list-controller';
 import datasource from '@/mixins/datasource';
-import { fields } from '../../../../api/rules/fields_car';
+import { fields } from '../../../../api/rules/fields_customer';
 
 export default {
-  name: '',
+  name: 'customer-search-modal',
   data() {
     return {
-      api_name: 'car',
+      api_name: 'customer',
       name: '',
       modalElem: null,
 
@@ -83,14 +83,13 @@ export default {
   computed: {
     tabFieldList() {
       const r = [
-        _.extend(fields.maker_name, {}),
-        _.extend(fields.model, {}),
-        _.extend(fields.year_name, {}),
-        _.extend(fields.color_name, {}),
-        _.extend(fields.price_per_day, {}),
-        _.extend(fields.entity_code, {}),
-        _.extend(fields.entity_name, {}),
-        _.extend(fields.code_id, {}),
+        _.extend(fields.customer_id, {}),
+        _.extend(fields.customer_name, {}),
+        _.extend(fields.phone_number, {}),
+        _.extend(fields.postal_code, {}),
+        _.extend(fields.address, {}),
+        _.extend(fields.created_date, {}),
+        _.extend(fields.notes, {}),
       ];
       return r;
     },
@@ -100,6 +99,7 @@ export default {
     onselect() {
       document.activeElement?.blur();
       this.modalElem.hide();
+
       if (this.selected_data_obj !== false) {
         this.$emit('selected', this.selected_data_obj.data);
       }
@@ -127,11 +127,10 @@ export default {
   beforeMount() {
     console.log(`${this.name} beforeMount`);
     this.gridOptions = _.extend(this.commonGridOptions, {});
-    this.api_request_options = { status: 'idle' };
     this.initDatasource({});
   },
   mounted() {
-    this.modalElem = new Modal(this.$refs.modalIdleCarSelect);
+    this.modalElem = new Modal(this.$refs.modalCustomerSelect);
     console.log(`${this.name} mounted`);
     // if (this.seqId === 'new') {
     this.is_new = true;

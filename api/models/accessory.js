@@ -56,11 +56,21 @@ class Accessory extends base_model {
   get_options_conditions(req, extend = {}) {
     const options = extend;
     const entity = req.local.session_entity;
+    options.conditions = (options.conditions) ? options.conditions : '';
+    options.params = (Array.isArray(options.params)) ? options.params : [];
 
     if (entity !== 'Super_admin') {
       options.conditions = 'entity_code=?';
       options.params = [entity];
     }
+    if (req.body.api_request_options && req.body.api_request_options.car_code_id && req.body.api_request_options.car_code_id.length > 0) {
+      if (options.conditions.length > 0) {
+        options.conditions += ' AND ';
+      }
+      options.conditions += ' code_id IN ( select accessory_code_id from link_accessory_car WHERE car_code_id = ?) ';
+      options.params.push(req.body.api_request_options.car_code_id);
+    }
+
     return options;
   }
 

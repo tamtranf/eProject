@@ -1,8 +1,8 @@
 <template>
-  <button type="button" @click="showModal()" style="float:right;margin-right:10px;" class="btn btn-info">Select Car</button>
+  <button type="button" @click="showModal()" style="float:right;margin-right:10px;" class="btn btn-info">Select</button>
 <div
   class="modal fade"
-  ref="modalIdleCarSelect"
+  ref="modalSearchCar"
   id="staticBackdrop"
   data-bs-backdrop="static"
   data-bs-keyboard="false"
@@ -56,13 +56,13 @@ import acl from '@/mixins/acl';
 import { Modal } from 'bootstrap';
 import agListController from '@/mixins/ag-list-controller';
 import datasource from '@/mixins/datasource';
-import { fields } from '../../../../api/rules/fields_car';
+import { fields } from '../../../../api/rules/fields_accessory';
 
 export default {
   name: '',
   data() {
     return {
-      api_name: 'car',
+      api_name: 'accessory',
       name: '',
       modalElem: null,
 
@@ -81,16 +81,14 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController, acl, agListController, datasource],
   components: {},
   computed: {
+    carCodeId() { return this.car_code_id || ''; },
     tabFieldList() {
       const r = [
-        _.extend(fields.maker_name, {}),
-        _.extend(fields.model, {}),
-        _.extend(fields.year_name, {}),
-        _.extend(fields.color_name, {}),
-        _.extend(fields.price_per_day, {}),
-        _.extend(fields.entity_code, {}),
-        _.extend(fields.entity_name, {}),
+        _.extend(fields.category, {}),
         _.extend(fields.code_id, {}),
+        _.extend(fields.name, {}),
+        _.extend(fields.notes, {}),
+        _.extend(fields.entity_code, {}),
       ];
       return r;
     },
@@ -98,8 +96,6 @@ export default {
   },
   methods: {
     onselect() {
-      document.activeElement?.blur();
-      this.modalElem.hide();
       if (this.selected_data_obj !== false) {
         this.$emit('selected', this.selected_data_obj.data);
       }
@@ -117,7 +113,7 @@ export default {
     onRowSelected(data_obj) { this.selected_data_obj = data_obj; },
 
   },
-  props: [],
+  props: ['car_code_id'],
   beforeCreate() {
     console.log(`${this.name} beforeCreate`);
   },
@@ -127,11 +123,11 @@ export default {
   beforeMount() {
     console.log(`${this.name} beforeMount`);
     this.gridOptions = _.extend(this.commonGridOptions, {});
-    this.api_request_options = { status: 'idle' };
+    this.api_request_options = { car_code_id: this.carCodeId };
     this.initDatasource({});
   },
   mounted() {
-    this.modalElem = new Modal(this.$refs.modalIdleCarSelect);
+    this.modalElem = new Modal(this.$refs.modalSearchCar);
     console.log(`${this.name} mounted`);
     // if (this.seqId === 'new') {
     this.is_new = true;

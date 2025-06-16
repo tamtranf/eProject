@@ -1,6 +1,6 @@
 // const uuid = require('uuid');
 // const md5 = require('md5');
-// const nseq = require('nseq');
+const Nseq = require('nseq');
 // const async = require('async');
 // const _ = require('lodash');
 const moment = require('moment');
@@ -108,6 +108,9 @@ class OrderControl extends base_model {
   }
 
   set(req, res) {
+    // req.body.changes.incharge_user_name = req.local.session_user;
+    // if (req.body.changes.status === '') { req.body.changes.status = 'pending'; }
+
     if (
       this.checkServerAcl(req,
         res,
@@ -156,8 +159,27 @@ class OrderControl extends base_model {
           });
         });
       } else {
-      // Nếu là cập nhật
-        return this.base_set(req, res, { save_change_history: true });
+        (new Nseq()).do([
+          (self) => {
+            if (req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0) {
+              DataUtil.query('SELECT entity_code FROM car WHERE code_id = ?', [req.body.changes.car_code_id], { }, (err, result) => {
+                if (err) { return ResponseUtil.response(req, res, {}, err); }
+                if (Array.isArray(result) && result.length > 0) {
+                  req.body.changes.entity_code = result[0].entity_code;
+                }
+                self.next();
+              });
+            } else {
+              self.next();
+            }
+          },
+          (self) => {
+            self.next(); // Có thể để chỗ này trống nếu không cần làm gì ở bước này
+          },
+        ],
+        (_self) => {
+          this.base_set(req, res, { save_change_history: true });
+        });
       }
     }
   }
