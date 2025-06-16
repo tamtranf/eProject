@@ -26,12 +26,18 @@
         <form-field v-for="f in formFieldsSideC" :read="false"  :key="f.id" :field_info="f"></form-field>
         <br>
         <button style="float:right;" class="btn btn-primary" @click="onSave">Save</button>
+
         <idleCarSearchModal v-if="is_new === false && seqId > 0&& carCodeId ===''" @selected="onSelectedCar"> </idleCarSearchModal>
         <customerSearchModal v-if="is_new === false && seqId > 0 && customerCodeId ==='' " @selected="onSelectedCustomer"></customerSearchModal>
-         <link_accessory_order v-if="is_new === false && seqId > 0  && orderId.length > 0 && carCodeId.length > 0" :order_id="orderId"  :car_code_id="carCodeId"
-></link_accessory_order>
-
+        <button style="float:right; margin-right: 10px;"
+          v-if="statusId === 'pending' && is_new === false && seqId > 0 && customerCodeId !=='' &&  carCodeId !=='' "
+          class="btn btn-warning" @click="onStartOrder">Start order</button>
+           <button style="float:right; margin-right: 10px;"
+          v-if="statusId === 'rent' && is_new === false && seqId > 0 && customerCodeId !=='' &&  carCodeId !=='' "
+          class="btn btn-danger" @click="onCloseOrder">Close order</button>
       </div>
+       <link_accessory_order style="margin: 0px;" v-if="is_new === false && seqId > 0  && orderId.length > 0 && carCodeId.length > 0" :order_id="orderId"  :car_code_id="carCodeId"
+></link_accessory_order>
     </div>
   </div>
 </template>
@@ -67,6 +73,7 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController],
   components: { idleCarSearchModal, customerSearchModal, link_accessory_order },
   computed: {
+    statusId() { return this.retrieved_value.status || ''; },
     orderId() {
       return this.retrieved_value.order_id || '';
     },
@@ -124,6 +131,18 @@ export default {
     },
   },
   methods: {
+    onCloseOrder() {
+      _.find(this.formFieldsSideA, (f) => f.id === 'end_date').ref_field.setValue(new Date());
+      _.find(this.formFieldsSideC, (f) => f.id === 'status').ref_field.setValue('terminated');
+      this.onSave(this.loadFormData);
+    },
+
+    onStartOrder() {
+      _.find(this.formFieldsSideA, (f) => f.id === 'start_date').ref_field.setValue(new Date());
+      _.find(this.formFieldsSideC, (f) => f.id === 'status').ref_field.setValue('rent');
+      this.onSave(this.loadFormData);
+    },
+
     onSelectedCustomer(customer_data) {
       _.find(this.formFieldsSideC, (f) => f.id === 'customer_id').ref_field.setValue(customer_data.customer_id);
       this.onSave(this.loadFormData);

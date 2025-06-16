@@ -59,15 +59,15 @@ class LinkAccessoryOrder extends base_model {
 
     options.conditions = (options.conditions) ? options.conditions : '';
     options.params = (Array.isArray(options.params)) ? options.params : [];
+    if (entity !== 'Super_admin') {
+      options.conditions = 'entity_code=?';
+      options.params = [entity];
+    }
     if (req.body.api_request_options) {
       options.conditions += (options.conditions === '') ? ' order_id = ?  ' : ' and order_id = ? ';
       options.params.push(req.body.api_request_options.order_id);
     }
 
-    if (entity !== 'Super_admin') {
-      options.conditions = 'entity_code=?';
-      options.params = [entity];
-    }
     return options;
   }
 

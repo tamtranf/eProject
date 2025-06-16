@@ -21,8 +21,7 @@ const arr = [
   {
     id: 'notes',
     label: 'Notes',
-    type:
-TYPES.INPUT,
+    type: TYPES.INPUT,
   },
 
 ];

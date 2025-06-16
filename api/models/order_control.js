@@ -107,22 +107,28 @@ class OrderControl extends base_model {
     });
   }
 
+  diffDates(date1, date2) {
+    const diff = Math.ceil(((new Date(date1)).getTime() - (new Date(date2)).getTime()) / (1000 * 3600));
+    return (diff > 0) ? diff : 0;
+  }
+
   set(req, res) {
-    // req.body.changes.incharge_user_name = req.local.session_user;
-    // if (req.body.changes.status === '') { req.body.changes.status = 'pending'; }
+    req.body.changes.incharge_user_name = req.local.session_user;
+
+    if (req.body.changes.status === '') {
+      req.body.changes.status = 'pending';
+    }
+
+    const isAdd = req.params.id === constants.IDS.ADD_NEW_RECORD_ID;
+    const aclAction = isAdd ? this.aclAction.ADD : this.aclAction.EDIT;
 
     if (
-      this.checkServerAcl(req,
-        res,
-        true,
-        (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) ? this.aclAction.ADD : this.aclAction.EDIT)
+      this.checkServerAcl(req, res, true, aclAction)
     ) {
       const entity = req.local.session_entity;
 
       // Gán entity_code nếu là tạo mới và không phải SUPER_ADMIN
-      if (
-        entity !== 'Super_admin' && req.params.id === constants.IDS.ADD_NEW_RECORD_ID
-      ) {
+      if (entity !== 'Super_admin' && isAdd) {
         req.body.changes.entity_code = entity;
       }
 
@@ -131,8 +137,8 @@ class OrderControl extends base_model {
         req.body.changes.total_value = 0;
       }
 
-      // Nếu là tạo bản ghi mới
-      if (req.params.id === constants.IDS.ADD_NEW_RECORD_ID) {
+      if (isAdd) {
+      // Tạo bản ghi mới
         DataUtil.get_new_transaction_connection('CreatedOrder', (err, connection) => {
           if (err) {
             return ResponseUtil.response(req, res, {}, err);
@@ -159,27 +165,149 @@ class OrderControl extends base_model {
           });
         });
       } else {
-        (new Nseq()).do([
+      // Cập nhật bản ghi cũ
+        new Nseq().do([
           (self) => {
             if (req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0) {
-              DataUtil.query('SELECT entity_code FROM car WHERE code_id = ?', [req.body.changes.car_code_id], { }, (err, result) => {
-                if (err) { return ResponseUtil.response(req, res, {}, err); }
-                if (Array.isArray(result) && result.length > 0) {
-                  req.body.changes.entity_code = result[0].entity_code;
-                }
-                self.next();
-              });
+              DataUtil.query('UPDATE car SET status = ? WHERE code_id = ?',
+                ['Rented', req.body.changes.car_code_id],
+                {},
+                (err) => {
+                  if (err) {
+                    return ResponseUtil.response(req, res, {}, err);
+                  }
+                  self.next();
+                });
             } else {
               self.next();
             }
           },
           (self) => {
-            self.next(); // Có thể để chỗ này trống nếu không cần làm gì ở bước này
+            if (req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0) {
+              DataUtil.query('SELECT entity_code FROM car WHERE code_id = ?',
+                [req.body.changes.car_code_id],
+                {},
+                (err, result) => {
+                  if (err) {
+                    return ResponseUtil.response(req, res, {}, err);
+                  }
+
+                  if (Array.isArray(result) && result.length > 0) {
+                    req.body.changes.entity_code = result[0].entity_code;
+                  }
+                  self.next();
+                });
+            } else {
+              self.next();
+            }
           },
-        ],
-        (_self) => {
-          this.base_set(req, res, { save_change_history: true });
-        });
+          (self) => {
+            if (
+              req.body.changes.status === 'terminated' && req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0
+            ) {
+              DataUtil.query('SELECT * FROM car WHERE code_id = ?',
+                [req.body.changes.car_code_id],
+                {},
+                (err, result) => {
+                  if (err) {
+                    return ResponseUtil.response(req, res, {}, err);
+                  }
+
+                  const total_rent_hours = this.diffDates(req.body.changes.end_date,
+                    req.body.changes.start_date);
+                  const price_per_hour = result[0].price_per_day / 24;
+                  req.body.changes.total_value = price_per_hour * total_rent_hours;
+
+                  self.next();
+                });
+            } else {
+              self.next();
+            }
+          },
+          (self) => {
+            if (
+              req.body.changes.status === 'terminated' && req.body.changes.order_id && req.body.changes.order_id.length > 0
+            ) {
+              DataUtil.query('SELECT count(*) as qty FROM v_link_accessory_order WHERE order_id = ?',
+                [req.body.changes.order_id],
+                {},
+                (err, result) => {
+                  if (err) {
+                    return ResponseUtil.response(req, res, {}, err);
+                  }
+
+                  const total_accessory_qty = result[0].qty;
+                  if (total_accessory_qty > 0) {
+                    const accessory_value = total_accessory_qty * 1000;
+                    req.body.changes.total_value += accessory_value;
+                  }
+
+                  self.next();
+                });
+            } else {
+              self.next();
+            }
+          },
+          (self) => {
+            if (
+              req.body.changes.status === 'terminated' && req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0
+            ) {
+              DataUtil.query('SELECT * FROM car WHERE code_id = ?',
+                [req.body.changes.car_code_id],
+                {},
+                (err, result) => {
+                  if (err) {
+                    return ResponseUtil.response(req, res, {}, err);
+                  }
+
+                  if (result[0].status === 'Rented') {
+                    const total_rent_hours = this.diffDates(req.body.changes.end_date,
+                      req.body.changes.start_date);
+
+                    const price_per_hour = result[0].price_per_day / 24;
+                    const rent_value = price_per_hour * total_rent_hours;
+
+                    const sql = 'INSERT INTO rent_history SET ?';
+                    const params = {
+                      car_id: result[0].seq_id,
+                      entity_code: result[0].entity_code,
+                      customer_id: req.body.changes.customer_id,
+                      from_date: req.body.changes.start_date,
+                      to_date: req.body.changes.end_date,
+                      total_rent_hours,
+                      rent_value,
+                      notes: '',
+                      // postal_code: req.body.changes.postal_code,
+                    };
+
+                    DataUtil.query(sql, params, {}, (err2, _result) => {
+                      if (err2) {
+                        return ResponseUtil.response(req, res, {}, err2);
+                      }
+                      self.next();
+                    });
+                  } else {
+                    self.next();
+                  }
+                });
+            } else {
+              self.next();
+            }
+          },
+
+          (self) => {
+            if (req.body.changes.status === 'terminated' && req.body.changes.car_code_id && req.body.changes.car_code_id.length > 0) {
+              DataUtil.query('UPDATE car set status=? WHERE code_id = ?', ['Idle', req.body.changes.car_code_id], { }, (err, _result) => {
+                if (err) { return ResponseUtil.response(req, res, {}, err); }
+                self.next();
+              });
+            } else { self.next(); }
+          },
+
+          (_self) => {
+            this.base_set(req, res, { save_change_history: true });
+          },
+        ]);
       }
     }
   }
