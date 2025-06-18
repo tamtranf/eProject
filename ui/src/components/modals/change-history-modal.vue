@@ -92,7 +92,7 @@ import datasource from '@/mixins/datasource';
 import { fields } from '../../../../api/rules/fields_change_history';
 
 export default {
-  name: '',
+  name: 'change-history-modal',
   data() {
     return {
       local_fields_ref_a: false,
@@ -102,7 +102,7 @@ export default {
       name: '',
       modalElem: null,
 
-      title: 'Modal',
+      title: 'History',
       text: 'Text',
       ok_text: 'OK',
       cancel_text: 'Cancel',

@@ -58,10 +58,13 @@ export default {
 
     formFieldsSideA() {
       // This show the mode 1 to load the fields
-      if (this.local_fields_ref_a === false) {
-        this.local_fields_ref_a = this.setFormDefaultFields(['category', 'code_id', 'name'], fields);
-      }
-      return this.local_fields_ref_a;
+
+      const r = [
+        _.extend(fields.category, {}),
+        _.extend(fields.code_id, { read_only: true }),
+        _.extend(fields.name, {}),
+      ];
+      return r;
     },
 
     formFieldsSideB() {
@@ -105,6 +108,7 @@ export default {
           if (this.is_new && result.data.seq_id !== this.seqId) {
             this.$route.params.seq_id = result.data.seq_id;
             this.is_new = false;
+            _.find(this.formFieldsSideA, (f) => f.id === 'code_id').ref_field.setValue(result.data.code_id);
 
             return this.$router.push({
               name: this.detail_page,

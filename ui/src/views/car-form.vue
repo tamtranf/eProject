@@ -88,7 +88,7 @@ export default {
         _.extend(fields.weight, {}),
         _.extend(fields.status, {}),
         _.extend(fields.notes, {}),
-        _.extend(fields.code_id, {}),
+        _.extend(fields.code_id, { read_only: true }),
       ];
       if (localStorage.entity_code === 'Super_admin') {
         r.push(fields.entity_code);
@@ -129,12 +129,11 @@ export default {
             title: 'Saved',
             text: 'Success',
           });
-          _.find(this.formFieldsSideB, (f) => f.id === 'code_id').ref_field.setValue(result.data.code_id);
 
           if (this.is_new && result.data.seq_id !== this.seqId) {
             this.$route.params.seq_id = result.data.seq_id;
             this.is_new = false;
-
+            _.find(this.formFieldsSideB, (f) => f.id === 'code_id').ref_field.setValue(result.data.code_id);
             return this.$router.push({
               name: this.detail_page,
               params: { seq_id: result.data.seq_id },

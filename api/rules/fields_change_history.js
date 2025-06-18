@@ -46,7 +46,7 @@ const arr = [
   {
     id: 'new_data',
     label: 'New Data',
-    type: TYPES.TEXT_AREA,
+    type: TYPES.INPUT,
   },
 
 ];

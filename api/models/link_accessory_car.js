@@ -57,12 +57,12 @@ class LinkAccessoryCar extends base_model {
 
   get_options_conditions(req, extend = {}) {
     const options = extend;
-    const entity = req.local.session_entity;
+    // const entity = req.local.session_entity;
 
-    if (entity !== 'Super_admin') {
-      options.conditions = 'entity_code=?';
-      options.params = [entity];
-    }
+    // if (entity !== 'Super_admin') {
+    //   options.conditions = 'entity_code=?';
+    //   options.params = [entity];
+    // }
     options.conditions = (options.conditions) ? options.conditions : '';
     options.params = (Array.isArray(options.params)) ? options.params : [];
 

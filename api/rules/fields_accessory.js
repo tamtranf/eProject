@@ -7,7 +7,15 @@ const arr = [
   {
     id: 'category',
     label: 'Category',
-    type: TYPES.INPUT,
+    options_mode: SELECT_FIELD_MODE.LIST,
+    list: [
+      { label: 'ETC device', value: 'ETC' },
+      { label: 'JAF certificate', value: 'JAF_CERT' },
+      { label: 'Child Seat', value: 'CHILD_SEAT' },
+      { label: 'Winter Tire', value: 'WINTER_TIRE' },
+      { label: 'Snow Chain', value: 'SNOW_CHAIN' },
+    ],
+    type: TYPES.SELECT_BOX,
   },
   {
     id: 'code_id',
@@ -22,7 +30,13 @@ const arr = [
   {
     id: 'color',
     label: 'Color',
-    type: TYPES.INPUT,
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_color/get_color_list',
+      label: 'color_name',
+      value: 'color_code',
+    },
+    type: TYPES.SELECT_BOX,
   },
   {
     id: 'notes',
@@ -32,7 +46,13 @@ const arr = [
   {
     id: 'entity_code',
     label: 'Entity Code',
-    type: TYPES.INPUT,
+    options_mode: SELECT_FIELD_MODE.API,
+    api: {
+      url: '/master_entity/get_entity_list',
+      label: 'entity_name',
+      value: 'entity_code',
+    },
+    type: TYPES.SELECT_BOX,
   },
 
 ];

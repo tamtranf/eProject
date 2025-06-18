@@ -23,7 +23,7 @@ acl localnet src 172.16.0.0/12          # RFC 1918 local private network (LAN)
 acl localnet src 192.168.0.0/16         # RFC 1918 local private network (LAN)
 acl localnet src fc00::/7               # RFC 4193 local private network range
 acl localnet src fe80::/10              # RFC 4291 link-local (directly plugged)) machines
-acl my_localnet src 10.10.0.0/16 
+acl my_localnet src 10.0.0.0/16 
 
 # line 1541 : uncomment
 http_access deny to_localhost
@@ -56,7 +56,7 @@ export http_proxy=http://{Squid IP}:3128
 export https_proxy=http://{Squid IP}:3128
 
 # For example:
-export http_proxy=http://10.10.0.10:3128
-export https_proxy=http://10.10.0.10:3128
+export http_proxy=http://10.0.0.10:3128
+export https_proxy=http://10.0.0.10:3128
 
 #Also don't forget to open the port 3128 in the AWS Security groups on the server where .

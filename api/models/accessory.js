@@ -92,7 +92,7 @@ class Accessory extends base_model {
 
   next_accessory_id(req, res, connection, cb) {
     const date_code = moment(new Date()).format('YYYYMMDD');
-    const sql = `SELECT code_id FROM accessory WHERE code_id LIKE 'C${date_code}%' ORDER BY code_id DESC LIMIT 1`;
+    const sql = `SELECT code_id FROM accessory WHERE code_id LIKE 'A${date_code}%' ORDER BY code_id DESC LIMIT 1`;
 
     DataUtil.query(sql, [], { connection }, (err, result) => {
       if (err) {
@@ -100,12 +100,12 @@ class Accessory extends base_model {
       }
 
       if (result.length === 0) {
-        return cb(null, `C${date_code}0001`);
+        return cb(null, `A${date_code}0001`);
       }
 
-      const last_id = result[0].code_id.replace(`C${date_code}`, '');
+      const last_id = result[0].code_id.replace(`A${date_code}`, '');
       const new_id = parseInt(last_id) + 1;
-      return cb(null, `C${date_code}${new_id.toString().padStart(4, '0')}`);
+      return cb(null, `A${date_code}${new_id.toString().padStart(4, '0')}`);
     });
   }
 
