@@ -10,8 +10,8 @@ class FileUtils {
   // constructor() {}
 
   put_object(file_path, data_to_save, cb = () => {}) {
-    if (config.upload_stoage.mode === 's3') {
-      const bucket_info = config.upload_stoage.bucket;
+    if (config.upload_storage.mode === 's3') {
+      const bucket_info = config.upload_storage.bucket;
       let key_path = bucket_info.prefix + file_path;
       key_path = key_path.replace(/\/\//g, '/').replace(/\/\//g, '/');
       // Files will be saved at S3.
@@ -32,7 +32,7 @@ class FileUtils {
       });
     } else {
       // Local emulation to save files.
-      const save_dir = path.join(config.upload_stoage.local.path, file_path);
+      const save_dir = path.join(config.upload_storage.local.path, file_path);
 
       if (fs.existsSync(path.dirname(save_dir)) === false) {
         fs.mkdirSync(path.dirname(save_dir), { recursive: true });
@@ -42,8 +42,8 @@ class FileUtils {
   }
 
   get_object(file_path, cb = () => {}) {
-    if (config.upload_stoage.mode === 's3') {
-      const bucket_info = config.upload_stoage.bucket;
+    if (config.upload_storage.mode === 's3') {
+      const bucket_info = config.upload_storage.bucket;
       let key_path = bucket_info.prefix + file_path;
       key_path = key_path.replace(/\/\//g, '/').replace(/\/\//g, '/');
       const params = {
@@ -59,7 +59,7 @@ class FileUtils {
         cb(err, data);
       });
     } else {
-      const load_dir = path.join(config.upload_stoage.local.path, file_path);
+      const load_dir = path.join(config.upload_storage.local.path, file_path);
       fs.readFile(load_dir, (err, buff) => {
         if (err) {
           return cb(err, { is_local_file: true });
@@ -70,8 +70,8 @@ class FileUtils {
   }
 
   delete_object(file_path, cb = () => {}) {
-    if (config.upload_stoage.mode === 's3') {
-      const bucket_info = config.upload_stoage.bucket;
+    if (config.upload_storage.mode === 's3') {
+      const bucket_info = config.upload_storage.bucket;
       let key_path = bucket_info.prefix + file_path;
       key_path = key_path.replace(/\/\//g, '/').replace(/\/\//g, '/');
       const params = {
@@ -87,7 +87,7 @@ class FileUtils {
         cb(err, data);
       });
     } else {
-      const load_dir = path.join(config.upload_stoage.local.path, file_path);
+      const load_dir = path.join(config.upload_storage.local.path, file_path);
       fs.unlink(load_dir, (err, result) => cb(err, { is_local_file: true, result }));
     }
   }

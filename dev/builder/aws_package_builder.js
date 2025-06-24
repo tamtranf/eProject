@@ -60,6 +60,13 @@ fs.writeFileSync(path.join(BUILD_APP_PATH,"version.txt"),"Ver: "+VERSION+"\nBuil
 shelljs.cp(path.join(BUILD_APP_PATH,"version.txt"),path.join(BUILD_TEMP_PUBLIC_PATH,""))
 shelljs.cp(path.join(BUILD_APP_PATH,"version.txt"),path.join(BUILD_TEMP_PUBLIC_PATH,"static"))
 
-build_helper.zip_dir(OUTPUT_PATH, PROJECT_NAME, PROJECT_NAME + "_" + VERSION.replace(/\./g,"_") + "_" + BUILD_ID + "_aws.zip" )
+var file_name = PROJECT_NAME + "_" + VERSION.replace(/\./g, "_") + "_" + BUILD_ID + "_aws.zip";
+build_helper.zip_dir(OUTPUT_PATH, PROJECT_NAME, file_name);
 
-console.log("Finished building AWS package.")
+// 🔧 Sửa đường dẫn scp: thay ¥ thành \, và dùng / để đảm bảo chạy được trên Windows + SSH
+var scp_cmd = 'scp -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@54.250.80.135" C:/Projects/e/dev/output/' + file_name + ' ubuntu@10.0.128.30:/tmp/.';
+
+// 🔧 Thêm khoảng trắng sau "&&" để đảm bảo đúng cú pháp shell
+shelljs.exec("cd " + BASE_PATH + " && " + scp_cmd);
+
+console.log("Finished building AWS package.");

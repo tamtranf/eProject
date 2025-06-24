@@ -27,7 +27,7 @@
 <script>
 import mixinFormController from '@/mixins/form_controller';
 import mixinLayoutComponents from '@/mixins/layout_components';
-import _ from 'lodash';
+import _, { get, set } from 'lodash';
 import link_accessory_car from '@/components/sub_views/link-accessory-car';
 import { fields } from '../../../api/rules/fields_accessory';
 
@@ -39,6 +39,8 @@ export default {
       local_fields_ref_b: false,
       api_name: 'accessory',
       name: 'AccessoryForm',
+      code_id: false,
+
     };
   },
   routes: [
@@ -54,7 +56,15 @@ export default {
   mixins: [mixinLayoutComponents, mixinFormController],
   components: { link_accessory_car },
   computed: {
-    codeID() { return this.retrieved_value.code_id; },
+    codeID: {
+      get() {
+        return this.code_id || this.retrieved_value.code_id;
+      },
+      set(v) {
+        this.code_id = v;
+      },
+
+    },
 
     formFieldsSideA() {
       // This show the mode 1 to load the fields
@@ -109,7 +119,7 @@ export default {
             this.$route.params.seq_id = result.data.seq_id;
             this.is_new = false;
             _.find(this.formFieldsSideA, (f) => f.id === 'code_id').ref_field.setValue(result.data.code_id);
-
+            this.codeID = result.data.code_id;
             return this.$router.push({
               name: this.detail_page,
               params: { seq_id: result.data.seq_id },

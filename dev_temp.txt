@@ -1,5 +1,6 @@
 ssh -i AWS_KEY.pem ubuntu@54.250.80.135
 
+ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@57.181.37.40" ubuntu@10.0.128.10
 ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@54.250.80.135" ubuntu@10.0.16.20
 
  scp -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i  AWS_KEY.pem ubuntu@57.181.37.40" test.txt ubuntu@10.0.128.10:/home/ubuntu/.
@@ -12,3 +13,8 @@ ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@54.250.80
  aws s3 cp test.txt s3://eprojecttamtest/test4.txt
  aws s3 cp test.txt s3://eprojecttamtest/test5.txt
  aws s3 ls s3://eprojecttamtest/
+
+  scp -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i  AWS_KEY.pem ubuntu@54.250.80.135" C:¥Projects¥e¥dev¥output¥e-project_1_0_0_20250623_133305_aws.zip ubuntu@10.0.128.30:/tmp/.
+
+
+ mysql -h pre-e-project-db.chgniclgihdw.ap-northeast-1.rds.amazonaws.com -u admin -p

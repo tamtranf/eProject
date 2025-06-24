@@ -59,11 +59,11 @@ import datasource from '@/mixins/datasource';
 import { fields } from '../../../../api/rules/fields_car';
 
 export default {
-  name: '',
+  name: 'link-accessory-car-search-modal',
   data() {
     return {
       api_name: 'car',
-      name: '',
+      name: 'link-accessory-car-search-modal',
       modalElem: null,
 
       title: 'Modal',
@@ -73,7 +73,7 @@ export default {
       ok_class: 'btn-primary',
       cancel_class: 'btn-secondary',
       on_confirm: () => {},
-      selected_data_obj: true,
+      selected_data_obj: false,
 
     };
   },
@@ -107,7 +107,7 @@ export default {
       this.modalElem.show();
       this.gridOptions.api.sizeColumnsToFit();
       this.gridOptions.api.purgeInfiniteCache();
-      this.countRows('ChangeHistoryModal');
+      this.countRows('LinkAccessoryCarSearchModal');
     },
     createColumnDefs() {
       return this.commonCreateColumnDefs({ show_details: false, show_checkbox: false });

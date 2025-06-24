@@ -2,7 +2,7 @@
   <div :class="[name,'page']">
     <h5>Compatible cars</h5>
     <div class="col-12" style="">
-      <ag-grid-vue style="width: 100%; height: 325px;"
+      <ag-grid-vue style="width: 100%; height: 125px;"
         class="ag-theme-blue"
         :gridOptions="gridOptions"
         >
@@ -88,7 +88,7 @@ export default {
         this.countRows('subPageLinkAccessoryCar');
         this.$notify({ clean: true });
         if (err) {
-          if (err.code === 'ER_DUP_ENTRY') {
+          if (err.code === 'Record already exists') {
             this.$notify({ type: 'Info', title: 'Already exist', text: 'The record already exist' });
           } else {
             this.$notify({ type: 'error', title: 'Error', text: err });

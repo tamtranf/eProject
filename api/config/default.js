@@ -48,6 +48,16 @@ const config = {
     'link_accessory_order',
 
   ],
+  upload_storage: {
+    mode: 'local',
+    bucket: {
+      prefix: '',
+      name: '',
+    },
+    local: {
+      path: 'local_uploads/',
+    },
+  },
   admin_user: {
     username: 'admin',
     default_password: '1234',

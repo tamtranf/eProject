@@ -6,7 +6,7 @@
       <search-control
         style="padding-bottom: 10px;"
         @change="searchControlChangedDatasource"
-        :field_names="tabFieldList"></search-control>
+        :field_names="searchFieldList"></search-control>
       <ag-grid-vue style="width: 100%; height: 325px;"
         class="ag-theme-blue"
         :gridOptions="gridOptions"
@@ -65,6 +65,19 @@ export default {
         _.extend(fields.code_id, {}),
       ];
       return r;
+    },
+
+    searchFieldList() {
+      return [
+        _.extend(fields.maker, {}),
+        _.extend(fields.model, {}),
+        _.extend(fields.code_id, {}),
+        _.extend(fields.car_year, {}),
+        _.extend(fields.color, {}),
+        _.extend(fields.price_per_day, { }),
+        _.extend(fields.entity_code, { }),
+        _.extend(fields.category, { }),
+      ];
     },
     deleteDisabled: {
       get() {
