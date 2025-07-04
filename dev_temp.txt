@@ -1,6 +1,6 @@
 ssh -i AWS_KEY.pem ubuntu@54.250.80.135
+ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@54.250.80.135" ubuntu@10.0.128.30
 
-ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@57.181.37.40" ubuntu@10.0.128.10
 ssh -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i AWS_KEY.pem ubuntu@54.250.80.135" ubuntu@10.0.16.20
 
  scp -i AWS_KEY.pem -o ProxyCommand="ssh -W %h:%p -i  AWS_KEY.pem ubuntu@57.181.37.40" test.txt ubuntu@10.0.128.10:/home/ubuntu/.

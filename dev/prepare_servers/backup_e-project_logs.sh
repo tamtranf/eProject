@@ -5,7 +5,7 @@ files_path=$base_path/e_app*.log.*
 old_files_path=$base_path/e_app*.log
 temp_path=/var/log/e-project/app/$(date +"%Y")
 s3_path=backups/app/logs
-bucket_name=e-project-files-0605
+bucket_name=eprojecttamtest 
 
 
 mkdir -p $temp_path
